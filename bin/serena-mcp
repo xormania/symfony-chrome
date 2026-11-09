@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+"""stdio MCP launcher: Serena REPL with the Mago LSP backend inside the selected container. Diagnostics on stderr."""
+import argparse
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from devlib import compose, environment, load, require_running  # noqa: E402
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--run', default='dev')
+args, passthrough = parser.parse_known_args()
+if passthrough[:1] == ['--']:
+    passthrough = passthrough[1:]
+try:
+    data = load(args.run)
+    require_running(data)
+except (RuntimeError, ValueError) as exc:
+    print(f'serena-mcp: {exc}', file=sys.stderr)
+    sys.exit(3)
+argv = compose(data, 'exec', '-T', '--user', f'{os.getuid()}:{os.getgid()}', '-w', '/workspace', 'php',
+               'serena', 'start-mcp-server', '--project', '/workspace', '--transport', 'stdio',
+               '--agent-interface', 'REPL', '--enable-web-dashboard', 'false', '--open-web-dashboard', 'false',
+               '--enable-gui-log-window', 'false', *passthrough)
+os.execve(argv[0], argv, environment(data))

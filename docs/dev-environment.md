@@ -15,6 +15,8 @@ Created 2026-11-09. Adapted from the launcher, workspace, and evidence conventio
 | `private/` if present, gitignored | `/private`, read-write, only when the directory exists |
 
 Pins are in `toolchain.lock.json`. The image records its own identity at build time; `bin/dev doctor` prints it.
+The first build compiles the patched Mago in Rust: allow several minutes and several GB of memory and disk.
+`MAGO_BUILD_JOBS` is a build argument, default 4.
 
 ## Base image from xorder
 
@@ -77,6 +79,29 @@ The structural guard rule encodes spec PKG-02: nothing under the runtime bundle 
 or the devtools bundle. Exit `1` with a report means findings, not a broken tool. Whether Mago accepts the
 symlinked `vendor/xormania/...` entries in `paths` is unverified until the first run; if it refuses, analyze the
 packages from `/packages/<name>` with their own configuration instead.
+
+## Serena with the Mago language server
+
+Ported from mago-serena_v2-poc and vendored under `tools/serena/`: Serena v2 at its pinned revision with the
+REPL facade patch, the `serena-mago-adapter` that registers Mago as a SolidLSP backend, and Mago built from the
+same upstream revision as the release binary plus the PoC's LSP extension patch. The patched build is
+`/usr/local/bin/mago`; the upstream release binary stays at `/usr/local/bin/mago-baseline` for comparison.
+
+Each new workspace gets `.serena/project.yml` from `tools/serena/config/`. Connect a client over stdio:
+
+```sh
+./bin/dev mcp-config
+```
+
+The printed JSON carries both servers, `chrome` and `serena`. The Serena entry runs `bin/serena-mcp --run <id>`,
+which bridges `serena start-mcp-server --project /workspace --agent-interface REPL` out of the container. Call
+`initial_instructions`, keep the session token, then `s.info("lsp")` before using the facade. The PoC's
+`WORKFLOWS.md` and `MAGO-LSP-EXTENSIONS.md` remain the reference for REPL usage and the opt-in Symfony
+wiring contribution, which is not wired here yet.
+
+Known from the PoC and carried over unchanged: an unfixed external-edit span defect in the Mago LSP path with a
+restart workaround, and the fact that `mago-baseline` here is the upstream release build rather than a local
+unpatched build of the same revision.
 
 ## Two Chrome attachment modes
 

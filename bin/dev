@@ -70,7 +70,8 @@ def cmd_mcp_config(args):
         # Owned headless Chrome for Testing inside the container; stdio bridged through compose exec.
         server = {'command': str(ROOT / 'bin/chrome-mcp'), 'args': ['--run', data['run_id']]}
         note = 'App URL inside the container: http://127.0.0.1:8000'
-    print(json.dumps({'mcpServers': {'chrome': server}}, indent=2))
+    serena = {'command': str(ROOT / 'bin/serena-mcp'), 'args': ['--run', data['run_id']]}
+    print(json.dumps({'mcpServers': {'chrome': server, 'serena': serena}}, indent=2))
     print(note, file=sys.stderr)
     return 0
 
@@ -103,7 +104,7 @@ def main(argv=None):
     p.add_argument('--run', default='dev')
     p.set_defaults(func=cmd_doctor)
 
-    p = sub.add_parser('mcp-config', help='Print an MCP client configuration for Chrome DevTools MCP')
+    p = sub.add_parser('mcp-config', help='Print an MCP client configuration: Chrome DevTools MCP plus Serena')
     p.add_argument('--run', default='dev')
     p.add_argument('--mode', default='host', choices=['host', 'owned'])
     p.set_defaults(func=cmd_mcp_config)

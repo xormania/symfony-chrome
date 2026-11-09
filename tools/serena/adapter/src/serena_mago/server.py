@@ -25,8 +25,8 @@ class MagoDependency(LanguageServerDependencyProvider):
         binary = os.environ.get("MAGO_BINARY", "mago")
         resolved = shutil.which(binary)
         if not resolved:
-            raise FileNotFoundError(f"Mago executable {binary!r} missing; run ./bin/poc up to build the pinned backend")
-        identity = Path("/opt/toolchain-runtime.json")
+            raise FileNotFoundError(f"Mago executable {binary!r} missing; run ./bin/dev up to build the pinned backend")
+        identity = Path("/opt/dev/image-identity.json")
         if identity.exists():
             expected = json.loads(identity.read_text())["mago_binary_sha256"]
             actual = hashlib.sha256(Path(resolved).read_bytes()).hexdigest()
@@ -79,8 +79,8 @@ class MagoTransport(StdioLanguageServer):
 
     def _state_trace(self, event, uri=None, **extra):
         """Optional bounded hash-only document-state evidence; never log source text."""
-        evidence = os.environ.get("POC_EVIDENCE")
-        if os.environ.get("POC_TRACE") != "1" or not evidence:
+        evidence = os.environ.get("DEV_EVIDENCE")
+        if os.environ.get("DEV_TRACE") != "1" or not evidence:
             return
         record = {"event":event,"uri":uri,"pid":os.getpid(),**extra}
         if uri:
@@ -259,7 +259,7 @@ class MagoServer(SolidLanguageServer):
                     "command": self._get_process_launch_info().cmd, "initialize": response,
                     "root": self.repository_root_path}
         log.info("MAGO_BACKEND_IDENTITY %s", json.dumps(identity))
-        evidence = os.environ.get("POC_EVIDENCE")
+        evidence = os.environ.get("DEV_EVIDENCE")
         if evidence:
             Path(evidence).mkdir(parents=True, exist_ok=True)
             Path(evidence, f"backend-{identity['pid']}.json").write_text(json.dumps(identity, indent=2))

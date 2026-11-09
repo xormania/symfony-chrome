@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_IMAGE = 'symfony-chrome-dev:local'
-FIXTURE_IGNORE = shutil.ignore_patterns('vendor', 'var', 'node_modules', '.env.local', '.phpunit.cache')
+FIXTURE_IGNORE = shutil.ignore_patterns('vendor', 'var', 'node_modules', '.env.local', '.phpunit.cache', '.serena')
 
 
 def docker():
@@ -52,6 +52,8 @@ def prepare(run_id, port=0, app_env='dev'):
         return load(run_id)
     workspace.mkdir(parents=True)
     shutil.copytree(ROOT / 'fixtures/app', workspace / 'app', ignore=FIXTURE_IGNORE)
+    (workspace / 'app/.serena').mkdir()
+    shutil.copy2(ROOT / 'tools/serena/config/project.yml', workspace / 'app/.serena/project.yml')
     (workspace / 'state').mkdir()
     (ROOT / 'artifacts' / run_id).mkdir(parents=True, exist_ok=True)
     digest = hashlib.sha256(str(ROOT).encode()).hexdigest()[:8]
