@@ -60,7 +60,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 60
     env:
       DEV_IMAGE: symfony-chrome-ci:${{ github.run_id }}-${{ github.run_attempt }}
       DEV_SKIP_BUILD: '1'
@@ -86,6 +86,12 @@ jobs:
       - name: Locked real development environment
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: ./bin/dev test --suite environment
+      - name: Real browser contracts and guard controls
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: ./bin/dev test --suite browser
+      - name: Real Mate, Mago and Serena contracts
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: ./bin/dev test --suite tooling
       - name: Retain integration results and build identity
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -111,7 +117,7 @@ jobs:
       - name: Verify required jobs and exact native result inventory
         env:
           REQUIRED_JOBS: ${{ toJSON(needs) }}
-          JOB_SUITES: '{"fast":["fast"],"package":["package"],"integration":["support","environment"]}'
+          JOB_SUITES: '{"fast":["fast"],"package":["package"],"integration":["support","environment","browser","tooling"]}'
         run: >-
           python3 tools/ci/acceptance.py
           --evidence artifacts-input

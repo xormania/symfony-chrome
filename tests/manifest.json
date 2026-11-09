@@ -5,7 +5,9 @@
       "fast",
       "package",
       "support",
-      "environment"
+      "environment",
+      "browser",
+      "tooling"
     ]
   },
   "suites": {
@@ -43,6 +45,27 @@
         "support.current-policy-and-actual-parent"
       ],
       "timeout": 900
+    },
+    "browser": {
+      "script": "tools/testing/browser.py",
+      "checks": [
+        "browser.chrome-mcp",
+        "browser.borrowed-endpoint",
+        "browser.request-profile",
+        "browser.guards"
+      ],
+      "timeout": 1200
+    },
+    "tooling": {
+      "script": "tools/testing/tooling.py",
+      "checks": [
+        "tooling.mate",
+        "tooling.native-mago",
+        "tooling.enriched-mago",
+        "tooling.serena-mago",
+        "tooling.external-spans"
+      ],
+      "timeout": 1800
     }
   }
 }

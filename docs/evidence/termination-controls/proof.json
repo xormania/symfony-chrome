@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "regression": "SIGTERM inside Checks.check must unwind workspace and call stop",
+  "same_test": true,
+  "records": [
+    {
+      "state": "parent-197a529",
+      "exit": 1
+    },
+    {
+      "state": "fixed",
+      "exit": 0
+    }
+  ]
+}

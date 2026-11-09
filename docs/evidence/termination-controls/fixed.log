@@ -1,0 +1,7 @@
+test_cleanup_error_preserves_original_interruption (test_termination.TerminationContract.test_cleanup_error_preserves_original_interruption) ... ok
+test_sigterm_runs_owned_stop_and_records_cleanup (test_termination.TerminationContract.test_sigterm_runs_owned_stop_and_records_cleanup) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.136s
+
+OK

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "regression": "empty/null successful rename must not establish recovery",
+  "same_test": true,
+  "records": [
+    {
+      "state": "parent-3638f75",
+      "exit": 1
+    },
+    {
+      "state": "fixed",
+      "exit": 0
+    }
+  ]
+}

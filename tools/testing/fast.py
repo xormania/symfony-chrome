@@ -40,7 +40,9 @@ def main(argv=None):
     parser.add_argument('--evidence', type=Path, required=True)
     args = parser.parse_args(argv)
     args.evidence.mkdir(parents=True, exist_ok=True)
-    suite = unittest.defaultTestLoader.discover(str(ROOT / 'tests/fast'))
+    suite = unittest.TestSuite()
+    for directory in ('fast', 'integration'):
+        suite.addTests(unittest.TestLoader().discover(str(ROOT / 'tests' / directory)))
     expected = [case.id() for case in cases(suite)]
     result = unittest.TextTestRunner(verbosity=2, resultclass=Result).run(suite)
     passed = bool(expected) and result.wasSuccessful() and not result.skipped and result.identities == expected
