@@ -3,6 +3,9 @@
 The browser and tooling suites use real providers against a freshly copied,
 owned Symfony fixture. They create test-only routes/services in that disposable
 application; the checked-in fixture and package sources are not changed.
+The test files are installed before dependency/bootstrap commands and the first
+HTTP readiness request, so the live PHP server starts with the final routes and
+service graph.
 
 Build/select the development image first. The common runner and native suite
 commands use the same implementation:

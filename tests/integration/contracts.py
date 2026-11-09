@@ -69,7 +69,6 @@ def install_contract_fixture(data):
     # Append to the existing top-level services mapping, not another services key.
     original += '\n    App\\Ci\\BindingProbe:\n        public: true\n    App\\Ci\\LoopbackTransport:\n        public: true\n    App\\Ci\\ContractTransport:\n        alias: App\\Ci\\LoopbackTransport\n        public: true\n'
     config.write_text(original)
-    execute(data, 'env', 'APP_ENV=dev', 'APP_DEBUG=1', 'php', 'bin/console', 'cache:clear', '--no-interaction')
 
 
 @contextmanager
@@ -98,8 +97,11 @@ def workspace():
     with termination_handler():
         primary = None
         try:
-            start(data, build=False)
+            # Bootstrap and the first HTTP readiness request must see the final
+            # fixture. Mutating routes after PHP starts can leave its live
+            # router/container using the preceding application snapshot.
             install_contract_fixture(data)
+            start(data, build=False)
             yield data
         except BaseException as exc:
             primary = exc
