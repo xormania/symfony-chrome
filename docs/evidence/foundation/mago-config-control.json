@@ -1,0 +1,15 @@
+{
+  "tool": "Mago1.58.2 release baseline",
+  "original_config_exit": 2,
+  "corrected_perimeter_exit": 0,
+  "runtime_package_dependency_fault_exit": 1,
+  "fault": "Inject runtime bundle reference to WebProfilerBundle via native --substitute, without changing original source",
+  "command": [
+    "mago-baseline",
+    "guard",
+    "--perimeter",
+    "--substitute",
+    "/workspace/scratch/7276bb7a269f/foundation-work/workspaces/mago-qualification/fixtures/app/vendor/xormania/chrome-bundle/src/ChromeBundle.php=/workspace/scratch/7276bb7a269f/foundation-work/artifacts/mago-qualification-fixed/ChromeBundle.php"
+  ],
+  "primary_source": "https://github.com/carthage-software/mago/blob/46df50c96d93d0ac3655c116c375574277cf0b30/docs/content/en/tools/guard/configuration-reference.md"
+}

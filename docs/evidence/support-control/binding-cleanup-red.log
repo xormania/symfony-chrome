@@ -1,0 +1,32 @@
+test_dockerfile_parent_must_match_the_selected_support_resource (test_support_contract.SupportSelectionContract.test_dockerfile_parent_must_match_the_selected_support_resource) ... FAIL
+test_failed_fetch_does_not_publish_a_partial_cached_checkout (test_support_contract.SupportSelectionContract.test_failed_fetch_does_not_publish_a_partial_cached_checkout) ... ok
+test_healthy_selection_preserves_actual_tagged_digest_reference (test_support_contract.SupportSelectionContract.test_healthy_selection_preserves_actual_tagged_digest_reference) ... ok
+test_modified_checker_is_rejected_before_execution (test_support_contract.SupportSelectionContract.test_modified_checker_is_rejected_before_execution) ... ok
+test_mutable_source_ref_and_unpinned_parent_are_rejected (test_support_contract.SupportSelectionContract.test_mutable_source_ref_and_unpinned_parent_are_rejected) ... ok
+test_successful_command_does_not_leave_background_children (test_support_contract.SupportSelectionContract.test_successful_command_does_not_leave_background_children) ... FAIL
+test_unrelated_locked_repository_cannot_satisfy_selected_parent (test_support_contract.SupportSelectionContract.test_unrelated_locked_repository_cannot_satisfy_selected_parent) ... ok
+
+======================================================================
+FAIL: test_dockerfile_parent_must_match_the_selected_support_resource (test_support_contract.SupportSelectionContract.test_dockerfile_parent_must_match_the_selected_support_resource)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpnb22j1wt/tests/fast/test_support_contract.py", line 60, in test_dockerfile_parent_must_match_the_selected_support_resource
+    with self.assertRaisesRegex(ValueError, 'Dockerfile FROM'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_successful_command_does_not_leave_background_children (test_support_contract.SupportSelectionContract.test_successful_command_does_not_leave_background_children)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpnb22j1wt/tests/fast/test_support_contract.py", line 109, in test_successful_command_does_not_leave_background_children
+    self.assertEqual(status.read_text().split()[2], 'Z', 'Background child remains running')
+AssertionError: 'S' != 'Z'
+- S
++ Z
+ : Background child remains running
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.060s
+
+FAILED (failures=2)

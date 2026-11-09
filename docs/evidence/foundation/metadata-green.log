@@ -1,0 +1,7 @@
+test_archive_dependency_change_is_rejected_with_old_consumer_metadata (test_package_artifact.ArtifactMetadataTest.test_archive_dependency_change_is_rejected_with_old_consumer_metadata) ... ok
+test_current_archive_matches_consumer_definition_and_genuine_lock (test_package_artifact.ArtifactMetadataTest.test_current_archive_matches_consumer_definition_and_genuine_lock) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.006s
+
+OK

@@ -1,0 +1,18 @@
+{
+  "kind": "controlled-fault-and-healthy-control",
+  "fault": "Remove archive/repository/lock metadata binding while retaining the same independent test cases",
+  "healthy_exit": 0,
+  "fault_exit": 1,
+  "expected_failure": "RuntimeError not raised for changed archive dependency with stale repository metadata",
+  "healthy_source_sha256": "5e283aeee3f7a7813b1e31bc23af14f490080bbff60133403306341e01b18473",
+  "fault_source_sha256": "a2c3755b40353f241b2c778bf9834abbcd99f4dd1f909644512ab35b98fe8f78",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/fast",
+    "-v"
+  ]
+}

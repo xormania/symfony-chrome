@@ -1,0 +1,10 @@
+# Foundation verification
+
+- `composer-range.json` records the same real Composer strict-validation command failing for the original `@dev` companion constraint and passing for the bounded development line. The original and corrected outputs are retained.
+- `metadata-control.json` records two independent archive metadata tests passing, then the same tests failing after archive/repository/lock binding is deliberately removed in a disposable copy. A changed archive dependency must not be accepted with old repository or lock metadata. This is a new-harness fault control, not a claim that the function existed in the parent commit.
+- Fixture locks were generated with Composer 2.10.3 on PHP 8.4.24 using `python3 tools/testing/package.py --bootstrap-locks --evidence artifacts/bootstrap-platform`. They target the selected image platform PHP 8.4.26. No platform requirement was ignored.
+- Native PHPUnit exercised a compiled test kernel and a real Symfony request: one test, five assertions. Native independent consumers also passed: production kernel 12 assertions, development kernel 5 assertions, plus actual HTTP responses from separate PHP server processes. Full Docker/image/browser acceptance runs on GitHub; writing those checks is not evidence that they passed.
+
+Routine install logs, generated fixture snapshots, distribution ZIPs, and JUnit are retained per run under `artifacts/`, not committed here.
+
+The original Mago configuration also failed parsing in every native command because `must-not-use` is not a structural-rule field in Mago 1.58.2. The corrected configuration uses documented perimeter restrictions. `mago-config-control.json` records original parse failure (exit 2), corrected guard success (exit 0), and a deliberately forbidden WebProfiler dependency in the real symlinked runtime bundle detected with native `--substitute` (exit 1). Native analyze, lint, perimeter guard, and format checks all passed afterward. The environment suite repeats that dependency fault to prove actual package source coverage.

@@ -1,0 +1,40 @@
+{
+  "tests_sha256": "b82241a61759d40a00076c9eba0036a8d4101cbb16d46a6a77460c40427c93aa",
+  "runner_sha256": "8b98e65d76fc033c557ea736e127730586a4deb2a9a015ae0758382c1f61cef9",
+  "variants": [
+    {
+      "name": "candidate",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-p",
+        "test_acceptance.py",
+        "-v"
+      ],
+      "native_exit": 0,
+      "expected_exit": 0,
+      "acceptance_sha256": "d8df9450355c0dfbccfd902ac7d2e2c5ca89d513a001247ba4581e2db1fd01be"
+    },
+    {
+      "name": "verdict-bypass",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-p",
+        "test_acceptance.py",
+        "-v"
+      ],
+      "native_exit": 1,
+      "expected_exit": 1,
+      "acceptance_sha256": "a6413eb1f5e70ea6314bf959adc0df4ded3c096256838c957f2c3bc80c2a6547"
+    }
+  ]
+}

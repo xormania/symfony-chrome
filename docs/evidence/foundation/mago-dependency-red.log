@@ -1,0 +1,14 @@
+error[disallowed-parameter-type]: Illegal dependency on `Symfony\Bundle\WebProfilerBundle\WebProfilerBundle`
+   ┌─ /workspace/scratch/7276bb7a269f/foundation-work/artifacts/mago-qualification-fixed/ChromeBundle.php:14:31
+   │
+14 │     public function forbidden(\Symfony\Bundle\WebProfilerBundle\WebProfilerBundle $profiler): void {}
+   │                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This parameter type-hint is not allowed by the architectural rules
+   │
+   = Breach occurred in namespace `Xormania\ChromeBundle`.
+   = Dependency forbidden by an architectural restriction
+   = The dependency matches the restricted selector `Symfony\Bundle\WebProfilerBundle\**` and cannot be used from this namespace.
+   = Development diagnostics belong to chrome-devtools-bundle; the runtime bundle installs without them.
+   = Help: Update your guard configuration to allow this dependency or refactor the code to remove it.
+
+error: found 1 issues: 1 error(s)
+

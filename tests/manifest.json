@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "profiles": {
+    "required": [
+      "fast",
+      "package",
+      "support",
+      "environment"
+    ]
+  },
+  "suites": {
+    "fast": {
+      "script": "tools/testing/fast.py",
+      "checks": [
+        "fast.contracts"
+      ],
+      "timeout": 120
+    },
+    "package": {
+      "script": "tools/testing/package.py",
+      "checks": [
+        "package.archives",
+        "package.kernel",
+        "consumer.prod",
+        "consumer.dev"
+      ],
+      "timeout": 900
+    },
+    "environment": {
+      "script": "tools/testing/environment.py",
+      "checks": [
+        "environment.identity",
+        "environment.fixture",
+        "environment.platform",
+        "environment.mago"
+      ],
+      "timeout": 1200
+    },
+    "support": {
+      "script": "tools/testing/support.py",
+      "checks": [
+        "support.checker-source",
+        "support.current-policy-and-actual-parent"
+      ],
+      "timeout": 900
+    }
+  }
+}

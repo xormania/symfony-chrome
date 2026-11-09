@@ -1,0 +1,13 @@
+test_doctor_healthy_platform_control (test_dev_contract.LauncherContract.test_doctor_healthy_platform_control) ... ok
+test_doctor_preserves_platform_check_failure (test_dev_contract.LauncherContract.test_doctor_preserves_platform_check_failure) ... ok
+test_existing_run_accepts_its_recorded_environment (test_dev_contract.LauncherContract.test_existing_run_accepts_its_recorded_environment) ... ok
+test_existing_run_never_silently_uses_another_environment (test_dev_contract.LauncherContract.test_existing_run_never_silently_uses_another_environment) ... ok
+test_foreign_workspace_marker_is_rejected_before_docker (test_dev_contract.LauncherContract.test_foreign_workspace_marker_is_rejected_before_docker) ... ok
+test_image_override_mismatch_never_starts_a_workload (test_dev_contract.LauncherContract.test_image_override_mismatch_never_starts_a_workload) ... ok
+test_purge_removes_only_its_workspace_and_keeps_evidence (test_dev_contract.LauncherContract.test_purge_removes_only_its_workspace_and_keeps_evidence) ... ok
+test_unsafe_run_ids_do_not_create_or_start_workspaces (test_dev_contract.LauncherContract.test_unsafe_run_ids_do_not_create_or_start_workspaces) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.806s
+
+OK

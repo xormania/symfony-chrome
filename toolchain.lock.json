@@ -2,13 +2,13 @@
   "schema": 1,
   "pinned_at": "2026-11-09T01:15:00Z",
   "images": {
-    "base": "ghcr.io/xormania/php-browser:8.4-trixie-v1.2.4@sha256:628021c4e31dbd226183aefb2186b363849475bcba8a5e176e684e7491054ee7",
-    "base_record": "https://github.com/xormania/xorder/blob/b8efe93/release-records/php-browser/8.4-trixie/1.2.4.json",
+    "base": "ghcr.io/xormania/php-browser:8.4-trixie-v1.2.3@sha256:ad37c8138c4aacdbba8c64f0436669104e0e57dd206aa6f5099c512440f65a3e",
+    "base_record": "https://github.com/xormania/xorder/blob/b8efe93f5b57587c1c48f4a579b9d38de37ff871/release-records/php-browser/8.4-trixie/1.2.3.json",
     "base_provides": {
-      "php": "8.4.27",
+      "php": "8.4.26",
       "composer": "2.10.3",
       "symfony_cli": "5.22.2",
-      "chromium": "156.0.8078.73",
+      "chromium": "155.0.8059.79",
       "xdebug": "3.5.3",
       "debian": "13.7 trixie"
     },
@@ -33,11 +33,12 @@
     "reference_consumer": "xormania/uxor demo (PHP >=8.4, Symfony 8.1.*)"
   },
   "notes": [
-    "Base image and Node digest taken from the xorder php-browser 8.4-trixie v1.2.4 release record on 2026-11-09.",
+    "Base image is the accepted xorder php-browser 8.4-trixie v1.2.3 resource. The separately pinned Node overlay remains the original 1.2.4-record selection.",
     "Chrome for Testing is added because chrome-devtools-mcp officially supports Google Chrome and Chrome for Testing only; Debian Chromium from the base remains for Panther.",
     "Chrome 157 satisfies chrome-devtools-mcp autoConnect (144+) and the WebMCP tool category (150+ with --enable-features=WebMCP).",
     "The CfT index publishes no sha256; docker/identity.py records the installed binary hash.",
-    "xorder release groups: adopt the downstream support check before 2026-11-11 08:00 UTC if this base stays in use."
+    "xorder release groups: adopt the downstream support check before 2026-11-11 08:00 UTC if this base stays in use.",
+    "CI adopts accepted weekly-2026-11-02 php-browser 1.2.3: the original 1.2.4 digest was not in an accepted release group at qualification. Owned Chrome for Testing remains separately pinned."
   ],
   "mago": {
     "version": "1.58.2",
@@ -83,5 +84,9 @@
     ],
     "context": "inspection-dev",
     "uxor_declares": "^0.14"
+  },
+  "xorder_support": {
+    "source_rev": "b8efe93f5b57587c1c48f4a579b9d38de37ff871",
+    "lock": "xorder-support.lock.json"
   }
 }

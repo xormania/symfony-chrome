@@ -1,0 +1,5 @@
+framework:
+    secret: 'symfony-chrome-disposable-consumer-only'
+    http_method_override: false
+    router:
+        utf8: true

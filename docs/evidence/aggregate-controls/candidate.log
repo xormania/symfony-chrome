@@ -1,0 +1,20 @@
+test_additional_required_job_is_valid_only_when_declared_and_complete (test_acceptance.AcceptanceContract.test_additional_required_job_is_valid_only_when_declared_and_complete) ... ok
+test_all_current_required_suites_across_separate_attempts_pass (test_acceptance.AcceptanceContract.test_all_current_required_suites_across_separate_attempts_pass) ... ok
+test_artifact_name_is_bound_to_current_workflow (test_acceptance.AcceptanceContract.test_artifact_name_is_bound_to_current_workflow) ... ok
+test_corrupted_or_deleted_artifact_inventory_cannot_pass (test_acceptance.AcceptanceContract.test_corrupted_or_deleted_artifact_inventory_cannot_pass) ... ok
+test_current_manifest_check_inventory_is_independent_of_downloaded_plan (test_acceptance.AcceptanceContract.test_current_manifest_check_inventory_is_independent_of_downloaded_plan) ... ok
+test_duplicate_suite_in_another_valid_attempt_fails (test_acceptance.AcceptanceContract.test_duplicate_suite_in_another_valid_attempt_fails) ... ok
+test_exact_required_jobs_must_succeed (test_acceptance.AcceptanceContract.test_exact_required_jobs_must_succeed) ... ok
+test_matching_foreign_plan_report_still_fail_actual_directory_identity (test_acceptance.AcceptanceContract.test_matching_foreign_plan_report_still_fail_actual_directory_identity) ... ok
+test_missing_native_report_cannot_be_hidden_by_success (test_acceptance.AcceptanceContract.test_missing_native_report_cannot_be_hidden_by_success) ... ok
+test_native_failure_and_incomplete_execution_cannot_pass (test_acceptance.AcceptanceContract.test_native_failure_and_incomplete_execution_cannot_pass) ... ok
+test_public_cli_uses_real_needs_and_job_suites_environment (test_acceptance.AcceptanceContract.test_public_cli_uses_real_needs_and_job_suites_environment) ... ok
+test_same_count_suite_substitution_and_duplicate_attempts_fail (test_acceptance.AcceptanceContract.test_same_count_suite_substitution_and_duplicate_attempts_fail) ... ok
+test_successful_conclusions_without_execution_evidence_fail (test_acceptance.AcceptanceContract.test_successful_conclusions_without_execution_evidence_fail) ... ok
+test_workflow_mapping_cannot_omit_a_new_required_suite (test_acceptance.AcceptanceContract.test_workflow_mapping_cannot_omit_a_new_required_suite) ... ok
+test_wrong_source_and_stale_workflow_identity_fail (test_acceptance.AcceptanceContract.test_wrong_source_and_stale_workflow_identity_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.139s
+
+OK

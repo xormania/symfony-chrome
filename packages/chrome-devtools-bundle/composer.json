@@ -7,7 +7,7 @@
         "php": ">=8.4",
         "symfony/framework-bundle": "^7.3|^8.0",
         "symfony/http-kernel": "^7.3|^8.0",
-        "xormania/chrome-bundle": "@dev"
+        "xormania/chrome-bundle": "^0.1@dev"
     },
     "suggest": {
         "symfony/web-profiler-bundle": "Exact request-to-profile correlation by X-Debug-Token",

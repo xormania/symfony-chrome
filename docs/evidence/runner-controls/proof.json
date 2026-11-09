@@ -1,0 +1,57 @@
+{
+  "candidate_revision": "f4d8108c6e7c5a5394d0228cd37e7fb602e50003",
+  "candidate_working_tree": true,
+  "runner_sha256": "8b98e65d76fc033c557ea736e127730586a4deb2a9a015ae0758382c1f61cef9",
+  "test_hashes": {
+    "test_runner_cli.py": "2a5ff9b0b4d14eb92a4f9c05bcc247497d29ae6bc0616d5388daf48e014ff3c5",
+    "test_runner_contract.py": "0615fc27c17502ad6ce7333341ac7c616855233171555c969f2c6a964363a991",
+    "test_dev_contract.py": "8244fa212e8baec69f44294d04273d676e658cd9f7475791161aadc8e0efb95f"
+  },
+  "variants": [
+    {
+      "name": "candidate",
+      "native_exit": 0,
+      "runner_sha256": "8b98e65d76fc033c557ea736e127730586a4deb2a9a015ae0758382c1f61cef9",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-v"
+      ],
+      "expected_exit": 0
+    },
+    {
+      "name": "validator-bypass",
+      "native_exit": 1,
+      "runner_sha256": "b2f57d705841e4bbe2f7c1bb57fa63f8522f21e65a600cbf48fbfc9c9474da2a",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-v"
+      ],
+      "expected_exit": 1
+    },
+    {
+      "name": "artifact-bypass",
+      "native_exit": 1,
+      "runner_sha256": "06c84709387efb8c6487daa264dbc196133633b0d107052f316d58c10f42612a",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-v"
+      ],
+      "expected_exit": 1
+    }
+  ]
+}

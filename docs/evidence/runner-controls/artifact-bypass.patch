@@ -1,0 +1,10 @@
+--- a/tools/testing/runner.py
++++ b/tools/testing/runner.py
+@@ -326,3 +326,7 @@
+ 
+ if __name__ == '__main__':
+     sys.exit(main())
++
++# Deliberate failure control in a disposable source copy.
++def verify_artifacts(directory, report):
++    return []

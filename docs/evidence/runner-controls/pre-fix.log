@@ -1,0 +1,51 @@
+test_parent_exit_does_not_waive_descendant_output_deadline (test_runner_contract.CaptureContract.test_parent_exit_does_not_waive_descendant_output_deadline) ... FAIL
+test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) ... 
+  test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='timed_out') ... FAIL
+  test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='truncated') ... FAIL
+test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks (test_runner_cli.RunnerCliContract.test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks) ... FAIL
+
+======================================================================
+FAIL: test_parent_exit_does_not_waive_descendant_output_deadline (test_runner_contract.CaptureContract.test_parent_exit_does_not_waive_descendant_output_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 134, in test_parent_exit_does_not_waive_descendant_output_deadline
+    self.assertTrue(timed_out, f'parent exit {native_exit} was accepted while stdout remained open for {elapsed:.2f}s')
+AssertionError: False is not true : parent exit 0 was accepted while stdout remained open for 8.03s
+
+======================================================================
+FAIL: test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='timed_out')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_timeout_or_truncation_cannot_be_hidden_by_native_zero
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_timeout_or_truncation_cannot_be_hidden_by_native_zero
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks (test_runner_cli.RunnerCliContract.test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_cli.py", line 119, in test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks
+    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+AssertionError: 1 != 0 : {
+  "run_id": "inventory-deleted",
+  "attempt_id": "fd0d0830d24c4d9a9b9f47869cf9be97",
+  "errors": []
+}
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 8.249s
+
+FAILED (failures=4)
