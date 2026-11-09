@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tests/integration'))
 from contracts import Checks, correlation, workspace
 from browser_report import verify as verify_browser_report
+from chrome_oracle import controlled_page_id
 from protocol import StdioClient, text_of
 sys.path.insert(0, str(ROOT / 'bin'))
 from devlib import environment, execute
@@ -41,11 +42,11 @@ def chrome(data, evidence):
         names = {row['name'] for row in listing}
         assert {'list_pages', 'navigate_page', 'take_snapshot'} <= names, 'Missing Chrome MCP tools'
         pages = text_of(client.call('list_pages', {}))
-        assert pages, 'No page listing'
-        text_of(client.call('navigate_page', {'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}))
-        snapshot = text_of(client.call('take_snapshot', {}))
+        page_id = controlled_page_id(pages)
+        text_of(client.call('navigate_page', {'pageId': page_id, 'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}))
+        snapshot = text_of(client.call('take_snapshot', {'pageId': page_id}))
         assert 'Symfony Chrome contract' in snapshot and 'Local action' in snapshot, snapshot
-        failure = client.call('navigate_page', {'type': 'not-a-navigation-mode'})
+        failure = client.call('navigate_page', {'pageId': page_id, 'type': 'not-a-navigation-mode'})
         assert 'error' in failure or failure.get('result', {}).get('isError') is True, 'Invalid invocation was not rejected'
     state = json.loads((Path(evidence) / 'chrome-mcp/transport.json').read_text())
     assert state['closed'] is True
@@ -55,7 +56,7 @@ def chrome(data, evidence):
     after = chrome_processes(data)
     assert after == before, 'Owned Chrome process survived transport cleanup: ' + str(after - before)
     (Path(evidence) / 'owned-processes.json').write_text(json.dumps({'before': sorted(before), 'after': sorted(after)}))
-    (Path(evidence) / 'chrome-identity.json').write_text(json.dumps(identity, indent=2) + '\n')
+    (Path(evidence) / 'chrome-identity.json').write_text(json.dumps({'server': identity, 'initial_page_id': page_id}, indent=2) + '\n')
     return 'Real MCP initialization, discovery, page/navigation/snapshot and invalid-schema response; owned browser process cleanup observed', 7
 
 
@@ -84,9 +85,9 @@ print(json.dumps({'pid':p.pid,'profile':profile}))
                                '--no-usage-statistics', '--no-performance-crux')
         with StdioClient(command, Path(evidence) / 'borrowed-mcp', timeout=90, env={**environment(data), 'CI': '1'}) as client:
             client.initialize()
-            assert text_of(client.call('list_pages', {})), 'Borrowed endpoint has no page'
-            text_of(client.call('navigate_page', {'type':'url','url':'http://127.0.0.1:8000/_ci/browser'}))
-            assert 'Symfony Chrome contract' in text_of(client.call('take_snapshot', {}))
+            page_id = controlled_page_id(text_of(client.call('list_pages', {})))
+            text_of(client.call('navigate_page', {'pageId':page_id,'type':'url','url':'http://127.0.0.1:8000/_ci/browser'}))
+            assert 'Symfony Chrome contract' in text_of(client.call('take_snapshot', {'pageId': page_id}))
         assert endpoint().returncode == 0 and owner['pid'] in chrome_processes(data), 'MCP detach closed the borrowed browser'
         owner['alive_after_detach'] = True
     except BaseException as exc:
@@ -123,6 +124,20 @@ def playwright(data, evidence):
                       check=False, capture_output=True)
     (Path(evidence) / 'npm-install.log').write_bytes(install.stdout + install.stderr)
     assert install.returncode == 0, 'Locked browser test dependency installation failed'
+
+    controls = execute(data, 'node', '--test', '--test-reporter=tap', '/workspace/.ci/browser/tests/browser/expected-errors.test.mjs', check=False, capture_output=True)
+    (Path(evidence) / 'guard-helper-tests.log').write_bytes(controls.stdout + controls.stderr)
+    assert controls.returncode == 0, 'Scoped CSP companion helper controls failed'
+    import re
+    totals = {name: int(match[1]) for name in ('tests', 'pass', 'fail', 'cancelled', 'skipped', 'todo')
+              if (match := re.search(r'^# ' + name + r' ([0-9]+)$', controls.stdout.decode(), re.M))}
+    assert set(totals) == {'tests', 'pass', 'fail', 'cancelled', 'skipped', 'todo'}, 'No complete native guard helper test inventory'
+    assert totals['tests'] > 0 and totals['pass'] == totals['tests'] and all(totals[name] == 0 for name in ('fail', 'cancelled', 'skipped', 'todo')), 'Guard helper tests failed or did not execute'
+    helper_tests = totals['tests']
+    helper_names = re.findall(r'^ok [0-9]+ - (.+)$', controls.stdout.decode(), re.M)
+    assert len(helper_names) == helper_tests and len(set(helper_names)) == helper_tests, 'Guard helper named-test inventory incomplete or duplicated'
+    (Path(evidence) / 'guard-helper-tests.json').write_text(json.dumps({**totals, 'named_tests': helper_names}, indent=2) + '\n')
+
     discovery = execute(data, 'env', 'CONTRACT_URL=http://127.0.0.1:8000', 'npm', '--prefix', '/workspace/.ci/browser', 'run', '--silent', 'test:browser', '--', '--list', '--reporter=json', check=False, capture_output=True)
     assert discovery.returncode == 0, 'Native browser test discovery failed'
     plan = json.loads(discovery.stdout)
@@ -138,7 +153,7 @@ def playwright(data, evidence):
     assert native.returncode == 0, 'Playwright browser guards failed; inspect native report'
     report = json.loads((results / 'results.json').read_text())
     count = verify_browser_report(plan, report)
-    return 'Real Chrome input/client-only action and five independent browser error controls; exact native identities and attempts verified', count
+    return 'Real Chrome input/client-only action and five independent browser error controls; exact native identities/attempts and ' + str(helper_tests) + ' scoped companion controls verified', count + helper_tests
 
 
 def main():

@@ -1,0 +1,42 @@
+{
+  "test_sha256": "fb975fb4c8a47c52e14ca5c413ba5e6cfb7b37a61be55cf5640abbe3e8a41d4a",
+  "native_message_source": "Chrome157 hosted browser fault-control output in pr4-warm-integration.zip/browser/playwright.log; console location URL empty",
+  "variants": [
+    {
+      "name": "candidate",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "expected-errors.test.mjs"
+      ],
+      "native_exit": 0,
+      "expected_exit": 0,
+      "classifier_sha256": "36f20dbe56f18e7acf3e30beae4437612323d15e061b1d0576455dc9a20abb50"
+    },
+    {
+      "name": "missing-independent-event",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "expected-errors.test.mjs"
+      ],
+      "native_exit": 1,
+      "expected_exit": 1,
+      "classifier_sha256": "a8894f8773a0a27e675c1d20a469b1d19f3dcdea84fee8cd10ecd9adbd235909"
+    },
+    {
+      "name": "message-prefix",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "expected-errors.test.mjs"
+      ],
+      "native_exit": 1,
+      "expected_exit": 1,
+      "classifier_sha256": "b1bd52e42578d63e13c64edef89a67a0e3a834c4d3b12e78000ec924fa832b91"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+test_ambiguous_or_foreign_page_lists_do_not_select_a_target (test_chrome_identity.ChromeIdentityContract.test_ambiguous_or_foreign_page_lists_do_not_select_a_target) ... ok
+test_controlled_page_selector_preserves_native_identity (test_chrome_identity.ChromeIdentityContract.test_controlled_page_selector_preserves_native_identity) ... ok
+test_owned_page_operations_use_the_observed_nondefault_identity (test_chrome_identity.ChromeIdentityContract.test_owned_page_operations_use_the_observed_nondefault_identity) ...
+  test_owned_page_operations_use_the_observed_nondefault_identity (test_chrome_identity.ChromeIdentityContract.test_owned_page_operations_use_the_observed_nondefault_identity) (observed_page_id=37) ... FAIL
+  test_owned_page_operations_use_the_observed_nondefault_identity (test_chrome_identity.ChromeIdentityContract.test_owned_page_operations_use_the_observed_nondefault_identity) (observed_page_id=904) ... FAIL
+
+======================================================================
+FAIL: test_owned_page_operations_use_the_observed_nondefault_identity (test_chrome_identity.ChromeIdentityContract.test_owned_page_operations_use_the_observed_nondefault_identity) (observed_page_id=37)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/integration/test_chrome_identity.py", line 61, in test_owned_page_operations_use_the_observed_nondefault_identity
+    browser.chrome({'run_id': 'controlled'}, temporary)
+  File "/tmp/tmpyg57460p/tools/testing/browser.py", line 46, in chrome
+    text_of(client.call('navigate_page', {'pageId': page_id, 'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/integration/test_chrome_identity.py", line 51, in call
+    assert arguments.get('pageId') == observed_id, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: navigate_page must receive observed pageId 37, got {'pageId': 1, 'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}
+
+======================================================================
+FAIL: test_owned_page_operations_use_the_observed_nondefault_identity (test_chrome_identity.ChromeIdentityContract.test_owned_page_operations_use_the_observed_nondefault_identity) (observed_page_id=904)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/integration/test_chrome_identity.py", line 61, in test_owned_page_operations_use_the_observed_nondefault_identity
+    browser.chrome({'run_id': 'controlled'}, temporary)
+  File "/tmp/tmpyg57460p/tools/testing/browser.py", line 46, in chrome
+    text_of(client.call('navigate_page', {'pageId': page_id, 'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/integration/test_chrome_identity.py", line 51, in call
+    assert arguments.get('pageId') == observed_id, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: navigate_page must receive observed pageId 904, got {'pageId': 1, 'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+FAILED (failures=2)

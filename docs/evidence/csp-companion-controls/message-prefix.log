@@ -1,0 +1,54 @@
+TAP version 13
+# Subtest: recorded CSP companion permits empty native console location only with its enforced event
+ok 1 - recorded CSP companion permits empty native console location only with its enforced event
+  ---
+  duration_ms: 1.072733
+  type: 'test'
+  ...
+# Subtest: lookalike console messages and another script hash remain unexpected
+not ok 2 - lookalike console messages and another script hash remain unexpected
+  ---
+  duration_ms: 1.64863
+  type: 'test'
+  location: '/tmp/tmpswqbdh5k/expected-errors.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Executing inline script violates the following Content Security Policy directive 'script-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-nJkmG+zggsUzCIx8lteOr3Z7UIAGgT5GCc9Jaff6WyE='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked. unrelated
+
+    true !== false
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/tmpswqbdh5k/expected-errors.test.mjs:25:16)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: an exact CSP message at another console location remains unexpected
+ok 3 - an exact CSP message at another console location remains unexpected
+  ---
+  duration_ms: 0.182722
+  type: 'test'
+  ...
+# Subtest: independent violation evidence must match document directive effect and enforcement
+ok 4 - independent violation evidence must match document directive effect and enforcement
+  ---
+  duration_ms: 0.250583
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 98.272068

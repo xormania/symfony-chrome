@@ -1,0 +1,8 @@
+test_ambiguous_or_foreign_page_lists_do_not_select_a_target (test_chrome_identity.ChromeIdentityContract.test_ambiguous_or_foreign_page_lists_do_not_select_a_target) ... ok
+test_controlled_page_selector_preserves_native_identity (test_chrome_identity.ChromeIdentityContract.test_controlled_page_selector_preserves_native_identity) ... ok
+test_owned_page_operations_use_the_observed_nondefault_identity (test_chrome_identity.ChromeIdentityContract.test_owned_page_operations_use_the_observed_nondefault_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK

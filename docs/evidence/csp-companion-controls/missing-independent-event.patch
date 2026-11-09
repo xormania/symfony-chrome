@@ -1,0 +1,13 @@
+--- a/tests/browser/expected-errors.mjs
++++ b/tests/browser/expected-errors.mjs
+@@ -7,9 +7,5 @@
+     return issue.kind === 'console'
+         && issue.message === expected
+         && (issue.url === '' || issue.url === documentURL)
+-        && violations.some((row) => row.kind === 'csp'
+-            && row.document === documentURL
+-            && row.message === 'script-src-elem'
+-            && row.blocked === 'inline'
+-            && row.disposition === 'enforce');
++;
+ }

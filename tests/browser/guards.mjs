@@ -18,7 +18,8 @@ export class BrowserGuard {
         });
         await this.page.exposeBinding('__contractCsp', (_, value) => this.issues.push({ kind: 'csp', ...value }));
         await this.page.addInitScript(() => document.addEventListener('securitypolicyviolation', (event) => {
-            window.__contractCsp({ message: event.effectiveDirective, blocked: event.blockedURI });
+            window.__contractCsp({ message: event.effectiveDirective, blocked: event.blockedURI,
+                document: event.documentURI, source: event.sourceFile, policy: event.originalPolicy, disposition: event.disposition });
         }, true));
     }
 
