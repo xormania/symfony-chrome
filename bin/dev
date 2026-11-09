@@ -12,7 +12,11 @@ MCP_VERSION = json.loads((ROOT / 'toolchain.lock.json').read_text())['mcp']['chr
 
 
 def cmd_up(args):
-    data = prepare(args.run, port=8000 if args.run == 'dev' else 0, app_env=args.env)
+    private = 'rw' if args.private_rw else 'ro' if args.private else None
+    data = prepare(args.run, port=8000 if args.run == 'dev' else 0, app_env=args.env, private=private)
+    if private and data.get('private') != private:
+        print(f"error: run {data['run_id']} was created with private={data.get('private')}; create a new run to change it", file=sys.stderr)
+        return 1
     start(data, build=not args.no_build)
     print(f"Fixture app: http://localhost:{host_port(data)}/_dev/ready  (run {data['run_id']})")
     return 0
@@ -58,8 +62,7 @@ def cmd_doctor(args):
     require_running(data)
     execute(data, 'cat', '/opt/dev/image-identity.json')
     execute(data, 'composer', 'check-platform-reqs', '--no-interaction', check=False)
-    private = (ROOT / 'private').is_dir()
-    print(f"private/ mounted at /private: {'yes' if private else 'no'}")
+    print(f"private/ mount for this run: {data.get('private') or 'none'}")
     print(f"host port: {host_port(data)}")
     return 0
 
@@ -90,6 +93,8 @@ def main(argv=None):
     p.add_argument('--run', default='dev')
     p.add_argument('--no-build', action='store_true')
     p.add_argument('--env', default='dev', choices=['dev', 'prod'], help='APP_ENV for the fixture app')
+    p.add_argument('--private', action='store_true', help='Mount ./private read-only at /private (recorded for this run)')
+    p.add_argument('--private-rw', action='store_true', help='Mount ./private read-write at /private (recorded for this run)')
     p.set_defaults(func=cmd_up)
 
     p = sub.add_parser('down', help='Stop the workspace; --purge also deletes workspaces/<run>')

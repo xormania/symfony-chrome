@@ -45,7 +45,7 @@ def load(run_id='dev'):
     return data
 
 
-def prepare(run_id, port=0, app_env='dev'):
+def prepare(run_id, port=0, app_env='dev', private=None):
     validate_id(run_id)
     workspace = ROOT / 'workspaces' / run_id
     if workspace.exists():
@@ -60,21 +60,25 @@ def prepare(run_id, port=0, app_env='dev'):
     data = {'schema': 1, 'run_id': run_id, 'repository': str(ROOT),
             'project': f'symfony-chrome-{digest}-{run_id}', 'app': str(workspace / 'app'),
             'state': str(workspace / 'state'), 'evidence': str(ROOT / 'artifacts' / run_id),
-            'port': port, 'app_env': app_env,
+            'port': port, 'app_env': app_env, 'private': private,
             'image': os.environ.get('DEV_IMAGE') or DEFAULT_IMAGE}
     (workspace / 'run.json').write_text(json.dumps(data, indent=2) + '\n')
     return data
 
 
-def compose_files():
+def compose_files(data, *, with_private=True):
     files = ['-f', str(ROOT / 'compose.yaml')]
-    if (ROOT / 'private').is_dir():
-        files += ['-f', str(ROOT / 'compose.private.yaml')]
+    mode = data.get('private') if with_private else None
+    if mode:
+        if not (ROOT / 'private').is_dir():
+            raise RuntimeError('Run was created with --private but ./private does not exist')
+        files += ['-f', str(ROOT / ('compose.private-rw.yaml' if mode == 'rw' else 'compose.private.yaml'))]
     return files
 
 
-def compose(data, *args):
-    return [docker(), 'compose', '--project-directory', str(ROOT), *compose_files(), '-p', data['project'], *args]
+def compose(data, *args, with_private=True):
+    return [docker(), 'compose', '--project-directory', str(ROOT), *compose_files(data, with_private=with_private),
+            '-p', data['project'], *args]
 
 
 def environment(data):
@@ -111,9 +115,12 @@ def start(data, build=False):
     evidence = Path(data['evidence'])
     if build:
         run(compose(data, 'build'), env=env, log=evidence / 'build.log')
+    # Dependencies and the Flex-generated skeleton (including public/) must exist before PHP's
+    # built-in server can start. Bootstrap in a one-off container that never sees ./private.
+    run(compose(data, 'run', '--rm', '--no-deps', '-T', '--user', f'{os.getuid()}:{os.getgid()}',
+                'php', '/opt/dev/docker/setup', with_private=False), env=env, log=evidence / 'setup.log')
     run(compose(data, 'up', '-d', '--no-build'), env=env)
     execute(data, 'cat', '/opt/dev/image-identity.json', log=evidence / 'image-identity.json')
-    execute(data, '/opt/dev/docker/setup', log=evidence / 'setup.log')
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline:
         probe = execute(data, 'curl', '-fsS', '-o', '/dev/null', 'http://127.0.0.1:8000/_dev/ready',

@@ -12,7 +12,7 @@ Created 2026-11-09. Adapted from the launcher, workspace, and evidence conventio
 | `workspaces/<run>/app/` disposable copy of `fixtures/app/` | `/workspace`, served by PHP's built-in server on port 8000 |
 | `workspaces/<run>/state/` | `/home/dev`: Composer and npm caches, `$HOME` |
 | `artifacts/<run>/` | `/evidence`: build and setup logs, image identity, later run records |
-| `private/` if present, gitignored | `/private`, read-write, only when the directory exists |
+| `private/` gitignored | `/private`, only for runs created with `up --private` (read-only) or `up --private-rw` |
 
 Pins are in `toolchain.lock.json`. The image records its own identity at build time; `bin/dev doctor` prints it.
 The first build compiles the patched Mago in Rust: allow several minutes and several GB of memory and disk.
@@ -42,8 +42,9 @@ launchers use POSIX user and group IDs so files in `workspaces/` and `packages/`
 ./bin/dev doctor
 ```
 
-The first `up` builds the image, copies `fixtures/app/` into `workspaces/dev/app/`, resolves Composer
-dependencies, and runs Symfony Flex recipes because the fixture has no lock yet. When it is ready, copy the
+The first `up` builds the image, copies `fixtures/app/` into `workspaces/dev/app/`, then bootstraps the copy in a
+one-off container: Composer resolves dependencies and Symfony Flex generates the skeleton, including `public/`,
+because the fixture has no lock yet. Only then does the service start PHP's built-in server. When it is ready, copy the
 generated skeleton and `composer.lock` back into `fixtures/app/` and commit them. Later workspaces install
 from that lock.
 
@@ -159,9 +160,12 @@ its usage statistics and CrUX lookups.
 
 ## Private companion repository
 
-Clone your private repository to `private/` at the checkout root. It is gitignored and, when present, mounted at
-`/private` in the container. Nothing in this repository reads from it; wiring (Composer path repository, npm
-workspace, or otherwise) is decided in that repository.
+Clone your private repository to `private/` at the checkout root. It is gitignored. It is never mounted unless the
+run was created with `./bin/dev up --private` (read-only at `/private`) or `--private-rw` (read-write, for a
+trusted editing session). The choice is recorded in the run's `run.json`; create a new run to change it. The
+bootstrap container that runs Composer and Flex recipes never sees `private/`, so a compromised dependency
+resolved on first install cannot reach it. Nothing in this repository reads from `private/`; wiring (Composer path
+repository, npm workspace, or otherwise) is decided in that repository.
 
 ## Proxy certificates
 
