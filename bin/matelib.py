@@ -15,7 +15,7 @@ import time
 import uuid
 from pathlib import Path
 
-from devlib import ROOT, compose, container_id, environment, execute, load, require_running, sha, write_json
+from devlib import ROOT, container_id, environment, exec_command, execute, load, require_running, sha, write_json
 
 CONTEXT = 'inspection-dev'
 RUNTIME_TOOLS = {
@@ -35,6 +35,9 @@ RUNTIME_MAX_FILES = 4096
 RUNTIME_MAX_BYTES = 128 * 1024 * 1024
 SOURCE_DIRS = ('src', 'tests', 'config', 'mate', '.mago')
 SOURCE_FILES = ('composer.json', 'composer.lock', 'mago.toml', '.env')
+PACKAGES = ('chrome-bundle', 'chrome-devtools-bundle')
+PACKAGE_DIRS = ('src', 'tests', 'config')
+PACKAGE_FILES = ('composer.json', 'mago.toml')
 
 
 def selected(run_id):
@@ -47,17 +50,23 @@ def invocation(data):
     return shlex.join([str(ROOT / 'bin/mate'), '--run', data['run_id'], '--'])
 
 
-def application_state(app):
-    """Hash of everything a compiled read depends on: manifests, lock, source, config, Mago and Mate configuration."""
-    app = Path(app)
-    files = {}
-    for name in SOURCE_FILES:
-        if (app / name).is_file():
-            files[name] = sha(app / name)
-    for base in SOURCE_DIRS:
-        for path in sorted((app / base).rglob('*')):
+def _tree(root, prefix, names, dirs, files):
+    for name in names:
+        if (root / name).is_file():
+            files[prefix + name] = sha(root / name)
+    for base in dirs:
+        for path in sorted((root / base).rglob('*')):
             if path.is_file() and not path.is_symlink():
-                files[str(path.relative_to(app))] = sha(path)
+                files[prefix + str(path.relative_to(root))] = sha(path)
+
+
+def application_state(app):
+    """Hash of everything a compiled read depends on: the fixture's manifests, lock, source, config, Mago and Mate
+    configuration, plus the live package trees the fixture consumes through Composer path symlinks."""
+    files = {}
+    _tree(Path(app), '', SOURCE_FILES, SOURCE_DIRS, files)
+    for package in PACKAGES:
+        _tree(ROOT / 'packages' / package, f'packages/{package}/', PACKAGE_FILES, PACKAGE_DIRS, files)
     return files
 
 
@@ -211,8 +220,7 @@ def call(data, argv):
     record = fresh(data) if policy['kind'] == 'compiled' else None
     directory = Path(data['evidence']) / 'mate/invocations' / uuid.uuid4().hex
     directory.mkdir(parents=True)
-    command = compose(data, 'exec', '-T', '-w', '/workspace', 'php', 'env', 'APP_ENV=dev', 'APP_DEBUG=1',
-                      'php', 'vendor/bin/mate', *argv)
+    command = exec_command(data, 'env', 'APP_ENV=dev', 'APP_DEBUG=1', 'php', 'vendor/bin/mate', *argv)
     started = time.monotonic()
     result = subprocess.run(command, env=environment(data), capture_output=True, timeout=180)
     (directory / 'stdout').write_bytes(result.stdout)

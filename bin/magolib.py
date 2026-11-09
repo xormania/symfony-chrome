@@ -7,11 +7,12 @@ import time
 import uuid
 from pathlib import Path
 
-from devlib import ROOT, compose, environment, execute, load, require_running, sha, write_json
+from devlib import ROOT, environment, exec_command, execute, load, require_running, sha, write_json
 
 MAGO_REV = '46df50c96d93d0ac3655c116c375574277cf0b30'
 WIRING_REV = '28c3f54065b71fe046a7474ced401aeadc941b0f'
 PHP_TARGET = '8.4'
+PACKAGES = ('chrome-bundle', 'chrome-devtools-bundle')
 NATIVE_COMMANDS = ('analyze', 'lint', 'format', 'guard', 'cst', 'config', 'list-files', 'extension', 'fix', 'version', 'help')
 
 
@@ -76,10 +77,22 @@ def validate_write_scope(data, argv):
     app = Path(data['app']).resolve()
     for operand in paths:
         path = Path(operand)
-        candidate = app / path
-        if (path.is_absolute() or '..' in path.parts or path.suffix != '.php' or not candidate.is_file()
-                or not candidate.resolve().is_relative_to(app)):
+        if path.is_absolute() or '..' in path.parts or path.suffix != '.php':
             raise ValueError(message + '; rejected target: ' + operand)
+        candidate, root = host_target(app, path)
+        if not candidate.is_file() or not candidate.resolve().is_relative_to(root):
+            raise ValueError(message + '; rejected target: ' + operand)
+
+
+def host_target(app, path):
+    """Map a workspace-relative operand to the host file it names. The fixture installs the two packages as
+    absolute symlinks to /packages, which only exist in the container; on the host those operands live under
+    this repository's packages/ directory. Anything else must stay beneath the disposable application."""
+    parts = path.parts
+    if len(parts) > 3 and parts[:2] == ('vendor', 'xormania') and parts[2] in PACKAGES:
+        root = (ROOT / 'packages' / parts[2]).resolve()
+        return root / Path(*parts[3:]), root
+    return app / path, app
 
 
 def run_native(data, argv, *, echo=False):
@@ -92,8 +105,8 @@ def run_native(data, argv, *, echo=False):
     identity = tool_identity(data)
     directory = Path(data['evidence']) / 'mago/invocations' / uuid.uuid4().hex
     directory.mkdir(parents=True)
-    command = compose(data, 'exec', '-T', '-w', '/workspace', 'php', 'mago', '--workspace', '/workspace',
-                      '--config', identity['config'], '--php-version', PHP_TARGET, '--colors', 'never', *argv)
+    command = exec_command(data, 'mago', '--workspace', '/workspace', '--config', identity['config'],
+                           '--php-version', PHP_TARGET, '--colors', 'never', *argv)
     started = time.monotonic()
     result = subprocess.run(command, env=environment(data), capture_output=True)
     (directory / 'stdout').write_bytes(result.stdout)
@@ -105,6 +118,22 @@ def run_native(data, argv, *, echo=False):
         sys.stdout.buffer.write(result.stdout)
         sys.stderr.buffer.write(result.stderr)
     return result.returncode
+
+
+def require_json_report(argv):
+    """The Symfony profile reads the wiring attestation from Mago's JSON report, so that format is mandatory.
+    Other formats remain available through the native profile."""
+    for index, arg in enumerate(argv):
+        if arg == '--reporting-format':
+            value = argv[index + 1] if index + 1 < len(argv) else None
+        elif arg.startswith('--reporting-format='):
+            value = arg.split('=', 1)[1]
+        else:
+            continue
+        if value != 'json':
+            raise ValueError('The Symfony profile requires --reporting-format json; use --profile native for other formats')
+        return list(argv)
+    return [*argv, '--reporting-format', 'json']
 
 
 def selected_symbols(symbols):
@@ -138,6 +167,7 @@ def run_enriched(data, argv, *, symbols=(), echo=False, wiring_enabled=True):
     if any(arg.split('=', 1)[0] in ('--workspace', '--config', '--php-version') for arg in argv):
         raise ValueError('Workspace/config/PHP target are selected by the run')
     validate_write_scope(data, argv)
+    argv = require_json_report(argv)
     symbols = selected_symbols(symbols)
     directory = Path(data['evidence']) / 'mago/enriched' / uuid.uuid4().hex
     directory.mkdir(parents=True)
@@ -158,10 +188,10 @@ def run_enriched(data, argv, *, symbols=(), echo=False, wiring_enabled=True):
         row.update(preparation_id=prepared['preparation_id'], application_sha256=prepared['application_sha256'],
                    compiled_metadata=prepared['metadata'], wiring_reference_sha256=prepared['wiring_reference_sha256'], tool=identity)
         observation = '/evidence/' + str((directory / 'graph.json').relative_to(Path(data['evidence'])))
-        command = compose(data, 'exec', '-T', '-w', '/workspace', 'php', 'env',
-                          'DEV_WIRING=' + ('1' if wiring_enabled else '0'), 'DEV_WIRING_SYMBOLS=' + json.dumps(symbols),
-                          'DEV_WIRING_OBSERVATION=' + observation, 'mago', '--workspace', '/workspace',
-                          '--config', identity['config'], '--php-version', PHP_TARGET, '--threads', '1', '--colors', 'never', *argv)
+        command = exec_command(data, 'env', 'DEV_WIRING=' + ('1' if wiring_enabled else '0'),
+                               'DEV_WIRING_SYMBOLS=' + json.dumps(symbols), 'DEV_WIRING_OBSERVATION=' + observation,
+                               'mago', '--workspace', '/workspace', '--config', identity['config'],
+                               '--php-version', PHP_TARGET, '--threads', '1', '--colors', 'never', *argv)
         row['argv'] = command
         process = subprocess.run(command, env=environment(data), capture_output=True)
         stdout, stderr = process.stdout, process.stderr
@@ -171,15 +201,14 @@ def run_enriched(data, argv, *, symbols=(), echo=False, wiring_enabled=True):
             graph = json.loads(path.read_text())
             assert graph['observer'] == 'symfony-chrome/wiring-observer' and graph['wiring_enabled'] is wiring_enabled
             assert set(graph['symbols']) == set(symbols), 'Observer returned different selected symbols'
-            if '--reporting-format=json' in argv or any(a == '--reporting-format' and argv[i + 1:i + 2] == ['json'] for i, a in enumerate(argv)):
-                report = json.loads(stdout)
-                attestations = [i for i in report['issues'] if i['code'] == 'byte-kitsune/symfony-wiring/analysis-attestation']
-                assert len(attestations) == int(wiring_enabled), 'Wiring completion attestation differs'
-                if wiring_enabled:
-                    note = next((n for n in attestations[0]['notes'] if n.startswith('extension-attestation: ')), '')
-                    attestation = json.loads(note.removeprefix('extension-attestation: '))
-                    assert attestation['complete'] is True
-                    row['extension_attestation'] = attestation
+            report = json.loads(stdout)
+            attestations = [i for i in report['issues'] if i['code'] == 'byte-kitsune/symfony-wiring/analysis-attestation']
+            assert len(attestations) == int(wiring_enabled), 'Wiring completion attestation differs'
+            if wiring_enabled:
+                note = next((n for n in attestations[0]['notes'] if n.startswith('extension-attestation: ')), '')
+                attestation = json.loads(note.removeprefix('extension-attestation: '))
+                assert attestation['complete'] is True, 'Wiring extension reported an incomplete service map'
+                row['extension_attestation'] = attestation
             row['status'] = 'findings' if process.returncode else 'clean'
             row['analyzed_files'] = len(graph['files'])
         else:

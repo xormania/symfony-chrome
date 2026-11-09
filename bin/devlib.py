@@ -96,10 +96,14 @@ def environment(data):
             'DEV_UID': str(os.getuid()), 'DEV_GID': str(os.getgid())}
 
 
+def exec_command(data, *args):
+    """compose exec argv for the php service as the host user. exec would otherwise run as root because the
+    image drops privileges in its entrypoint, not with a Dockerfile USER."""
+    return compose(data, 'exec', '-T', '--user', f'{os.getuid()}:{os.getgid()}', '-w', '/workspace', 'php', *args)
+
+
 def execute(data, *args, **kwargs):
-    # exec would otherwise run as root; match the PUID/PGID the entrypoint gave the main process.
-    user = f'{os.getuid()}:{os.getgid()}'
-    return run(compose(data, 'exec', '-T', '--user', user, '-w', '/workspace', 'php', *args), env=environment(data), **kwargs)
+    return run(exec_command(data, *args), env=environment(data), **kwargs)
 
 
 def require_running(data):

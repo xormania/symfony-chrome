@@ -143,7 +143,10 @@ reads the sanitized container reference and contributes compiled autowiring edge
 
 Results land under `artifacts/<run>/mago/enriched/<id>/` as `graph.json`, `invocation.json`, stdout and stderr.
 `status` is `clean`, `findings`, `stale_preparation` or `tool_failure`; a native exit of 0 or 1 without the
-observer's graph or the wiring attestation is a wrapper failure, exit 3, never a clean result. `--extension-off`
+observer's graph or the wiring attestation is a wrapper failure, exit 3, never a clean result. The Symfony profile
+always reports JSON because the attestation is read from the report; other formats are available through the
+native profile. The preparation fingerprint includes the live `packages/*` trees, so editing a package invalidates
+compiled reads until the next `mate-prepare`. `--extension-off`
 is the comparison control on the same preparation. The observer only reads Mago's final graph; it adds no edges.
 This enriches CLI analysis only. LSP enrichment through Serena needs the workspace opt-in described in the
 PoC's `MAGO-LSP-EXTENSIONS.md` and is not configured here.
