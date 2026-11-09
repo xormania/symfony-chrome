@@ -1,5 +1,6 @@
 """Subprocess signals must unwind the public owned-workspace context."""
 import json
+import os
 from pathlib import Path
 import signal
 import subprocess
@@ -8,10 +9,10 @@ import tempfile
 import time
 import unittest
 
-MODULES = Path(__file__).resolve().parent
+MODULES = Path(os.environ.get('TEST_SUBJECT_ROOT', Path(__file__).resolve().parents[2])) / 'tests/integration'
 
 CHILD = r'''
-import json,pathlib,sys,time
+import json,os,pathlib,signal,sys,time
 sys.path.insert(0,sys.argv[1])
 import contracts
 root=pathlib.Path(sys.argv[2]);root.mkdir(exist_ok=True)
@@ -26,12 +27,29 @@ def stop(value,purge=False):
 contracts.stop=stop
 try:
  with contracts.workspace():
-  (root/'ready').write_text('owned context entered')
   checks=contracts.Checks(root/'native-checks')
-  checks.check('controlled-blocking-contract',lambda:(time.sleep(60),1))
+  def blocking_check():
+   if sys.argv[3]=='mkdir-signal':
+    native_mkdir=os.mkdir
+    def mkdir_then_signal(path,*args,**kwargs):
+     result=native_mkdir(path,*args,**kwargs)
+     if pathlib.Path(path).name=='mkdir-probe':
+      os.kill(os.getpid(),signal.SIGTERM)
+     return result
+    os.mkdir=mkdir_then_signal
+    try:
+     (root/'mkdir-probe').mkdir(exist_ok=True)
+    finally:
+     os.mkdir=native_mkdir
+    return 'cancellation was swallowed by filesystem handling',1
+   (root/'ready').write_text('blocking check entered')
+   time.sleep(60)
+   return 'blocking check unexpectedly completed',1
+  checks.check('controlled-blocking-contract',blocking_check)
   (root/'continued').write_text('unexpected next-contract path')
-  time.sleep(60)
-except InterruptedError:
+  if sys.argv[3]!='mkdir-signal': time.sleep(60)
+except contracts.ContractCancelled:
+ (root/'cancelled.json').write_text(json.dumps({'type':'ContractCancelled'}))
  sys.exit(130)
 '''
 
@@ -43,15 +61,17 @@ class TerminationContract(unittest.TestCase):
             process = subprocess.Popen([sys.executable, '-u', '-c', CHILD, str(MODULES), str(root), mode],
                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             try:
-                deadline = time.monotonic() + 5
-                while not (root / 'ready').exists() and process.poll() is None and time.monotonic() < deadline:
-                    time.sleep(0.01)
-                self.assertTrue((root / 'ready').exists(), 'Controlled context did not start')
-                process.send_signal(signal.SIGTERM)
+                if mode != 'mkdir-signal':
+                    deadline = time.monotonic() + 5
+                    while not (root / 'ready').exists() and process.poll() is None and time.monotonic() < deadline:
+                        time.sleep(0.01)
+                    self.assertTrue((root / 'ready').exists(), 'Controlled blocking check did not start')
+                    process.send_signal(signal.SIGTERM)
                 stdout, stderr = process.communicate(timeout=5)
                 self.assertTrue((root / 'stop.json').exists(), 'SIGTERM bypassed owned-workspace stop')
                 self.assertEqual(json.loads((root / 'stop.json').read_text()), {'run_id': 'controlled-signal', 'purge': True})
                 self.assertEqual(process.returncode, 130, stderr.decode())
+                self.assertEqual(json.loads((root / 'cancelled.json').read_text()), {'type': 'ContractCancelled'})
                 self.assertFalse((root / 'continued').exists(), 'Interrupted check continued to the next contract')
                 cleanup = json.loads((root / 'evidence/contract-cleanup.json').read_text())
                 self.assertEqual(cleanup['outcome'], 'error' if mode == 'cleanup-error' else 'passed')
@@ -67,6 +87,9 @@ class TerminationContract(unittest.TestCase):
 
     def test_cleanup_error_preserves_original_interruption(self):
         self.exercise('cleanup-error')
+
+    def test_filesystem_oserror_handling_cannot_swallow_cancellation(self):
+        self.exercise('mkdir-signal')
 
 
 if __name__ == '__main__':

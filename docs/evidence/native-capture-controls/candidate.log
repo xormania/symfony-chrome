@@ -1,0 +1,13 @@
+test_devlib_execute_bounds_the_original_inner_capture_boundary (test_native_capture.NativeCaptureContract.test_devlib_execute_bounds_the_original_inner_capture_boundary) ... ok
+test_devlib_private_capture_does_not_publish_payload_or_command (test_native_capture.NativeCaptureContract.test_devlib_private_capture_does_not_publish_payload_or_command) ... ok
+test_exited_parent_cannot_leave_a_descendant_holding_diagnostic_pipes (test_native_capture.NativeCaptureContract.test_exited_parent_cannot_leave_a_descendant_holding_diagnostic_pipes) ... ok
+test_json_stdout_and_diagnostic_stderr_remain_separate (test_native_capture.NativeCaptureContract.test_json_stdout_and_diagnostic_stderr_remain_separate) ... ok
+test_native_timeout_is_an_error_even_when_exit_checks_are_disabled (test_native_capture.NativeCaptureContract.test_native_timeout_is_an_error_even_when_exit_checks_are_disabled) ... ok
+test_nine_mib_stdout_cannot_pass_through_capture_output (test_native_capture.NativeCaptureContract.test_nine_mib_stdout_cannot_pass_through_capture_output) ... ok
+test_stdout_and_stderr_share_one_byte_budget (test_native_capture.NativeCaptureContract.test_stdout_and_stderr_share_one_byte_budget) ... ok
+test_text_mode_and_nonzero_native_exit_preserve_subprocess_semantics (test_native_capture.NativeCaptureContract.test_text_mode_and_nonzero_native_exit_preserve_subprocess_semantics) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.468s
+
+OK

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "boundary": "Actual native Python subprocesses through shared split-stream capture and devlib.execute; no Docker execution claimed",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/integration",
+    "-p",
+    "test_native_capture.py",
+    "-v"
+  ],
+  "test_sha256": "035b6057ba15a8223bc6d0c73514fb8537a390ec5e599f6fbf432c188d5bdccf",
+  "devlib_sha256": "f31a62944e935717cc170aeac9e0df608e17f219fe30c762d23447ee86fde10e",
+  "configured_limit_bytes": 8388608,
+  "mutation": "Double only the default aggregate budget. Unchanged 9 MiB stdout, 5+5 MiB combined streams and devlib boundary controls must reject that bypass.",
+  "variants": [
+    {
+      "name": "candidate",
+      "native_exit": 0,
+      "expected_exit": 0,
+      "processlib_sha256": "038b311548927df6d972dbdde96ca72f195bd82b2d7eead6738e069110039e41"
+    },
+    {
+      "name": "budget-bypass",
+      "native_exit": 1,
+      "expected_exit": 1,
+      "processlib_sha256": "28adb5798a2b5318aa50594e398fade63fd2bcd22620689fe45f31fd50be86cd"
+    }
+  ]
+}

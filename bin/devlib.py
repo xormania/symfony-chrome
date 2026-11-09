@@ -6,10 +6,12 @@ import re
 import shutil
 import subprocess
 import time
+import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_IMAGE = 'symfony-chrome-dev:local'
+from processlib import run_captured
 FIXTURE_IGNORE = shutil.ignore_patterns('vendor', 'var', 'node_modules', '.env.local', '.phpunit.cache', '.serena')
 
 
@@ -110,6 +112,18 @@ def exec_command(data, *args):
 
 
 def execute(data, *args, **kwargs):
+    if kwargs.get('capture_output'):
+        if kwargs.pop('log', None):
+            raise ValueError('capture_output and streaming log cannot be combined')
+        identity = uuid.uuid4().hex
+        # Generic captured payloads may contain private compiled-container facts.
+        # Keep their streams private; expose only bounded status in public evidence.
+        directory = Path(data['state']) / 'native-captures' / identity
+        directory.mkdir(parents=True, mode=0o700)
+        status = Path(data['evidence']) / 'native-capture-status' / (identity + '.json')
+        return run_captured(exec_command(data, *args), directory, env=environment(data),
+                            metadata_path=status, visibility='private_ephemeral',
+                            check=kwargs.pop('check', True), **kwargs)
     return run(exec_command(data, *args), env=environment(data), **kwargs)
 
 

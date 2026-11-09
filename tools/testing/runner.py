@@ -10,12 +10,16 @@ import re
 import signal
 import subprocess
 import sys
-import threading
 import time
 import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
-LOG_LIMIT = 8 * 1024 * 1024
+sys.path.insert(0, str(ROOT / 'bin'))
+from processlib import LOG_LIMIT, SUITE_DEADLINE, capture as bounded_capture, terminate
+
+
+def capture(command, directory, timeout, cwd=None, env=None, **kwargs):
+    return bounded_capture(command, directory, timeout, cwd=cwd or ROOT, env=env, **kwargs)
 
 
 def write_json(path, value):
@@ -125,64 +129,6 @@ def source_identity():
             'inputs_sha256': digest.hexdigest()}
 
 
-def terminate(process):
-    # The session can outlive its parent; kill its group even after parent exit.
-    try:
-        os.killpg(process.pid, signal.SIGTERM)
-    except ProcessLookupError:
-        return
-    try:
-        process.wait(timeout=20)
-    except subprocess.TimeoutExpired:
-        pass
-    try:
-        os.killpg(process.pid, signal.SIGKILL)
-    except ProcessLookupError:
-        pass
-    process.wait()
-
-
-def capture(command, directory, timeout, cwd=None, env=None):
-    """The deadline covers parent, descendants, and output draining."""
-    process = subprocess.Popen(command, cwd=cwd or ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                               start_new_session=True)
-    truncated = threading.Event()
-    def pump():
-        remaining = LOG_LIMIT
-        with (directory / 'native.log').open('wb') as stream:
-            while True:
-                chunk = process.stdout.read(65536)
-                if not chunk:
-                    break
-                stream.write(chunk[:remaining])
-                overflow = len(chunk) > remaining
-                remaining = max(0, remaining - len(chunk))
-                if overflow:
-                    truncated.set()
-                    terminate(process)
-                    break
-    thread = threading.Thread(target=pump, daemon=True)
-    thread.start()
-    timed_out = False
-    deadline = time.monotonic() + timeout
-    try:
-        while process.poll() is None or thread.is_alive():
-            if time.monotonic() >= deadline:
-                timed_out = True
-                terminate(process)
-                break
-            time.sleep(0.02)
-    except BaseException:
-        terminate(process)
-        raise
-    finally:
-        thread.join(timeout=3)
-        process.stdout.close()
-    native_exit = process.returncode
-    terminate(process)
-    return native_exit, timed_out, truncated.is_set()
-
-
 def artifacts(directory):
     rows = []
     total = 0
@@ -255,7 +201,9 @@ def run_suites(args):
             if not isinstance(arguments, list) or any(not isinstance(value, str) for value in arguments):
                 raise ValueError('Suite arguments must be a string array')
             command = [sys.executable, entry['script'], '--evidence', str(evidence), *arguments]
-            code, timed_out, truncated = capture(command, evidence, entry.get('timeout', 900))
+            timeout = entry.get('timeout', 900)
+            worker_env = {**os.environ, SUITE_DEADLINE: str(time.monotonic() + timeout)}
+            code, timed_out, truncated = capture(command, evidence, timeout, env=worker_env)
             row.update(native_exit=code, timed_out=timed_out, truncated=truncated)
             native = json.loads((evidence / 'checks.json').read_text())
             if native.get('schema') != 1:

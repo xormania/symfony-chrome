@@ -1,0 +1,8 @@
+test_cleanup_error_preserves_original_interruption (test_termination.TerminationContract.test_cleanup_error_preserves_original_interruption) ... ok
+test_filesystem_oserror_handling_cannot_swallow_cancellation (test_termination.TerminationContract.test_filesystem_oserror_handling_cannot_swallow_cancellation) ... ok
+test_sigterm_runs_owned_stop_and_records_cleanup (test_termination.TerminationContract.test_sigterm_runs_owned_stop_and_records_cleanup) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.170s
+
+OK

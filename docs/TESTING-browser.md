@@ -45,7 +45,7 @@ records, native Playwright discovery/results, failure traces, and LSP observatio
 `checks.json` also identifies the disposable workspace's native evidence tree,
 where the existing Mate/Mago wrappers retain their invocation records. Workspace
 cleanup preserves that evidence and records cleanup failures without replacing
-an earlier failure. SIGTERM raises an interruption inside the owned workspace; the check collector re-raises it so cleanup runs immediately instead of continuing later contracts. The parent runner must allow its configured cleanup grace before its hard-kill fallback.
+an earlier failure. SIGTERM raises a dedicated BaseException-derived ContractCancelled inside the owned workspace, so ordinary filesystem OSError handlers cannot swallow it; the check collector re-raises it so cleanup runs immediately instead of continuing later contracts. The CLI then records an explicit interruption in partial evidence and exits 130. The parent runner must allow its configured cleanup grace before its hard-kill fallback.
 
 Playwright runs the selected `/usr/local/bin/chrome`, with no automatic retries.
 Its result verifier compares exact titles and native IDs against discovery and

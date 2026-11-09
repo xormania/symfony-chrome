@@ -10,7 +10,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tests/integration'))
-from contracts import Checks, http, workspace
+from contracts import ContractCancelled, Checks, http, workspace
 from archive_oracle import snapshot_profile, verify_archive
 from serena_oracle import verify_constructor_reference
 from protocol import StdioClient, text_of
@@ -152,6 +152,7 @@ def main():
     parser.add_argument('--contract', choices=['tooling.mate', 'tooling.native-mago', 'tooling.enriched-mago', 'tooling.serena-mago', 'tooling.external-spans'], help='Run one named contract in a fresh owned workspace')
     args = parser.parse_args()
     checks = Checks(args.evidence)
+    cancelled = False
     try:
         with workspace() as data:
             checks.context.update(workspace_run_id=data['run_id'], native_evidence=data['evidence'])
@@ -165,12 +166,16 @@ def main():
                 checks.check('tooling.serena-mago', lambda: serena(data, args.evidence))
             if args.contract in (None, 'tooling.external-spans'):
                 checks.check('tooling.external-spans', lambda: external_spans(data, args.evidence))
+    except ContractCancelled as exc:
+        cancelled = True
+        checks.rows.append({'id': 'tooling.environment', 'outcome': 'error', 'assertions': 0,
+                            'detail': 'ContractCancelled: ' + str(exc)})
     except Exception as exc:
         checks.rows.append({'id': 'tooling.environment', 'outcome': 'error', 'assertions': 0,
                             'detail': type(exc).__name__ + ': ' + str(exc)[-4000:]})
-    checks.save(capability_scope={'requested_mode': 'deterministic_real_protocol_calls', 'fresh_agent_session': False,
+    checks.save(execution_interrupted=cancelled, capability_scope={'requested_mode': 'deterministic_real_protocol_calls', 'fresh_agent_session': False,
                                  'external_edit_support_claim': False})
-    return checks.exit()
+    return 130 if cancelled else checks.exit()
 
 
 if __name__ == '__main__':

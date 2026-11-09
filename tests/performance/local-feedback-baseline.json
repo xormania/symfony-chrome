@@ -27,345 +27,345 @@
     "toolchain_identity_scope": "Declared locked inputs; actual nested scenario runtime evidence retained separately"
   },
   "source": {
-    "commit": "c05b9e628fdd7dca492574bb10396d65016a239d",
+    "commit": "03e3c8c8a41276908839ddb04c58d4e49c7e148f",
     "dirty": false,
-    "inputs_sha256": "6fb998ff2c9c1f7c8f54ac92652ca3e6c7206ef055f56b2e89e235da603ff97a"
+    "inputs_sha256": "f26faff574ba9952483c272dcf0293ed787712f55499a257b8c3f40c9ffe82e2"
   },
   "source_after": {
-    "commit": "c05b9e628fdd7dca492574bb10396d65016a239d",
+    "commit": "03e3c8c8a41276908839ddb04c58d4e49c7e148f",
     "dirty": false,
-    "inputs_sha256": "6fb998ff2c9c1f7c8f54ac92652ca3e6c7206ef055f56b2e89e235da603ff97a"
+    "inputs_sha256": "f26faff574ba9952483c272dcf0293ed787712f55499a257b8c3f40c9ffe82e2"
   },
   "samples": [
     {
       "attempt": 1,
-      "started_at": "2026-11-09T04:09:01.540282+00:00",
+      "started_at": "2026-11-09T05:03:11.550370+00:00",
       "log": "attempt-001/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.1816610250098165,
-      "output_bytes": 109,
-      "log_sha256": "a0a7e5c62aa9d5547272dc42e15c48c24a43b3b8336ac206d7c0c2f615ffe24a"
+      "seconds": 0.2029516550101107,
+      "output_bytes": 110,
+      "log_sha256": "530796054a9ba7e72b948f987e649d1ce17d26462f5421d1faa2ec82700ad5b3"
     },
     {
       "attempt": 2,
-      "started_at": "2026-11-09T04:09:01.723463+00:00",
+      "started_at": "2026-11-09T05:03:11.755863+00:00",
       "log": "attempt-002/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18145170400384814,
-      "output_bytes": 109,
-      "log_sha256": "a0bf1659a83798675d689eabb50e0442666edd9927395f4f3281736de54d48fd"
+      "seconds": 0.20227634100592695,
+      "output_bytes": 110,
+      "log_sha256": "c203ab48011aadc2b7ca543cb3559eac1d88238ffe921a60012adafa9c437dde"
     },
     {
       "attempt": 3,
-      "started_at": "2026-11-09T04:09:01.905740+00:00",
+      "started_at": "2026-11-09T05:03:11.958998+00:00",
       "log": "attempt-003/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.1815655130048981,
-      "output_bytes": 109,
-      "log_sha256": "a0a7e5c62aa9d5547272dc42e15c48c24a43b3b8336ac206d7c0c2f615ffe24a"
+      "seconds": 0.2028454259998398,
+      "output_bytes": 110,
+      "log_sha256": "c203ab48011aadc2b7ca543cb3559eac1d88238ffe921a60012adafa9c437dde"
     },
     {
       "attempt": 4,
-      "started_at": "2026-11-09T04:09:02.088101+00:00",
+      "started_at": "2026-11-09T05:03:12.162730+00:00",
       "log": "attempt-004/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.181776772995363,
-      "output_bytes": 109,
-      "log_sha256": "59d7db1c0fb1a57072279a834113c3e7a67fe3586a8192687449d2c79796b972"
+      "seconds": 0.20229341699450742,
+      "output_bytes": 110,
+      "log_sha256": "8323b0df9f556a45ae868e7c6fc5280085017aec7a6071f154d4d381bf02a972"
     },
     {
       "attempt": 5,
-      "started_at": "2026-11-09T04:09:02.270714+00:00",
+      "started_at": "2026-11-09T05:03:12.365800+00:00",
       "log": "attempt-005/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18149248999543488,
-      "output_bytes": 109,
-      "log_sha256": "a0a7e5c62aa9d5547272dc42e15c48c24a43b3b8336ac206d7c0c2f615ffe24a"
+      "seconds": 0.18196766800247133,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 6,
-      "started_at": "2026-11-09T04:09:02.453061+00:00",
+      "started_at": "2026-11-09T05:03:12.548519+00:00",
       "log": "attempt-006/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.2017855580052128,
-      "output_bytes": 109,
-      "log_sha256": "9271c508d04a4163508337fd68e352a2947567792f8c897e5c6189b6dabf7281"
+      "seconds": 0.18184712900256272,
+      "output_bytes": 110,
+      "log_sha256": "9620dbd3336de5f425a9243681b70da76d44d781948f6fe9530efa7a3b57144a"
     },
     {
       "attempt": 7,
-      "started_at": "2026-11-09T04:09:02.655774+00:00",
+      "started_at": "2026-11-09T05:03:12.731006+00:00",
       "log": "attempt-007/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.2023057619953761,
-      "output_bytes": 109,
-      "log_sha256": "a0bf1659a83798675d689eabb50e0442666edd9927395f4f3281736de54d48fd"
+      "seconds": 0.18181701400317252,
+      "output_bytes": 110,
+      "log_sha256": "9620dbd3336de5f425a9243681b70da76d44d781948f6fe9530efa7a3b57144a"
     },
     {
       "attempt": 8,
-      "started_at": "2026-11-09T04:09:02.858966+00:00",
+      "started_at": "2026-11-09T05:03:12.913541+00:00",
       "log": "attempt-008/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.20176332799019292,
-      "output_bytes": 109,
-      "log_sha256": "7bf47306e042abc4675e71a0d606f74587647258c43ee9390962f3ef404134e5"
+      "seconds": 0.1819872630003374,
+      "output_bytes": 110,
+      "log_sha256": "5fe5b10d32264d5822bbc6bea3021e5131c5029547cc4aa9bf98bf64c1740957"
     },
     {
       "attempt": 9,
-      "started_at": "2026-11-09T04:09:03.061718+00:00",
+      "started_at": "2026-11-09T05:03:13.096375+00:00",
       "log": "attempt-009/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.20589346000633668,
-      "output_bytes": 109,
-      "log_sha256": "f3823cf77d7d142e607cbbdc3fed8857c4912350928bb61583eb5894d2b45b15"
+      "seconds": 0.18196378600259777,
+      "output_bytes": 110,
+      "log_sha256": "a1997bca199d13e3e903ceb20a1553adeacc855514ae424c9195f78f6a0df6d4"
     },
     {
       "attempt": 10,
-      "started_at": "2026-11-09T04:09:03.268524+00:00",
+      "started_at": "2026-11-09T05:03:13.279064+00:00",
       "log": "attempt-010/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.20260969499940984,
-      "output_bytes": 109,
-      "log_sha256": "dcfcd65f3f224130e193fca33dd5d28a17d429605463903a9824a4bc7cd6617d"
+      "seconds": 0.18184418900636956,
+      "output_bytes": 110,
+      "log_sha256": "a1997bca199d13e3e903ceb20a1553adeacc855514ae424c9195f78f6a0df6d4"
     },
     {
       "attempt": 11,
-      "started_at": "2026-11-09T04:09:03.472205+00:00",
+      "started_at": "2026-11-09T05:03:13.461693+00:00",
       "log": "attempt-011/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18208188799326308,
-      "output_bytes": 109,
-      "log_sha256": "dcfcd65f3f224130e193fca33dd5d28a17d429605463903a9824a4bc7cd6617d"
+      "seconds": 0.1816652889974648,
+      "output_bytes": 110,
+      "log_sha256": "5fe5b10d32264d5822bbc6bea3021e5131c5029547cc4aa9bf98bf64c1740957"
     },
     {
       "attempt": 12,
-      "started_at": "2026-11-09T04:09:03.655223+00:00",
+      "started_at": "2026-11-09T05:03:13.644091+00:00",
       "log": "attempt-012/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18178597999212798,
-      "output_bytes": 109,
-      "log_sha256": "a8ea4421f68e83d11a8ff1ef30ba1cca525d147d91640c5daa49262b40cf834c"
+      "seconds": 0.18209302000468597,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 13,
-      "started_at": "2026-11-09T04:09:03.838691+00:00",
+      "started_at": "2026-11-09T05:03:13.826925+00:00",
       "log": "attempt-013/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18168932499247603,
-      "output_bytes": 109,
-      "log_sha256": "0e36c75cd751601091a3f10caefd0a3dbd833b7cb65a0bd91ebf3cc652efe406"
+      "seconds": 0.20214776899956632,
+      "output_bytes": 110,
+      "log_sha256": "a890c7b5975bc75ae91a8b2b6a7994d6d164868f00ed3ec6ad75dfc6c42c50fa"
     },
     {
       "attempt": 14,
-      "started_at": "2026-11-09T04:09:04.021265+00:00",
+      "started_at": "2026-11-09T05:03:14.029910+00:00",
       "log": "attempt-014/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.1816211950063007,
-      "output_bytes": 109,
-      "log_sha256": "3ab25c16a2e8728f4658a1a67c4a537f59eedf439e8ae22101c138fa2c5a00a1"
+      "seconds": 0.20226492900110316,
+      "output_bytes": 110,
+      "log_sha256": "a890c7b5975bc75ae91a8b2b6a7994d6d164868f00ed3ec6ad75dfc6c42c50fa"
     },
     {
       "attempt": 15,
-      "started_at": "2026-11-09T04:09:04.204543+00:00",
+      "started_at": "2026-11-09T05:03:14.233139+00:00",
       "log": "attempt-015/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18245473800925538,
-      "output_bytes": 109,
-      "log_sha256": "a8ea4421f68e83d11a8ff1ef30ba1cca525d147d91640c5daa49262b40cf834c"
+      "seconds": 0.20242984298965894,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 16,
-      "started_at": "2026-11-09T04:09:04.387837+00:00",
+      "started_at": "2026-11-09T05:03:14.436366+00:00",
       "log": "attempt-016/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18707004099269398,
-      "output_bytes": 109,
-      "log_sha256": "59d7db1c0fb1a57072279a834113c3e7a67fe3586a8192687449d2c79796b972"
+      "seconds": 0.20216723799239844,
+      "output_bytes": 110,
+      "log_sha256": "9620dbd3336de5f425a9243681b70da76d44d781948f6fe9530efa7a3b57144a"
     },
     {
       "attempt": 17,
-      "started_at": "2026-11-09T04:09:04.575652+00:00",
+      "started_at": "2026-11-09T05:03:14.639469+00:00",
       "log": "attempt-017/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18144664500141516,
-      "output_bytes": 109,
-      "log_sha256": "a0bf1659a83798675d689eabb50e0442666edd9927395f4f3281736de54d48fd"
+      "seconds": 0.20224263099953532,
+      "output_bytes": 110,
+      "log_sha256": "c203ab48011aadc2b7ca543cb3559eac1d88238ffe921a60012adafa9c437dde"
     },
     {
       "attempt": 18,
-      "started_at": "2026-11-09T04:09:04.757978+00:00",
+      "started_at": "2026-11-09T05:03:14.842435+00:00",
       "log": "attempt-018/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18156267701124307,
-      "output_bytes": 109,
-      "log_sha256": "3ab25c16a2e8728f4658a1a67c4a537f59eedf439e8ae22101c138fa2c5a00a1"
+      "seconds": 0.1821762900071917,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 19,
-      "started_at": "2026-11-09T04:09:04.940498+00:00",
+      "started_at": "2026-11-09T05:03:15.025429+00:00",
       "log": "attempt-019/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.16621825999754947,
-      "output_bytes": 109,
-      "log_sha256": "cb2836fa98ecbd362b06616add7767409aa5f9399f8a841c8c81eb611a0087bf"
+      "seconds": 0.20232940900314134,
+      "output_bytes": 110,
+      "log_sha256": "8323b0df9f556a45ae868e7c6fc5280085017aec7a6071f154d4d381bf02a972"
     },
     {
       "attempt": 20,
-      "started_at": "2026-11-09T04:09:05.107557+00:00",
+      "started_at": "2026-11-09T05:03:15.228351+00:00",
       "log": "attempt-020/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18396899801155087,
-      "output_bytes": 109,
-      "log_sha256": "3ab25c16a2e8728f4658a1a67c4a537f59eedf439e8ae22101c138fa2c5a00a1"
+      "seconds": 0.1818465109972749,
+      "output_bytes": 110,
+      "log_sha256": "9add4659de3967bbddcbb30695b24348663410d983336620aa1fd8fe1a9306a5"
     },
     {
       "attempt": 21,
-      "started_at": "2026-11-09T04:09:05.292530+00:00",
+      "started_at": "2026-11-09T05:03:15.410937+00:00",
       "log": "attempt-021/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18228038999950513,
-      "output_bytes": 109,
-      "log_sha256": "59d7db1c0fb1a57072279a834113c3e7a67fe3586a8192687449d2c79796b972"
+      "seconds": 0.20207703400228638,
+      "output_bytes": 110,
+      "log_sha256": "530796054a9ba7e72b948f987e649d1ce17d26462f5421d1faa2ec82700ad5b3"
     },
     {
       "attempt": 22,
-      "started_at": "2026-11-09T04:09:05.475672+00:00",
+      "started_at": "2026-11-09T05:03:15.614143+00:00",
       "log": "attempt-022/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.1814622380043147,
-      "output_bytes": 109,
-      "log_sha256": "a0a7e5c62aa9d5547272dc42e15c48c24a43b3b8336ac206d7c0c2f615ffe24a"
+      "seconds": 0.20218629098962992,
+      "output_bytes": 110,
+      "log_sha256": "a890c7b5975bc75ae91a8b2b6a7994d6d164868f00ed3ec6ad75dfc6c42c50fa"
     },
     {
       "attempt": 23,
-      "started_at": "2026-11-09T04:09:05.658063+00:00",
+      "started_at": "2026-11-09T05:03:15.817115+00:00",
       "log": "attempt-023/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18175747600616887,
-      "output_bytes": 109,
-      "log_sha256": "a0bf1659a83798675d689eabb50e0442666edd9927395f4f3281736de54d48fd"
+      "seconds": 0.20228647399926558,
+      "output_bytes": 110,
+      "log_sha256": "d5095b239359d2594b057c065ce365ce140413f6dccdc046d5fe5391d8a2d866"
     },
     {
       "attempt": 24,
-      "started_at": "2026-11-09T04:09:05.840616+00:00",
+      "started_at": "2026-11-09T05:03:16.020115+00:00",
       "log": "attempt-024/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18161655199946836,
-      "output_bytes": 109,
-      "log_sha256": "9bbec91d56bb1e1cfb9110c208f4e4f07f605678c0aaaba9d2fe47e2236e8e31"
+      "seconds": 0.20205557200824842,
+      "output_bytes": 110,
+      "log_sha256": "50c9bd28b2855ce04db607cf9d903a1b596fe8f4993e9399378852568a7b4050"
     },
     {
       "attempt": 25,
-      "started_at": "2026-11-09T04:09:06.024215+00:00",
+      "started_at": "2026-11-09T05:03:16.222865+00:00",
       "log": "attempt-025/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.2019353120122105,
-      "output_bytes": 109,
-      "log_sha256": "a8ea4421f68e83d11a8ff1ef30ba1cca525d147d91640c5daa49262b40cf834c"
+      "seconds": 0.18193700999836437,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 26,
-      "started_at": "2026-11-09T04:09:06.227055+00:00",
+      "started_at": "2026-11-09T05:03:16.405550+00:00",
       "log": "attempt-026/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18233111899462529,
-      "output_bytes": 109,
-      "log_sha256": "59d7db1c0fb1a57072279a834113c3e7a67fe3586a8192687449d2c79796b972"
+      "seconds": 0.18502750599873252,
+      "output_bytes": 110,
+      "log_sha256": "530796054a9ba7e72b948f987e649d1ce17d26462f5421d1faa2ec82700ad5b3"
     },
     {
       "attempt": 27,
-      "started_at": "2026-11-09T04:09:06.412087+00:00",
+      "started_at": "2026-11-09T05:03:16.591388+00:00",
       "log": "attempt-027/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18675468699075282,
-      "output_bytes": 109,
-      "log_sha256": "a0bf1659a83798675d689eabb50e0442666edd9927395f4f3281736de54d48fd"
+      "seconds": 0.2019841000001179,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 28,
-      "started_at": "2026-11-09T04:09:06.599700+00:00",
+      "started_at": "2026-11-09T05:03:16.794060+00:00",
       "log": "attempt-028/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.1838101469911635,
-      "output_bytes": 109,
-      "log_sha256": "3ab25c16a2e8728f4658a1a67c4a537f59eedf439e8ae22101c138fa2c5a00a1"
+      "seconds": 0.1818628949986305,
+      "output_bytes": 110,
+      "log_sha256": "8323b0df9f556a45ae868e7c6fc5280085017aec7a6071f154d4d381bf02a972"
     },
     {
       "attempt": 29,
-      "started_at": "2026-11-09T04:09:06.784446+00:00",
+      "started_at": "2026-11-09T05:03:16.976811+00:00",
       "log": "attempt-029/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.20156539099116344,
-      "output_bytes": 109,
-      "log_sha256": "a0a7e5c62aa9d5547272dc42e15c48c24a43b3b8336ac206d7c0c2f615ffe24a"
+      "seconds": 0.18212904999381863,
+      "output_bytes": 110,
+      "log_sha256": "e6de06692e5881bbabcd8ea9febf8621b8274e988b7e9f1426448b49f88e70ac"
     },
     {
       "attempt": 30,
-      "started_at": "2026-11-09T04:09:06.986905+00:00",
+      "started_at": "2026-11-09T05:03:17.159681+00:00",
       "log": "attempt-030/native.log",
       "native_exit": 0,
       "output_truncated": false,
       "outcome": "passed",
-      "seconds": 0.18252561800181866,
-      "output_bytes": 109,
-      "log_sha256": "59d7db1c0fb1a57072279a834113c3e7a67fe3586a8192687449d2c79796b972"
+      "seconds": 0.18191787700925488,
+      "output_bytes": 110,
+      "log_sha256": "8323b0df9f556a45ae868e7c6fc5280085017aec7a6071f154d4d381bf02a972"
     }
   ],
   "summary": {
@@ -375,11 +375,11 @@
     "timed_out": 0,
     "errors": 0,
     "cancelled": 0,
-    "all_attempts_median_seconds": 0.1821811389963841,
-    "successful_median_seconds": 0.1821811389963841,
-    "successful_min_seconds": 0.16621825999754947,
-    "successful_max_seconds": 0.20589346000633668,
-    "successful_mad_seconds": 0.0007037749965093099,
+    "all_attempts_median_seconds": 0.1935058029994252,
+    "successful_median_seconds": 0.1935058029994252,
+    "successful_min_seconds": 0.1816652889974648,
+    "successful_max_seconds": 0.2029516550101107,
+    "successful_mad_seconds": 0.00939273750555003,
     "timing_gate": "advisory",
     "native_success": true,
     "source_stable": true
