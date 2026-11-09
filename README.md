@@ -16,6 +16,8 @@ packages/chrome-devtools-bundle/   development-only diagnostics
 fixtures/app/                      minimal Symfony 8.1 consumer, no UXor
 bin/dev                            host launcher for the Docker development environment
 tools/serena/                      Serena + Mago LSP adapter, patches and lock vendored from mago-serena_v2-poc
+tools/mago/                        Mago extension host and wiring config installed into workspaces by mate-prepare
+tools/mate/                        Mate runtime-instructions template
 private/                           gitignored slot for a private companion repository
 ```
 

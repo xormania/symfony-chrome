@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+"""Run installed Symfony AI Mate in a selected workspace with freshness and runtime guards. Ported from mago-serena_v2-poc."""
+import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from matelib import invoke, selected  # noqa: E402
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--run', default='dev')
+    parser.add_argument('argv', nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    argv = args.argv[1:] if args.argv[:1] == ['--'] else args.argv
+    if not argv:
+        parser.error('Supply Mate arguments after --, for example tools:list --format=json')
+    return invoke(selected(args.run), argv)
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except (RuntimeError, ValueError, AssertionError, OSError) as exc:
+        print(f'mate: {exc}', file=sys.stderr)
+        sys.exit(3)

@@ -25,6 +25,8 @@
         "xormania/chrome-bundle": "@dev"
     },
     "require-dev": {
+        "byte-kitsune/mago-symfony-wiring": "dev-poc-28c3f54",
+        "carthage-software/mago": "1.58.2",
         "phpunit/phpunit": "^12.0",
         "symfony/ai-mate": "0.15.0",
         "symfony/ai-monolog-mate-extension": "0.15.0",
@@ -51,6 +53,71 @@
             "url": "/packages/chrome-devtools-bundle",
             "options": {
                 "symlink": true
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "carthage-software/mago",
+                "version": "1.58.2",
+                "type": "library",
+                "license": [
+                    "MIT",
+                    "Apache-2.0"
+                ],
+                "require": {
+                    "php": "~8.1 || ~8.2 || ~8.3 || ~8.4 || ~8.5 || ~8.6",
+                    "revolt/event-loop": "^1.0.9"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Mago\\": "composer/src/"
+                    },
+                    "files": [
+                        "composer/src/functions.php",
+                        "composer/src/internal.php"
+                    ]
+                },
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/carthage-software/mago.git",
+                    "reference": "46df50c96d93d0ac3655c116c375574277cf0b30"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://api.github.com/repos/carthage-software/mago/zipball/46df50c96d93d0ac3655c116c375574277cf0b30",
+                    "reference": "46df50c96d93d0ac3655c116c375574277cf0b30"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "byte-kitsune/mago-symfony-wiring",
+                "version": "dev-poc-28c3f54",
+                "type": "library",
+                "license": "MIT",
+                "require": {
+                    "php": "^8.2",
+                    "carthage-software/mago": "^1.50",
+                    "nikic/php-parser": "^5.9",
+                    "symfony/yaml": "^7.4 || ^8.0"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "ByteKitsune\\MagoSymfonyWiring\\": "src/"
+                    }
+                },
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Byte-Kitsune/mago-symfony-wiring.git",
+                    "reference": "28c3f54065b71fe046a7474ced401aeadc941b0f"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://api.github.com/repos/Byte-Kitsune/mago-symfony-wiring/zipball/28c3f54065b71fe046a7474ced401aeadc941b0f",
+                    "reference": "28c3f54065b71fe046a7474ced401aeadc941b0f"
+                }
             }
         }
     ],

@@ -76,6 +76,10 @@ standalone `mago.toml` for lint and format without vendor context.
 ./bin/dev mago -- format --check vendor/xormania/chrome-bundle/src/ChromeBundle.php
 ```
 
+`bin/dev mago` and `bin/mago` are the same wrapper. It fixes workspace, config and PHP target, refuses the
+generic `fix` command, requires explicit workspace-relative `.php` targets for `format` and `--fix`, and
+records each invocation under `artifacts/<run>/mago/invocations/`.
+
 The structural guard rule encodes spec PKG-02: nothing under the runtime bundle namespace may use the Profiler
 or the devtools bundle. Exit `1` with a report means findings, not a broken tool. Whether Mago accepts the
 symlinked `vendor/xormania/...` entries in `paths` is unverified until the first run; if it refuses, analyze the
@@ -102,9 +106,47 @@ Mate reads this application's recorded dev data through the `inspection-dev` con
 ```
 
 Use the exact response's `X-Debug-Token`; the health check creates profiles too. Mate's `server-info` describes
-its own CLI process, not the HTTP request. Compiled service facts go stale after source or dependency edits;
-`cache:clear` and re-discovery refresh them. The PoC's `mate-prepare` wrapper with its freshness and
-archive-before-clear rules is not ported; `bin/dev mate` is a plain passthrough.
+its own CLI process, not the HTTP request.
+
+### Preparation and freshness
+
+`bin/dev mate` and `bin/mate` are the same guarded wrapper, ported from the PoC. Mate commands fall into three
+classes. Discovery (`tools:list`, `tools:inspect`, `init`, `discover`, help) runs anytime. Runtime reads
+(`symfony-profiler-*`, `monolog-*`, `server-info`, exact `symfony-profiler://` resources) need the runtime
+marker and exact parameters: `--context=inspection-dev`, six-hex tokens, limits 1 to 100. Compiled reads, and
+any unknown or abbreviated command, need a fresh preparation.
+
+```sh
+./bin/dev mate-prepare --run dev
+```
+
+Preparation archives existing profiles and logs under `artifacts/<run>/mate/prepare-*/runtime-before-refresh/`,
+installs a managed runtime-instructions block into the workspace `AGENTS.md`, runs `mate init`, dump-autoload,
+`mate discover` and `cache:clear --env=dev`, installs `.mago/extensions.php` and `.mago/wiring.toml` from
+`tools/mago/`, exports the two `debug:container` JSON views privately into `/home/dev`, runs the wiring package's
+exporter to produce the sanitized `.mago/container-reference.dev.json`, and seals a preparation record in
+`workspaces/<run>/trusted/`. The record binds application source, manifests, lock, config, compiled
+`DebugContainer.xml`, the reference and the container id. Any change to those makes compiled reads and enriched
+analysis exit 3 with a refresh instruction. Every invocation leaves stdout, stderr and an `invocation.json`
+under `artifacts/<run>/mate/invocations/`.
+
+### Symfony-enriched Mago analysis
+
+The fixture declares the Mago PHP SDK at the same source revision as the executable and the Byte-Kitsune
+Symfony wiring extension at its pinned snapshot, both as Composer package repositories. The wiring extension
+reads the sanitized container reference and contributes compiled autowiring edges to Mago's dependency graph.
+
+```sh
+./bin/mago --run dev --profile symfony --symbol 'App\Controller\ReadyController' -- analyze --reporting-format json
+./bin/mago --run dev --profile symfony --extension-off -- analyze --reporting-format json
+```
+
+Results land under `artifacts/<run>/mago/enriched/<id>/` as `graph.json`, `invocation.json`, stdout and stderr.
+`status` is `clean`, `findings`, `stale_preparation` or `tool_failure`; a native exit of 0 or 1 without the
+observer's graph or the wiring attestation is a wrapper failure, exit 3, never a clean result. `--extension-off`
+is the comparison control on the same preparation. The observer only reads Mago's final graph; it adds no edges.
+This enriches CLI analysis only. LSP enrichment through Serena needs the workspace opt-in described in the
+PoC's `MAGO-LSP-EXTENSIONS.md` and is not configured here.
 
 Version note: UXor declares Mate `^0.14`. The fixture pins 0.15.0, which the PoC verified. The package's Mate
 integration must be checked against both before claiming UXor compatibility (spec §4, DIAG section).
