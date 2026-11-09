@@ -1,0 +1,41 @@
+test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace (test_fixture_bootstrap.FixtureBootstrapContract.test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace) ... FAIL
+test_first_bootstrap_sees_complete_fixture_without_post_start_mutation (test_fixture_bootstrap.FixtureBootstrapContract.test_first_bootstrap_sees_complete_fixture_without_post_start_mutation) ... FAIL
+
+======================================================================
+FAIL: test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace (test_fixture_bootstrap.FixtureBootstrapContract.test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_fixture_bootstrap.py", line 89, in test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace
+    with contracts.workspace():
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/tmp/tmpevgobu83/tests/integration/contracts.py", line 101, in workspace
+    start(data, build=False)
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_fixture_bootstrap.py", line 86, in fail_bootstrap
+    self.first_runtime_view(data, build=build)
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_fixture_bootstrap.py", line 40, in first_runtime_view
+    self.assertTrue(controller.is_file(), 'first runtime bootstrap has no CI controller/routes')
+AssertionError: False is not true : first runtime bootstrap has no CI controller/routes
+
+======================================================================
+FAIL: test_first_bootstrap_sees_complete_fixture_without_post_start_mutation (test_fixture_bootstrap.FixtureBootstrapContract.test_first_bootstrap_sees_complete_fixture_without_post_start_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_fixture_bootstrap.py", line 74, in test_first_bootstrap_sees_complete_fixture_without_post_start_mutation
+    with contracts.workspace() as data:
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/tmp/tmpevgobu83/tests/integration/contracts.py", line 101, in workspace
+    start(data, build=False)
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_fixture_bootstrap.py", line 40, in first_runtime_view
+    self.assertTrue(controller.is_file(), 'first runtime bootstrap has no CI controller/routes')
+AssertionError: False is not true : first runtime bootstrap has no CI controller/routes
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (failures=2)
