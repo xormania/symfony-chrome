@@ -1,0 +1,13 @@
+
+Fatal error: Uncaught Symfony\Component\DependencyInjection\Exception\RuntimeException: Cannot autowire service "App\Controller\ContractController": argument "$profiler" of method "__construct()" references class "Symfony\Component\HttpKernel\Profiler\Profiler" but no such service exists. You should maybe alias this class to the existing "profiler" service. in $VENDOR_ROOT/symfony/dependency-injection/Compiler/DefinitionErrorExceptionPass.php:48
+Stack trace:
+#0 $VENDOR_ROOT/symfony/dependency-injection/Compiler/Compiler.php(73): Symfony\Component\DependencyInjection\Compiler\DefinitionErrorExceptionPass->process(Object(Symfony\Component\DependencyInjection\ContainerBuilder))
+#1 $VENDOR_ROOT/symfony/dependency-injection/ContainerBuilder.php(823): Symfony\Component\DependencyInjection\Compiler\Compiler->compile(Object(Symfony\Component\DependencyInjection\ContainerBuilder))
+#2 $VENDOR_ROOT/symfony/dependency-injection/Kernel/KernelTrait.php(231): Symfony\Component\DependencyInjection\ContainerBuilder->compile()
+#3 $VENDOR_ROOT/symfony/http-kernel/Kernel.php(214): App\Kernel->doInitializeContainer()
+#4 $VENDOR_ROOT/symfony/framework-bundle/Kernel/MicroKernelTrait.php(85): Symfony\Component\HttpKernel\Kernel->initializeContainer()
+#5 $VENDOR_ROOT/symfony/http-kernel/Kernel.php(270): App\Kernel->initializeContainer()
+#6 $VENDOR_ROOT/symfony/http-kernel/Kernel.php(83): Symfony\Component\HttpKernel\Kernel->preBoot()
+#7 $WORKSPACE/profiler-wiring-red-green/qualify.php(13): Symfony\Component\HttpKernel\Kernel->boot()
+#8 {main}
+  thrown in $VENDOR_ROOT/symfony/dependency-injection/Compiler/DefinitionErrorExceptionPass.php on line 48
