@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: recorded CSP companion permits empty native console location only with its enforced event
+ok 1 - recorded CSP companion permits empty native console location only with its enforced event
+  ---
+  duration_ms: 2.673402
+  type: 'test'
+  ...
+# Subtest: lookalike console messages and another script hash remain unexpected
+ok 2 - lookalike console messages and another script hash remain unexpected
+  ---
+  duration_ms: 0.187148
+  type: 'test'
+  ...
+# Subtest: an exact CSP message at another console location remains unexpected
+ok 3 - an exact CSP message at another console location remains unexpected
+  ---
+  duration_ms: 0.192897
+  type: 'test'
+  ...
+# Subtest: independent violation evidence must match document directive effect and enforcement
+ok 4 - independent violation evidence must match document directive effect and enforcement
+  ---
+  duration_ms: 0.296541
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 89.166745

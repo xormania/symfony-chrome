@@ -1,0 +1,95 @@
+{
+  "run_id": 42565198325,
+  "head": "8b6e116390eeeb998f7f4f47db137d6931e7b5b2",
+  "artifact_id": 13650922213,
+  "artifact_sha256": "25c19746a6c6a0b2e76f54908229f554c297085ac9af57235058fd27a7b433bf",
+  "protocol_excerpt": [
+    {
+      "direction": "send",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "list_pages",
+          "arguments": {}
+        }
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "## Pages\n1: about:blank [selected]\n## Third-party developer tools\nNo third-party developer tools available."
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 3
+      }
+    },
+    {
+      "direction": "send",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "tools/call",
+        "params": {
+          "name": "navigate_page",
+          "arguments": {
+            "pageId": 1,
+            "type": "url",
+            "url": "http://127.0.0.1:8000/_ci/browser"
+          }
+        }
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Successfully navigated to http://127.0.0.1:8000/_ci/browser.\n## Pages\n1: No route found for \"GET http://127.0.0.1:8000/_... (http://127.0.0.1:8000/_ci/browser) [selected]\n## Third-party developer tools\nNo third-party developer tools available."
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 4
+      }
+    },
+    {
+      "direction": "send",
+      "message": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "method": "tools/call",
+        "params": {
+          "name": "take_snapshot",
+          "arguments": {
+            "pageId": 1
+          }
+        }
+      }
+    },
+    {
+      "direction": "receive",
+      "message": {
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "## Latest page snapshot\nuid=1_0 RootWebArea \"No route found for \"GET http://127.0.0.1:8000/_ci/browser\" (404 Not Found)\" url=\"http://127.0.0.1:8000/_ci/browser\"\n  uid=1_1 banner\n    uid=1_2 heading \" Symfony Exception\" level=\"1\"\n    uid=1_3 link \"Symfony Docs\" url=\"https://symfony.com/doc/8.1/index.html\"\n  uid=1_6 link \"ResourceNotFoundException\" url=\"http://127.0.0.1:8000/_ci/browser#trace-box-2\"\n  uid=1_8 link \"NotFoundHttpException\" url=\"http://127.0.0.1:8000/_ci/browser#trace-box-1\"\n  uid=1_10 heading \"HTTP 404 Not Found\" level=\"2\"\n  uid=1_11 heading \"No route found for \"GET http://127.0.0.1:8000/_ci/browser\"\" level=\"1\"\n  uid=1_12 tab \"Exceptions 2\" selectable selecte"
+            }
+          ]
+        },
+        "jsonrpc": "2.0",
+        "id": 5
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+
+> test:browser
+> playwright test --config tests/browser/playwright.config.mjs
+
+
+Running 7 tests using 1 worker
+
+  ✘  1 tests/browser/contracts.spec.mjs:6:1 › real input changes state without creating a request (293ms)
+  ✓  2 tests/browser/contracts.spec.mjs:15:1 › clean navigation keeps all runtime guards quiet (222ms)
+  ✓  3 tests/browser/contracts.spec.mjs:30:5 › guard detects deliberate console fault (185ms)
+  ✓  4 tests/browser/contracts.spec.mjs:30:5 › guard detects deliberate page fault (187ms)
+  ✓  5 tests/browser/contracts.spec.mjs:30:5 › guard detects deliberate http fault (172ms)
+  ✓  6 tests/browser/contracts.spec.mjs:30:5 › guard detects deliberate request fault (168ms)
+  ✓  7 tests/browser/contracts.spec.mjs:30:5 › guard detects deliberate csp fault (174ms)
+
+
+  1) tests/browser/contracts.spec.mjs:6:1 › real input changes state without creating a request ────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "http://127.0.0.1:8000/_ci/icon.svg",
+    + ]
+
+      10 |     await page.getByRole('button', { name: 'Local action' }).click();
+      11 |     await expect(page.locator('#count')).toHaveText('1');
+    > 12 |     expect(requests).toEqual([]);
+         |                      ^
+      13 | });
+      14 |
+      15 | test('clean navigation keeps all runtime guards quiet', async ({ page, guard }) => {
+        at /workspace/.ci/browser/tests/browser/contracts.spec.mjs:12:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results/traces/contracts-real-input-chang-e00d4--without-creating-a-request/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results/traces/contracts-real-input-chang-e00d4--without-creating-a-request/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    results/traces/contracts-real-input-chang-e00d4--without-creating-a-request/trace.zip
+    Usage:
+
+        npx playwright show-trace results/traces/contracts-real-input-chang-e00d4--without-creating-a-request/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser/contracts.spec.mjs:6:1 › real input changes state without creating a request ─────
+  6 passed (3.1s)

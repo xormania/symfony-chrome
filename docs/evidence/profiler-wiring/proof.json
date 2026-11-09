@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "subject": "explicit named Symfony profiler injection into the disposable contract controller",
+  "kind": "same_native_kernel_qualification_red_green",
+  "php": "PHP 8.4.24 (cli) (built: Jul 31 2026 05:11:11) (NTS)",
+  "symfony": "8.1.11",
+  "same_script": "qualify.php",
+  "command_template": [
+    "php",
+    "qualify.php",
+    "DISPOSABLE_APP_COPY",
+    "INSTALLED_VENDOR_AUTOLOAD"
+  ],
+  "records": [
+    {
+      "state": "parent",
+      "exit": 255,
+      "controller_sha256": "4393ed4e0fa81f0a90349061e48aa469c37ee2205fe29252a874f634a62ea7b8",
+      "log": "parent.log"
+    },
+    {
+      "state": "fixed",
+      "exit": 0,
+      "controller_sha256": "3f2e650d1c732fbc1d675540b64293ad681100228bc573ebe4641b957bfa50a6",
+      "log": "fixed.log"
+    }
+  ],
+  "before_observation": "Profiler type has no autowiring service alias; native Symfony container compilation fails",
+  "after_observation": {
+    "status": 200,
+    "marker": "native-profiler-wiring",
+    "profiler_token": "b6e36b",
+    "symfony": "8.1.11"
+  },
+  "log_sanitization": "absolute workspace and vendor roots replaced by $WORKSPACE and $VENDOR_ROOT",
+  "scope": "real PHP/Symfony DI and kernel Request/Response; no listening socket, Docker, browser or MCP success is claimed"
+}

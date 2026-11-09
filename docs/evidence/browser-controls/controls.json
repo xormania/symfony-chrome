@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "kind": "deliberate_mutation_red_green",
+  "records": [
+    {
+      "control": "healthy",
+      "exit": 0,
+      "expected": "pass"
+    },
+    {
+      "control": "foreign-response-accepted",
+      "exit": 1,
+      "expected": "foreign-response identity assertion fails"
+    }
+  ]
+}

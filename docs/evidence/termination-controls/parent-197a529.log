@@ -1,0 +1,27 @@
+test_cleanup_error_preserves_original_interruption (test_termination.TerminationContract.test_cleanup_error_preserves_original_interruption) ... FAIL
+test_sigterm_runs_owned_stop_and_records_cleanup (test_termination.TerminationContract.test_sigterm_runs_owned_stop_and_records_cleanup) ... FAIL
+
+======================================================================
+FAIL: test_cleanup_error_preserves_original_interruption (test_termination.TerminationContract.test_cleanup_error_preserves_original_interruption)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp0h6s1ti9/tests/integration/test_termination.py", line 69, in test_cleanup_error_preserves_original_interruption
+    self.exercise('cleanup-error')
+  File "/tmp/tmp0h6s1ti9/tests/integration/test_termination.py", line 52, in exercise
+    self.assertTrue((root / 'stop.json').exists(), 'SIGTERM bypassed owned-workspace stop')
+AssertionError: False is not true : SIGTERM bypassed owned-workspace stop
+
+======================================================================
+FAIL: test_sigterm_runs_owned_stop_and_records_cleanup (test_termination.TerminationContract.test_sigterm_runs_owned_stop_and_records_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmp0h6s1ti9/tests/integration/test_termination.py", line 66, in test_sigterm_runs_owned_stop_and_records_cleanup
+    self.exercise('healthy')
+  File "/tmp/tmp0h6s1ti9/tests/integration/test_termination.py", line 52, in exercise
+    self.assertTrue((root / 'stop.json').exists(), 'SIGTERM bypassed owned-workspace stop')
+AssertionError: False is not true : SIGTERM bypassed owned-workspace stop
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.105s
+
+FAILED (failures=2)

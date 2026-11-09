@@ -1,0 +1,17 @@
+test_successful_rpc_with_null_rename_cannot_certify_recovery (test_external_spans_flow.RecoveryVerdictContract.test_successful_rpc_with_null_rename_cannot_certify_recovery) ... FAIL
+
+======================================================================
+FAIL: test_successful_rpc_with_null_rename_cannot_certify_recovery (test_external_spans_flow.RecoveryVerdictContract.test_successful_rpc_with_null_rename_cannot_certify_recovery)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpw0r7wnd5/test_external_spans_flow.py", line 25, in test_successful_rpc_with_null_rename_cannot_certify_recovery
+    self.rejected(None)
+  File "/tmp/tmpw0r7wnd5/test_external_spans_flow.py", line 21, in rejected
+    with self.assertRaises(AssertionError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: AssertionError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

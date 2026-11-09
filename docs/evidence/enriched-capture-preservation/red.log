@@ -1,0 +1,23 @@
+test_cancellation_propagates_without_erasing_native_streams (test_enriched_capture.EnrichedCaptureFailure.test_cancellation_propagates_without_erasing_native_streams) ... FAIL
+test_enriched_finally_keeps_partial_native_streams_and_flags (test_enriched_capture.EnrichedCaptureFailure.test_enriched_finally_keeps_partial_native_streams_and_flags) ... FAIL
+
+======================================================================
+FAIL: test_cancellation_propagates_without_erasing_native_streams (test_enriched_capture.EnrichedCaptureFailure.test_cancellation_propagates_without_erasing_native_streams)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/native-capture-work/tests/integration/test_enriched_capture.py", line 55, in test_cancellation_propagates_without_erasing_native_streams
+    self.assertIn(b'before-cancellation', (retained / 'stdout').read_bytes())
+AssertionError: b'before-cancellation' not found in b''
+
+======================================================================
+FAIL: test_enriched_finally_keeps_partial_native_streams_and_flags (test_enriched_capture.EnrichedCaptureFailure.test_enriched_finally_keeps_partial_native_streams_and_flags)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/native-capture-work/tests/integration/test_enriched_capture.py", line 32, in test_enriched_finally_keeps_partial_native_streams_and_flags
+    self.assertGreater(size, 0, 'Wrapper finally erased the bounded native failure evidence')
+AssertionError: 0 not greater than 0 : Wrapper finally erased the bounded native failure evidence
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.042s
+
+FAILED (failures=2)

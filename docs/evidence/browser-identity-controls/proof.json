@@ -1,0 +1,41 @@
+{
+  "test_sha256": "208c5258a3cacff7e825ba44e1360408fdbd88d0b2503b6471e1be04f033f8dd",
+  "selector_sha256": "2ac000b8965ad916caafc06d7a19248b08a7aed52fcd0cb3788ceeb517f15497",
+  "boundary": "Actual chrome contract with controlled MCP provider enforcing observed nondefault page identities; no browser launched",
+  "variants": [
+    {
+      "name": "candidate",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/integration",
+        "-p",
+        "test_chrome_identity.py",
+        "-v"
+      ],
+      "native_exit": 0,
+      "expected_exit": 0,
+      "browser_sha256": "c9054e8a1e97ecbe9f4e32344ca2b89e3b506685b6d7e0f33d7fe05e38bc10ed"
+    },
+    {
+      "name": "hardcoded-page-id",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/integration",
+        "-p",
+        "test_chrome_identity.py",
+        "-v"
+      ],
+      "native_exit": 1,
+      "expected_exit": 1,
+      "browser_sha256": "308c0bbfe2bfbce1221526e8a0b19219580e4f5258e3deb95c3d9bb770dc55e8"
+    }
+  ]
+}

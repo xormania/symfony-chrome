@@ -93,4 +93,11 @@ The derived development image is recorded separately from its released parent.
 
 Local host runtime results identify their actual PHP version; they do not claim
 to have qualified a Docker image. Browser and tool protocol checks are added in
-the subsequent integration PR, with consumer/compatibility measurements following.
+[the browser/tooling suite](TESTING-browser.md), with consumer/compatibility measurements following.
+
+## Browser and tooling integration
+
+Run `./bin/dev test --suite browser` or `--suite tooling` after preparing the
+selected image. Both suites use disposable applications and real native protocol
+calls; the fast suite includes their protocol/report controls. See
+[TESTING-browser.md](TESTING-browser.md) for actual scenario scope and limits.

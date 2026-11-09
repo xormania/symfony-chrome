@@ -1,0 +1,6 @@
+test_successful_rpc_with_null_rename_cannot_certify_recovery (test_external_spans_flow.RecoveryVerdictContract.test_successful_rpc_with_null_rename_cannot_certify_recovery) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK

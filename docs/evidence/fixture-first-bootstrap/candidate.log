@@ -1,0 +1,7 @@
+test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace (test_fixture_bootstrap.FixtureBootstrapContract.test_failed_bootstrap_keeps_primary_error_and_cleans_owned_workspace) ... ok
+test_first_bootstrap_sees_complete_fixture_without_post_start_mutation (test_fixture_bootstrap.FixtureBootstrapContract.test_first_bootstrap_sees_complete_fixture_without_post_start_mutation) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+OK

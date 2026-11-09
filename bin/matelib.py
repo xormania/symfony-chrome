@@ -15,6 +15,7 @@ import time
 import uuid
 from pathlib import Path
 
+from processlib import run_captured
 from devlib import ROOT, container_id, environment, exec_command, execute, load, require_running, sha, write_json
 
 CONTEXT = 'inspection-dev'
@@ -222,7 +223,7 @@ def call(data, argv):
     directory.mkdir(parents=True)
     command = exec_command(data, 'env', 'APP_ENV=dev', 'APP_DEBUG=1', 'php', 'vendor/bin/mate', *argv)
     started = time.monotonic()
-    result = subprocess.run(command, env=environment(data), capture_output=True, timeout=180)
+    result = run_captured(command, directory, env=environment(data), timeout=180)
     (directory / 'stdout').write_bytes(result.stdout)
     (directory / 'stderr').write_bytes(result.stderr)
     write_json(directory / 'invocation.json', {

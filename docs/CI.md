@@ -7,7 +7,7 @@ There are no scheduled runs or duplicate feature-branch push runs.
 | --- | --- |
 | fast | fast |
 | package | package |
-| integration | support, environment |
+| integration | support, environment, browser, tooling |
 | Symfony Chrome acceptance | Every required job and its exact native evidence. |
 
 The integration job validates the supported released parent, builds the pinned

@@ -1,0 +1,24 @@
+test_early_eof_is_not_a_success (test_protocol.ProtocolContract.test_early_eof_is_not_a_success) ... ok
+test_foreign_response_identity_is_rejected (test_protocol.ProtocolContract.test_foreign_response_identity_is_rejected) ... FAIL
+test_initialize_records_actual_server_identity (test_protocol.ProtocolContract.test_initialize_records_actual_server_identity) ... ok
+test_lsp_content_length_frames_use_utf8_byte_counts (test_protocol.ProtocolContract.test_lsp_content_length_frames_use_utf8_byte_counts) ... ok
+test_lsp_declared_oversized_frame_is_rejected_before_body_read (test_protocol.ProtocolContract.test_lsp_declared_oversized_frame_is_rejected_before_body_read) ... ok
+test_non_json_output_is_not_a_successful_empty_response (test_protocol.ProtocolContract.test_non_json_output_is_not_a_successful_empty_response) ... ok
+test_oversized_message_is_rejected (test_protocol.ProtocolContract.test_oversized_message_is_rejected) ... ok
+test_real_peer_returns_matching_request_and_retains_evidence (test_protocol.ProtocolContract.test_real_peer_returns_matching_request_and_retains_evidence) ... ok
+test_stderr_is_drained_with_a_retained_bound (test_protocol.ProtocolContract.test_stderr_is_drained_with_a_retained_bound) ... ok
+test_timeout_closes_the_owned_process (test_protocol.ProtocolContract.test_timeout_closes_the_owned_process) ... ok
+
+======================================================================
+FAIL: test_foreign_response_identity_is_rejected (test_protocol.ProtocolContract.test_foreign_response_identity_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/stdio-controls-m7cwkvyi/test_protocol.py", line 76, in test_foreign_response_identity_is_rejected
+    with self.assertRaisesRegex(ProtocolError, 'another request'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ProtocolError not raised
+
+----------------------------------------------------------------------
+Ran 10 tests in 3.279s
+
+FAILED (failures=1)
