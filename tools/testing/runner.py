@@ -251,7 +251,10 @@ def run_suites(args):
         try:
             if cancelled:
                 raise InterruptedError('Earlier suite was interrupted; remaining selection did not execute')
-            command = [sys.executable, entry['script'], '--evidence', str(evidence)]
+            arguments = entry.get('args', [])
+            if not isinstance(arguments, list) or any(not isinstance(value, str) for value in arguments):
+                raise ValueError('Suite arguments must be a string array')
+            command = [sys.executable, entry['script'], '--evidence', str(evidence), *arguments]
             code, timed_out, truncated = capture(command, evidence, entry.get('timeout', 900))
             row.update(native_exit=code, timed_out=timed_out, truncated=truncated)
             native = json.loads((evidence / 'checks.json').read_text())

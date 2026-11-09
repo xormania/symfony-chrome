@@ -35,7 +35,7 @@ jobs:
 
   package:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -49,6 +49,8 @@ jobs:
           coverage: none
       - name: Package, kernel, and independent distribution consumers
         run: ./bin/dev test --suite package
+      - name: Declared lower framework boundary
+        run: ./bin/dev test --suite compatibility
       - name: Retain package results
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -101,11 +103,41 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.4'
+          extensions: ctype, iconv, intl, mbstring, dom, xml, curl, zip, pdo_sqlite
+          tools: composer:2.10.3
+          coverage: none
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.4'
+      - name: Prepare exact native consumer browser
+        run: python3 tools/testing/prepare_browser.py --evidence artifacts/consumer-browser
+      - name: Pinned UXor consumer and native Live interactions
+        run: ./bin/dev test --suite consumer
+      - name: Retain consumer evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: consumer-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 14
+
   acceptance:
     name: Symfony Chrome acceptance
     runs-on: ubuntu-latest
     if: always()
-    needs: [fast, package, integration]
+    needs: [fast, package, integration, consumer]
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -117,7 +149,7 @@ jobs:
       - name: Verify required jobs and exact native result inventory
         env:
           REQUIRED_JOBS: ${{ toJSON(needs) }}
-          JOB_SUITES: '{"fast":["fast"],"package":["package"],"integration":["support","environment","browser","tooling"]}'
+          JOB_SUITES: '{"fast":["fast"],"package":["package","compatibility"],"integration":["support","environment","browser","tooling"],"consumer":["consumer"]}'
         run: >-
           python3 tools/ci/acceptance.py
           --evidence artifacts-input

@@ -101,3 +101,18 @@ Run `./bin/dev test --suite browser` or `--suite tooling` after preparing the
 selected image. Both suites use disposable applications and real native protocol
 calls; the fast suite includes their protocol/report controls. See
 [TESTING-browser.md](TESTING-browser.md) for actual scenario scope and limits.
+
+## Consumers and measurements
+
+`./bin/dev test --suite compatibility` checks the declared Symfony 7.3 runtime
+boundary. `./bin/dev test --suite consumer` installs candidate archives into the
+pinned UXor revision and runs its existing modal and Live validation assertions.
+The native consumer needs PHP/Composer, Node 22 and the locked Chrome build;
+`python3 tools/testing/prepare_browser.py --evidence artifacts/browser-install`
+prepares that binary. Set CHROME_PATH to its printed absolute path locally.
+
+`./bin/dev test --profile extended` performs 30 retained contract-feedback
+measurements. This default measures Python contract feedback, not browser latency.
+A specific real browser scenario can be measured through performance.py using
+its documented `{attempt_evidence}` argument. Timing remains advisory.
+See [TESTING-consumers.md](TESTING-consumers.md) for replay and comparison details.

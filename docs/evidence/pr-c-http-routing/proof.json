@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "fault": "Existing public/lab directory shadows /lab/live-modal under PHP implicit fallback",
+  "expected_failure": "test_lab_route_beneath_existing_public_directory_reaches_front_controller receives HTTP404",
+  "runtime": "PHP8.4.24 native TCP HTTP",
+  "results": [
+    {
+      "mode": "red",
+      "native_exit": 1,
+      "command": "python3 tests/consumers/test_http_router.py",
+      "implementation": "implicit PHP fallback (parent behavior)"
+    },
+    {
+      "mode": "green",
+      "native_exit": 0,
+      "command": "python3 tests/consumers/test_http_router.py",
+      "implementation": "explicit static-aware front controller router"
+    }
+  ]
+}

@@ -7,7 +7,12 @@
       "support",
       "environment",
       "browser",
-      "tooling"
+      "tooling",
+      "compatibility",
+      "consumer"
+    ],
+    "extended": [
+      "extended"
     ]
   },
   "suites": {
@@ -66,6 +71,50 @@
         "tooling.external-spans"
       ],
       "timeout": 1800
+    },
+    "compatibility": {
+      "script": "tools/testing/compatibility.py",
+      "checks": [
+        "compatibility.runtime.symfony-7.3"
+      ],
+      "timeout": 900
+    },
+    "consumer": {
+      "script": "tools/testing/consumer.py",
+      "checks": [
+        "consumer.uxor.install",
+        "consumer.uxor.modal",
+        "consumer.uxor.validation"
+      ],
+      "timeout": 1200
+    },
+    "extended": {
+      "script": "tools/testing/performance.py",
+      "checks": [
+        "performance.native-attempts"
+      ],
+      "timeout": 300,
+      "args": [
+        "--label",
+        "contract-feedback",
+        "--runner",
+        "local-linux-amd64",
+        "--warm-state",
+        "unspecified",
+        "--attempts",
+        "30",
+        "--timeout",
+        "60",
+        "--",
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-p",
+        "test_*contracts.py"
+      ]
     }
   }
 }

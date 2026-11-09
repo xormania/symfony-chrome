@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "repository": "https://github.com/xormania/uxor.git",
+  "revision": "89e607a4be48b2fd8f46f1b9e9465cba406fedee",
+  "tests": [
+    {
+      "file": "tests/e2e/lab.live-modal.spec.ts",
+      "title": "a modal whose container a Live re-render replaces is torn down cleanly, and the new one opens and closes"
+    },
+    {
+      "file": "tests/e2e/lab.live-form.spec.ts",
+      "title": "a Live form validates changed fields and keeps focus and values across re-renders"
+    }
+  ],
+  "coverage": "Selected native UXor assertions; no whole-dialog-profile certification",
+  "notes": "Keep UXor dependency constraints and native browser guards. Candidate package archives are the only added Composer requirements."
+}

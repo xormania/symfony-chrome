@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "kind": "deliberate implementation fault with unchanged regression test",
+  "results": [
+    {
+      "control": "consumer-identity",
+      "mode": "red",
+      "native_exit": 1,
+      "test": "test_consumer_contracts.ConsumerContracts.test_same_total_with_foreign_test_cannot_pass"
+    },
+    {
+      "control": "consumer-identity",
+      "mode": "green",
+      "native_exit": 0,
+      "test": "test_consumer_contracts.ConsumerContracts.test_same_total_with_foreign_test_cannot_pass"
+    },
+    {
+      "control": "failure-retention",
+      "mode": "red",
+      "native_exit": 1,
+      "test": "test_performance_contracts.PerformanceContracts.test_failed_attempt_is_counted_alongside_successes"
+    },
+    {
+      "control": "failure-retention",
+      "mode": "green",
+      "native_exit": 0,
+      "test": "test_performance_contracts.PerformanceContracts.test_failed_attempt_is_counted_alongside_successes"
+    }
+  ]
+}

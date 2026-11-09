@@ -1,0 +1,6 @@
+test_same_total_with_foreign_test_cannot_pass (test_consumer_contracts.ConsumerContracts.test_same_total_with_foreign_test_cannot_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK

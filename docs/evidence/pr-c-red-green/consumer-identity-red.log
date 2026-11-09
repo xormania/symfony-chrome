@@ -1,0 +1,15 @@
+test_same_total_with_foreign_test_cannot_pass (test_consumer_contracts.ConsumerContracts.test_same_total_with_foreign_test_cannot_pass) ... FAIL
+
+======================================================================
+FAIL: test_same_total_with_foreign_test_cannot_pass (test_consumer_contracts.ConsumerContracts.test_same_total_with_foreign_test_cannot_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/consumer-work/tests/fast/test_consumer_contracts.py", line 32, in test_same_total_with_foreign_test_cannot_pass
+    with self.assertRaisesRegex(ValueError, 'inventory mismatch'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
