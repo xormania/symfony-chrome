@@ -1,0 +1,10 @@
+web_dashboard: false
+projects: []
+web_dashboard_open_on_launch: false
+gui_log_window: false
+log_level: 10
+tool_timeout: 90
+trace_lsp_communication: false
+ls_specific_settings:
+  mago:
+    ignore_vendor: false

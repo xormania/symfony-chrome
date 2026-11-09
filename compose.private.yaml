@@ -1,0 +1,9 @@
+# Used by bin/dev only for runs created with `up --private`. Mounts the private companion
+# repository read-only at /private. Never used for the bootstrap (setup) container.
+services:
+  php:
+    volumes:
+      - type: bind
+        source: ./private
+        target: /private
+        read_only: true

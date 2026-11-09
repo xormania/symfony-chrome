@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "pinned_at": "2026-11-09T01:15:00Z",
+  "images": {
+    "base": "ghcr.io/xormania/php-browser:8.4-trixie-v1.2.4@sha256:628021c4e31dbd226183aefb2186b363849475bcba8a5e176e684e7491054ee7",
+    "base_record": "https://github.com/xormania/xorder/blob/b8efe93/release-records/php-browser/8.4-trixie/1.2.4.json",
+    "base_provides": {
+      "php": "8.4.27",
+      "composer": "2.10.3",
+      "symfony_cli": "5.22.2",
+      "chromium": "156.0.8078.73",
+      "xdebug": "3.5.3",
+      "debian": "13.7 trixie"
+    },
+    "node": "docker.io/library/node:22-trixie@sha256:77d0c7953e80648137a237496c8edbcb3a14bedc5c5298b93a6d0dfa6c3e1271",
+    "python": "docker.io/library/python:3.12.12-slim-trixie@sha256:f3fa41d74a768c2fce8016b98c191ae8c1bacd8f1152870a3f9f87d350920b7c",
+    "uv": "ghcr.io/astral-sh/uv:0.12.8@sha256:d1cbaeadc234fe19c0d93daabcf5e98738cd93c6d1dd4918ef6aa30735feb23a",
+    "rust": "docker.io/library/rust:1.99.0-bookworm@sha256:114c7a4425406451c2866b6aafe69fe29b1b298832db1277d411ac73c82d04d6"
+  },
+  "browser": {
+    "chrome_for_testing": "157.0.8103.38",
+    "platform": "linux64",
+    "url": "https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux64/chrome-linux64.zip",
+    "channel_observed": "Stable as of 2026-11-09"
+  },
+  "mcp": {
+    "chrome_devtools_mcp": "1.12.0",
+    "node_engines": "^20.19.0 || ^22.12.0 || >=23"
+  },
+  "targets": {
+    "php": "8.4",
+    "symfony": "8.1.*",
+    "reference_consumer": "xormania/uxor demo (PHP >=8.4, Symfony 8.1.*)"
+  },
+  "notes": [
+    "Base image and Node digest taken from the xorder php-browser 8.4-trixie v1.2.4 release record on 2026-11-09.",
+    "Chrome for Testing is added because chrome-devtools-mcp officially supports Google Chrome and Chrome for Testing only; Debian Chromium from the base remains for Panther.",
+    "Chrome 157 satisfies chrome-devtools-mcp autoConnect (144+) and the WebMCP tool category (150+ with --enable-features=WebMCP).",
+    "The CfT index publishes no sha256; docker/identity.py records the installed binary hash.",
+    "xorder release groups: adopt the downstream support check before 2026-11-11 08:00 UTC if this base stays in use."
+  ],
+  "mago": {
+    "version": "1.58.2",
+    "asset": "mago-1.58.2-x86_64-unknown-linux-gnu.tar.gz",
+    "sha256": "80b6e6ed3cd2fe2da348f9cd83d23e638f2ccd44988d48bebd766c20ccd30dc2",
+    "url": "https://github.com/carthage-software/mago/releases/download/1.58.2/mago-1.58.2-x86_64-unknown-linux-gnu.tar.gz",
+    "source": "Same version mago-serena_v2-poc pins (upstream rev 46df50c96d93d0ac3655c116c375574277cf0b30). Hash computed from the downloaded asset on 2026-11-09; the installer script verifies attestation with gh, which this build does not.",
+    "baseline": "The hash-pinned release binary is installed as mago-baseline. Unlike the PoC, the baseline is the upstream release build, not a local unpatched build of the same revision.",
+    "patched": {
+      "source_rev": "46df50c96d93d0ac3655c116c375574277cf0b30",
+      "patch": "tools/serena/patches/mago-lsp-extensions.patch",
+      "patch_sha256": "ca955e0db6023a997fe708d46d3bd0b92e6dd91237aee7c206f13768effdea11",
+      "recorded_poc_binary_sha256": "5cfaa051b9cb23f63cbcd8ec1703538c1f2789ff21ad068b239678631f701e46",
+      "cargo_lock_sha256": "f5468183e5440ccacff66b06f7b444f15641caf89d9533057a03e4f280a28e1d"
+    }
+  },
+  "serena": {
+    "source_rev": "9e1cced0c34ed48d668e179f7c56c77b4d14a3e3",
+    "patch": "tools/serena/patches/serena-symbol-references.patch",
+    "patch_sha256": "57385a9e49d8a490e696f49b3c62d16e8685703d9531899372a3c41a28270051",
+    "adapter": "tools/serena/adapter (serena-mago-adapter 0.1.0)",
+    "python": "3.12.12",
+    "vendored_from": "xormania/mago-serena_v2-poc@b6dbec8378338e39fe51489bc28f9ad578e4f3ab",
+    "note": "pyproject keeps the PoC root project name mago-serena-poc so uv.lock stays valid under --frozen."
+  }
+}

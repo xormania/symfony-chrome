@@ -1,0 +1,23 @@
+{
+    "name": "xormania/chrome-devtools-bundle",
+    "description": "Development-only diagnostics for xormania/chrome-bundle: Profiler correlation, Chrome DevTools MCP integration, component observations.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.4",
+        "symfony/framework-bundle": "^7.3|^8.0",
+        "symfony/http-kernel": "^7.3|^8.0",
+        "xormania/chrome-bundle": "@dev"
+    },
+    "suggest": {
+        "symfony/web-profiler-bundle": "Exact request-to-profile correlation by X-Debug-Token",
+        "symfony/ai-mate": "Reuse Mate collectors and formatters where the installed version allows"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xormania\\ChromeDevtoolsBundle\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

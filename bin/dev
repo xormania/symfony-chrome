@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Build, start, and use the Symfony-Chrome development environment."""
+import argparse
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from devlib import ROOT, execute, host_port, load, prepare, require_running, start, stop  # noqa: E402
+
+MCP_VERSION = json.loads((ROOT / 'toolchain.lock.json').read_text())['mcp']['chrome_devtools_mcp']
+
+
+def cmd_up(args):
+    private = 'rw' if args.private_rw else 'ro' if args.private else None
+    data = prepare(args.run, port=8000 if args.run == 'dev' else 0, app_env=args.env, private=private)
+    if private and data.get('private') != private:
+        print(f"error: run {data['run_id']} was created with private={data.get('private')}; create a new run to change it", file=sys.stderr)
+        return 1
+    start(data, build=not args.no_build)
+    print(f"Fixture app: http://localhost:{host_port(data)}/_dev/ready  (run {data['run_id']})")
+    return 0
+
+
+def cmd_down(args):
+    stop(load(args.run), purge=args.purge)
+    return 0
+
+
+def cmd_exec(args):
+    data = load(args.run)
+    require_running(data)
+    return execute(data, *args.command, check=False).returncode
+
+
+def cmd_console(args):
+    data = load(args.run)
+    require_running(data)
+    return execute(data, 'php', 'bin/console', *args.command, check=False).returncode
+
+
+def cmd_composer(args):
+    data = load(args.run)
+    require_running(data)
+    return execute(data, 'composer', *args.command, check=False).returncode
+
+
+def cmd_mago(args):
+    data = load(args.run)
+    require_running(data)
+    return execute(data, 'mago', *args.command, check=False).returncode
+
+
+def cmd_mate(args):
+    data = load(args.run)
+    require_running(data)
+    return execute(data, 'php', 'vendor/bin/mate', *args.command, check=False).returncode
+
+
+def cmd_doctor(args):
+    data = load(args.run)
+    require_running(data)
+    execute(data, 'cat', '/opt/dev/image-identity.json')
+    execute(data, 'composer', 'check-platform-reqs', '--no-interaction', check=False)
+    print(f"private/ mount for this run: {data.get('private') or 'none'}")
+    print(f"host port: {host_port(data)}")
+    return 0
+
+
+def cmd_mcp_config(args):
+    data = load(args.run)
+    if args.mode == 'host':
+        # Developer's own Chrome, attached. Chrome 144+ with remote debugging enabled at chrome://inspect/#remote-debugging.
+        server = {'command': 'npx', 'args': ['--yes', f'chrome-devtools-mcp@{MCP_VERSION}', '--autoConnect',
+                                             '--categoryExperimentalThirdParty', '--no-usage-statistics',
+                                             '--no-performance-crux']}
+        note = f"App URL for this run: http://localhost:{host_port(data)}"
+    else:
+        # Owned headless Chrome for Testing inside the container; stdio bridged through compose exec.
+        server = {'command': str(ROOT / 'bin/chrome-mcp'), 'args': ['--run', data['run_id']]}
+        note = 'App URL inside the container: http://127.0.0.1:8000'
+    serena = {'command': str(ROOT / 'bin/serena-mcp'), 'args': ['--run', data['run_id']]}
+    print(json.dumps({'mcpServers': {'chrome': server, 'serena': serena}}, indent=2))
+    print(note, file=sys.stderr)
+    return 0
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest='command', required=True)
+
+    p = sub.add_parser('up', help='Create or select a workspace, build the image, start the fixture app')
+    p.add_argument('--run', default='dev')
+    p.add_argument('--no-build', action='store_true')
+    p.add_argument('--env', default='dev', choices=['dev', 'prod'], help='APP_ENV for the fixture app')
+    p.add_argument('--private', action='store_true', help='Mount ./private read-only at /private (recorded for this run)')
+    p.add_argument('--private-rw', action='store_true', help='Mount ./private read-write at /private (recorded for this run)')
+    p.set_defaults(func=cmd_up)
+
+    p = sub.add_parser('down', help='Stop the workspace; --purge also deletes workspaces/<run>')
+    p.add_argument('--run', default='dev')
+    p.add_argument('--purge', action='store_true')
+    p.set_defaults(func=cmd_down)
+
+    for name, func, help_text in (('exec', cmd_exec, 'Run a command in /workspace'),
+                                  ('console', cmd_console, 'Run bin/console in /workspace'),
+                                  ('composer', cmd_composer, 'Run composer in /workspace'),
+                                  ('mago', cmd_mago, 'Run Mago (analyze, lint, format, guard) in /workspace'),
+                                  ('mate', cmd_mate, 'Run Symfony AI Mate (vendor/bin/mate) in /workspace')):
+        p = sub.add_parser(name, help=help_text)
+        p.add_argument('--run', default='dev')
+        p.add_argument('command', nargs=argparse.REMAINDER)
+        p.set_defaults(func=func)
+
+    p = sub.add_parser('doctor', help='Print image identity, platform requirements and mounts')
+    p.add_argument('--run', default='dev')
+    p.set_defaults(func=cmd_doctor)
+
+    p = sub.add_parser('mcp-config', help='Print an MCP client configuration: Chrome DevTools MCP plus Serena')
+    p.add_argument('--run', default='dev')
+    p.add_argument('--mode', default='host', choices=['host', 'owned'])
+    p.set_defaults(func=cmd_mcp_config)
+
+    args = parser.parse_args(argv)
+    if getattr(args, 'command', None) and isinstance(args.command, list) and args.command[:1] == ['--']:
+        args.command = args.command[1:]
+    try:
+        return args.func(args)
+    except (RuntimeError, ValueError, TimeoutError) as exc:
+        print(f'error: {exc}', file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

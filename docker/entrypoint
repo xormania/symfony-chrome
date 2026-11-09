@@ -1,0 +1,8 @@
+#!/bin/sh
+# Runs after the xorder base entrypoint has dropped privileges. Seeds Serena's global config once.
+set -eu
+mkdir -p "$SERENA_HOME"
+if [ ! -f "$SERENA_HOME/serena_config.yml" ]; then
+    cp /opt/dev/serena/config/serena_config.yml "$SERENA_HOME/serena_config.yml"
+fi
+exec "$@"

@@ -1,0 +1,38 @@
+# Driven by bin/dev; the DEV_* values come from workspaces/<run>/run.json.
+services:
+  php:
+    image: ${DEV_IMAGE:-symfony-chrome-dev:local}
+    build:
+      context: .
+    init: true
+    working_dir: /workspace
+    volumes:
+      - type: bind
+        source: ${DEV_APP:-./workspaces/dev/app}
+        target: /workspace
+      - type: bind
+        source: ./packages
+        target: /packages
+      - type: bind
+        source: ${DEV_STATE:-./workspaces/dev/state}
+        target: /home/dev
+      - type: bind
+        source: ${DEV_EVIDENCE_DIR:-./artifacts/dev}
+        target: /evidence
+    environment:
+      # xorder entrypoint remaps the dev user to the invoking host user.
+      PUID: ${DEV_UID:-1000}
+      PGID: ${DEV_GID:-1000}
+      DEV_RUN_ID: ${DEV_RUN_ID:-dev}
+      APP_ENV: ${DEV_APP_ENV:-dev}
+    ports:
+      - "127.0.0.1:${DEV_PORT:-8000}:8000"
+    # Chrome needs a larger /dev/shm than the Docker default.
+    shm_size: 1gb
+    healthcheck:
+      test: [CMD, curl, -fsS, -o, /dev/null, "http://127.0.0.1:8000/_dev/ready"]
+      interval: 3s
+      timeout: 10s
+      retries: 30
+      start_period: 120s
+    stop_grace_period: 10s
