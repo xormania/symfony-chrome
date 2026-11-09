@@ -80,6 +80,38 @@ or the devtools bundle. Exit `1` with a report means findings, not a broken tool
 symlinked `vendor/xormania/...` entries in `paths` is unverified until the first run; if it refuses, analyze the
 packages from `/packages/<name>` with their own configuration instead.
 
+## Symfony development setup
+
+The fixture is a dev-oriented Symfony 8.1 application. Beyond the runtime packages it carries, in `require-dev`:
+WebProfilerBundle and DebugBundle, MonologBundle (all environments), MakerBundle, VarDumper, PHPUnit,
+BrowserKit and CssSelector, and Symfony AI Mate 0.15.0 with its Symfony and Monolog extensions. The base image
+also supplies the `symfony` CLI, Xdebug (off by default, `XDEBUG_MODE=debug` to enable) and PCOV.
+
+Mate reads this application's recorded dev data through the `inspection-dev` context defined in
+`mate/config.php`: container metadata from `var/cache/dev`, profiles from `var/cache/dev/profiler`, logs from
+`var/log`. Profiler and Monolog reads are exact-request joins, which is what spec DIAG-01 and DIAG-04 need.
+
+```sh
+./bin/dev mate -- tools:list --format=json
+./bin/dev mate -- tools:call symfony-profiler-list --context=inspection-dev --limit=20 --url=MARKER --format=json
+./bin/dev mate -- tools:call symfony-profiler-get --token=HEX6 --format=json
+./bin/dev mate -- resources:read symfony-profiler://profile/HEX6/request --format=json
+./bin/dev mate -- tools:call monolog-search --term=MARKER --environment=dev --kernelContext=inspection-dev --limit=20 --format=json
+./bin/dev mate -- tools:call symfony-service-detail --id='App\Controller\ReadyController' --context=inspection-dev --format=json
+```
+
+Use the exact response's `X-Debug-Token`; the health check creates profiles too. Mate's `server-info` describes
+its own CLI process, not the HTTP request. Compiled service facts go stale after source or dependency edits;
+`cache:clear` and re-discovery refresh them. The PoC's `mate-prepare` wrapper with its freshness and
+archive-before-clear rules is not ported; `bin/dev mate` is a plain passthrough.
+
+Version note: UXor declares Mate `^0.14`. The fixture pins 0.15.0, which the PoC verified. The package's Mate
+integration must be checked against both before claiming UXor compatibility (spec §4, DIAG section).
+
+Symfony Docker (dunglas) and FrankenPHP: not adopted. The fixture runs PHP's built-in server, which is enough
+for request/profile correlation. xorder's `php-frankenphp` and `uxor-dev` lines are the route if a worker-mode
+or Caddy-fronted fixture becomes necessary, for example for Mercure or HTTP/2 behavior.
+
 ## Serena with the Mago language server
 
 Ported from mago-serena_v2-poc and vendored under `tools/serena/`: Serena v2 at its pinned revision with the
