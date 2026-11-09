@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "parent_revision": "51737aa",
+  "parent_expression": "installed = {row['name']: row['version'] for row in lock['packages'] + lock.get('packages-dev', [])}",
+  "defect": "Lock packages-dev described as installed after --no-dev",
+  "results": [
+    {
+      "mode": "red",
+      "native_exit": 1,
+      "test": "test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies",
+      "implementation": "Exact parent lockfile inventory expression"
+    },
+    {
+      "mode": "green",
+      "native_exit": 0,
+      "test": "test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies",
+      "implementation": "Actual Composer vendor inventory"
+    }
+  ]
+}

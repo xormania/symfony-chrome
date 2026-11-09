@@ -23,7 +23,7 @@ runner records the candidate source identity and native process exits.
 
 | Suite / check | What executes |
 | --- | --- |
-| `browser.chrome-mcp` | Real MCP initialize/discovery, page navigation/snapshot, schema-error response; an external `/proc` observation checks owned Chrome cleanup. |
+| `browser.chrome-mcp` | Real MCP initialize/discovery, observed controlled page-ID selection for navigation/snapshot and invalid-mode response; an external `/proc` observation checks owned Chrome cleanup. |
 | `browser.borrowed-endpoint` | A separate owner starts Chrome on a loopback endpoint. MCP attaches, navigates and detaches. The owner verifies that its process and endpoint survive, then cleans up its own resources. |
 | `browser.request-profile` | Two outstanding HTTP clients obtain distinct exact response tokens. Raw Symfony profile metadata independently verifies each marker, URL, method and status. Swapping profiles is rejected. Missing-profile and redirect records are retained. Client concurrency is not a claim of backend parallelism. |
 | `browser.guards` | Seven native Playwright cases: real input/client-only behavior, clean load, and deliberately injected console, page, HTTP, request and CSP failures. Unexpected errors fail teardown; expected companion messages are scoped to the exact fixture URL/message. |
@@ -51,6 +51,10 @@ Playwright runs the selected `/usr/local/bin/chrome`, with no automatic retries.
 Its result verifier compares exact titles and native IDs against discovery and
 checks every result attempt, global errors and skip/flaky counts. Equal totals
 alone cannot pass a substituted test.
+
+Chrome MCP 1.12 requires explicit page IDs for navigation and snapshots. The suite derives the ID from the actual single controlled about:blank listing and uses that identity for every subsequent operation, including the invalid-mode control. It never assumes that the initial ID is 1.
+
+Chrome 157 may omit console location for its CSP diagnostic. That companion is allowed only when the exact message contains the known blocked script's SHA-256 and an independent native CSP event identifies the controlled document, inline script, script-src-elem directive and enforcement disposition. Unrelated errors remain unexpected. Native Node helper controls run inside the existing browser phase alongside the seven Playwright cases.
 
 The JSON-RPC client uses byte/time limits, validates response identity/envelopes,
 and owns only its process group. Missing, malformed, timed-out or oversized

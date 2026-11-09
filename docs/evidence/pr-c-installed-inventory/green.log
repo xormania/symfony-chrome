@@ -1,0 +1,6 @@
+test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies (test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK

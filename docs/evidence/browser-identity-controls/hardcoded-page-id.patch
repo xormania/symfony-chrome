@@ -1,0 +1,11 @@
+--- a/tools/testing/browser.py
++++ b/tools/testing/browser.py
+@@ -42,7 +42,7 @@
+         names = {row['name'] for row in listing}
+         assert {'list_pages', 'navigate_page', 'take_snapshot'} <= names, 'Missing Chrome MCP tools'
+         pages = text_of(client.call('list_pages', {}))
+-        page_id = controlled_page_id(pages)
++        page_id = 1
+         text_of(client.call('navigate_page', {'pageId': page_id, 'type': 'url', 'url': 'http://127.0.0.1:8000/_ci/browser'}))
+         snapshot = text_of(client.call('take_snapshot', {'pageId': page_id}))
+         assert 'Symfony Chrome contract' in snapshot and 'Local action' in snapshot, snapshot

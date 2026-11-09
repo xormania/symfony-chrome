@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tests/integration'))
 from contracts import Checks, http, workspace
 from archive_oracle import snapshot_profile, verify_archive
+from serena_oracle import verify_constructor_reference
 from protocol import StdioClient, text_of
 sys.path.insert(0, str(ROOT / 'bin'))
 from devlib import environment, host_port
@@ -119,9 +120,11 @@ def serena(data, evidence):
         symbol = text_of(client.call('serena_repl', {'session': session,
             'code': 's.lsp.find_symbol("BindingProbe", relative_path="src/Ci/BindingProbe.php", include_body=True)'}))
         assert 'BindingProbe' in symbol and 'ContractTransport' in symbol, symbol
+        text_of(client.call('serena_repl', {'session': session, 'code': 'import json'}))
         refs = text_of(client.call('serena_repl', {'session': session,
-            'code': 's.lsp.get_symbol_references("src/Ci/BindingProbe.php", "App\\\\Ci\\\\BindingProbe", "__construct")'}))
-        assert 'ContractTransport' in refs, 'Real Mago reference query omitted known constructor type'
+            'code': 'json.dumps(s.lsp.get_symbol_references("src/Ci/BindingProbe.php", "App\\\\Ci\\\\BindingProbe", "__construct"))'}))
+        verified = verify_constructor_reference(json.loads(refs), OWNER, INTERFACE)
+        (Path(evidence) / 'serena-reference-oracle.json').write_text(json.dumps(verified, indent=2) + '\n')
     return 'Real Serena REPL resolves known symbol/body and Mago constructor reference; no model session claimed', 5
 
 

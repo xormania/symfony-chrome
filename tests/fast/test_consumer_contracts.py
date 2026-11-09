@@ -11,6 +11,9 @@ ROOT = Path(os.environ.get('CONSUMER_TEST_ROOT', Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location('consumer', ROOT / 'tools/testing/consumer.py')
 consumer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(consumer)
+spec = importlib.util.spec_from_file_location('compatibility', ROOT / 'tools/testing/compatibility.py')
+compatibility = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(compatibility)
 
 
 class ConsumerContracts(unittest.TestCase):
@@ -70,6 +73,18 @@ class ConsumerContracts(unittest.TestCase):
             archive.write_bytes(b'tampered archive')
             with self.assertRaisesRegex(ValueError, 'identity mismatch'):
                 consumer.add_archives(original, [entry])
+
+    def test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            app = Path(temporary)
+            (app / 'vendor/composer').mkdir(parents=True)
+            runtime = {'name': 'xormania/chrome-bundle', 'version': '0.1.x-dev'}
+            devtools = {'name': 'xormania/chrome-devtools-bundle', 'version': '0.1.x-dev'}
+            (app / 'composer.lock').write_text(json.dumps({'packages': [runtime], 'packages-dev': [devtools]}))
+            for installed in [{'packages': [runtime], 'dev': False}, [runtime]]:
+                with self.subTest(format=type(installed).__name__):
+                    (app / 'vendor/composer/installed.json').write_text(json.dumps(installed))
+                    self.assertEqual({'xormania/chrome-bundle': '0.1.x-dev'}, compatibility.installed_inventory(app))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # Development image for writing the Symfony-Chrome package.
-# Base: xorder php-browser 8.4-trixie v1.2.4 (PHP 8.4.26, Composer, Symfony CLI, Chromium 155 + runtime libs,
+# Base: xorder php-browser 8.4-trixie v1.2.3 (PHP 8.4.26, Composer, Symfony CLI, Chromium 155 + runtime libs,
 # PUID/PGID entrypoint, HOME=/home/dev, workspace /workspace). This file adds Node 22, Chrome for Testing
 # (the browser chrome-devtools-mcp officially supports) and chrome-devtools-mcp. Pins: toolchain.lock.json.
 # Candidate for a dedicated xorder line once the contract settles.

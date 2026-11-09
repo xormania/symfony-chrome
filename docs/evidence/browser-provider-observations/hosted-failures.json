@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "kind": "selected raw provider fields from the failing hosted run",
+  "workflow_run": 42562177685,
+  "head": "4f9fdfa19db2f68c719a0669eabf57b29c2b8701",
+  "artifact_id": 13649693356,
+  "artifact_url": "https://github.com/xormania/symfony-chrome/actions/runs/42562177685/artifacts/13649693356",
+  "chrome": "Google Chrome for Testing 157.0.8103.38 ",
+  "mcp_server": {
+    "name": "chrome_devtools",
+    "title": "Chrome DevTools MCP server",
+    "version": "1.12.0"
+  },
+  "initial_page_listing": "## Pages\n1: about:blank [selected]\n## Third-party developer tools\nNo third-party developer tools available.",
+  "tool_input_requirements": {
+    "navigate_page": {
+      "required": [
+        "pageId"
+      ],
+      "pageId": {
+        "type": "number",
+        "description": "Targets a specific page by ID."
+      }
+    },
+    "take_snapshot": {
+      "required": [
+        "pageId"
+      ],
+      "pageId": {
+        "type": "number",
+        "description": "Targets a specific page by ID."
+      }
+    }
+  },
+  "omitted_page_id_rejection": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Input validation error: Invalid arguments for tool navigate_page: pageId: Invalid input: expected number, received undefined"
+      }
+    ],
+    "isError": true
+  },
+  "csp_console": {
+    "kind": "console",
+    "message": "Executing inline script violates the following Content Security Policy directive 'script-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-nJkmG+zggsUzCIx8lteOr3Z7UIAGgT5GCc9Jaff6WyE='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.",
+    "url": ""
+  },
+  "playwright_outcome": {
+    "passed": 6,
+    "failed": 1
+  },
+  "scope": "Provider observations explaining the pageId and empty-console-location corrections; no passing browser run claimed here"
+}

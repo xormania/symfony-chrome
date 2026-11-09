@@ -46,6 +46,14 @@ intentional dependency resolution, with its actual resolved lock retained; it is
 not described as the locked Symfony 8.1 regression baseline. A conflict fails the
 selected cell instead of rewriting package constraints.
 
+The compatibility report observes `installed` from Composer's actual vendor
+inventory. `resolved_dependencies` separately records everything in the resolved
+lock, including development packages omitted by a production install. The selected
+case proves the Symfony 7.3 framework boundary against its recorded dependency
+set; other Symfony components resolve within the declared package ranges. It does
+not claim that every component or transitive dependency was installed at its
+minimum possible version.
+
 ## Performance experiments
 
 ```sh

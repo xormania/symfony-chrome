@@ -1,0 +1,38 @@
+test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies (test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies) ...
+  test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies (test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies) (format='dict') ... FAIL
+  test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies (test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies) (format='list') ... FAIL
+
+======================================================================
+FAIL: test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies (test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies) (format='dict')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/consumer-work/tests/fast/test_consumer_contracts.py", line 87, in test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies
+    self.assertEqual({'xormania/chrome-bundle': '0.1.x-dev'}, compatibility.installed_inventory(app))
+AssertionError: {'xor[19 chars]': '0.1.x-dev'} != {'xor[19 chars]': '0.1.x-dev', 'xormania/chrome-devtools-bundle': '0.1.x-dev'}
+- {'xormania/chrome-bundle': '0.1.x-dev'}
+?                                       ^
+
++ {'xormania/chrome-bundle': '0.1.x-dev',
+?                                       ^
+
++  'xormania/chrome-devtools-bundle': '0.1.x-dev'}
+
+======================================================================
+FAIL: test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies (test_consumer_contracts.ConsumerContracts.test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies) (format='list')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/consumer-work/tests/fast/test_consumer_contracts.py", line 87, in test_production_inventory_reports_vendor_packages_instead_of_locked_dev_dependencies
+    self.assertEqual({'xormania/chrome-bundle': '0.1.x-dev'}, compatibility.installed_inventory(app))
+AssertionError: {'xor[19 chars]': '0.1.x-dev'} != {'xor[19 chars]': '0.1.x-dev', 'xormania/chrome-devtools-bundle': '0.1.x-dev'}
+- {'xormania/chrome-bundle': '0.1.x-dev'}
+?                                       ^
+
++ {'xormania/chrome-bundle': '0.1.x-dev',
+?                                       ^
+
++  'xormania/chrome-devtools-bundle': '0.1.x-dev'}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=2)

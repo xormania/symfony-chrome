@@ -15,6 +15,22 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def installed_inventory(app: Path) -> dict[str, str]:
+    """Observe installed vendor packages; lockfiles can also name absent dev dependencies."""
+    value = json.loads((app / 'vendor/composer/installed.json').read_text())
+    packages = value.get('packages') if isinstance(value, dict) else value
+    if not isinstance(packages, list) or not packages:
+        raise ValueError('Installed Composer package inventory is missing')
+    installed = {}
+    for package in packages:
+        if not isinstance(package, dict) or not isinstance(package.get('name'), str) or not isinstance(package.get('version'), str):
+            raise ValueError('Invalid installed Composer package identity')
+        if package['name'] in installed:
+            raise ValueError('Duplicate installed Composer package identity')
+        installed[package['name']] = package['version']
+    return installed
+
+
 def run(evidence: Path, selected: str | None = None) -> dict:
     from package import build_archives, prepare_consumer, http_probe
 
@@ -48,7 +64,8 @@ def run(evidence: Path, selected: str | None = None) -> dict:
                 if not response.get('ready') or response.get('environment') != cell['mode']:
                     raise RuntimeError('Unexpected independent runtime HTTP response')
                 lock = json.loads((app / 'composer.lock').read_text())
-                installed = {row['name']: row['version'] for row in lock['packages'] + lock.get('packages-dev', [])}
+                installed = installed_inventory(app)
+                resolved = {row['name']: row['version'] for row in lock['packages'] + lock.get('packages-dev', [])}
                 wanted = cell['symfony'].rstrip('*')
                 framework = installed.get('symfony/framework-bundle', '').lstrip('v')
                 if not framework.startswith(wanted):
@@ -58,7 +75,8 @@ def run(evidence: Path, selected: str | None = None) -> dict:
                     shutil.copy2(path, target / path.name)
             checks.append({'id': 'compatibility.' + cell['id'], 'outcome': 'passed', 'assertions': 3,
                            'detail': 'Independent archive consumer boots with expected framework; native production oracle passed'})
-            results.append({**cell, 'installed': installed, 'input_mode': 'intentional resolution within selected boundary'})
+            results.append({**cell, 'installed': installed, 'resolved_dependencies': resolved,
+                            'input_mode': 'intentional resolution within selected framework boundary'})
         except InterruptedError:
             raise  # The temporary consumer is cleaned before propagating cancellation; do not start another cell.
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:

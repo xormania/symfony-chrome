@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Ci\BindingProbe;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[AsController]
 final class ContractController
 {
-    public function __construct(private readonly Profiler $profiler, private readonly BindingProbe $probe) {}
+    public function __construct(#[Autowire(service: 'profiler')] private readonly Profiler $profiler, private readonly BindingProbe $probe) {}
 
     #[Route('/_ci/observe', methods: ['GET'])]
     public function observe(Request $request): JsonResponse
