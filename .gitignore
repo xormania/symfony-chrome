@@ -1,0 +1,14 @@
+# Private companion repository, cloned locally. Never committed here.
+/private/
+
+# Disposable per-run state created by bin/dev
+/workspaces/
+/artifacts/
+/.cache/
+
+# Dependency and build output
+vendor/
+node_modules/
+var/
+__pycache__/
+.phpunit.cache/

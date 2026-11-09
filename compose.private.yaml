@@ -1,0 +1,8 @@
+# Added by bin/dev only when ./private exists. Mounts the private companion
+# repository read-write at /private. Nothing in this file is required.
+services:
+  php:
+    volumes:
+      - type: bind
+        source: ./private
+        target: /private

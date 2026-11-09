@@ -1,0 +1,26 @@
+{
+    "name": "xormania/chrome-bundle",
+    "description": "Chrome browser APIs, CDP, and MCP capabilities for Symfony applications. Runtime bundle.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["symfony-ux", "chrome", "mcp", "webmcp", "devtools"],
+    "require": {
+        "php": ">=8.4",
+        "symfony/config": "^7.3|^8.0",
+        "symfony/dependency-injection": "^7.3|^8.0",
+        "symfony/framework-bundle": "^7.3|^8.0",
+        "symfony/http-kernel": "^7.3|^8.0"
+    },
+    "suggest": {
+        "chrome-php/chrome": "Managed Chrome operations from PHP (CDP adapter)",
+        "symfony/mcp-bundle": "Expose package operations as MCP tools and resources",
+        "symfony/messenger": "Asynchronous managed-browser jobs"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xormania\\ChromeBundle\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

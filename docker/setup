@@ -1,0 +1,17 @@
+#!/bin/sh
+# Prepare the disposable fixture application. Run in /workspace inside the container.
+# Idempotent: a fresh workspace resolves dependencies; a prepared one reinstalls from its lock.
+set -eu
+if [ -f composer.lock ]; then
+    composer install --no-interaction --no-progress --prefer-dist
+else
+    echo "No composer.lock in the fixture yet: resolving dependencies and running Flex recipes." >&2
+    composer update --no-interaction --no-progress --prefer-dist
+fi
+php bin/console cache:clear
+if php bin/console list --raw 2>/dev/null | grep -q '^importmap:install'; then
+    php bin/console importmap:install
+fi
+if php bin/console list --raw 2>/dev/null | grep -q '^assets:install'; then
+    php bin/console assets:install public
+fi

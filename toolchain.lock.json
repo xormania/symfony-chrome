@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "pinned_at": "2026-11-09T01:15:00Z",
+  "images": {
+    "base": "ghcr.io/xormania/php-browser:8.4-trixie-v1.2.4@sha256:628021c4e31dbd226183aefb2186b363849475bcba8a5e176e684e7491054ee7",
+    "base_record": "https://github.com/xormania/xorder/blob/b8efe93/release-records/php-browser/8.4-trixie/1.2.4.json",
+    "base_provides": {
+      "php": "8.4.27",
+      "composer": "2.10.3",
+      "symfony_cli": "5.22.2",
+      "chromium": "156.0.8078.73",
+      "xdebug": "3.5.3",
+      "debian": "13.7 trixie"
+    },
+    "node": "docker.io/library/node:22-trixie@sha256:77d0c7953e80648137a237496c8edbcb3a14bedc5c5298b93a6d0dfa6c3e1271"
+  },
+  "browser": {
+    "chrome_for_testing": "157.0.8103.38",
+    "platform": "linux64",
+    "url": "https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux64/chrome-linux64.zip",
+    "channel_observed": "Stable as of 2026-11-09"
+  },
+  "mcp": {
+    "chrome_devtools_mcp": "1.12.0",
+    "node_engines": "^20.19.0 || ^22.12.0 || >=23"
+  },
+  "targets": {
+    "php": "8.4",
+    "symfony": "8.1.*",
+    "reference_consumer": "xormania/uxor demo (PHP >=8.4, Symfony 8.1.*)"
+  },
+  "notes": [
+    "Base image and Node digest taken from the xorder php-browser 8.4-trixie v1.2.4 release record on 2026-11-09.",
+    "Chrome for Testing is added because chrome-devtools-mcp officially supports Google Chrome and Chrome for Testing only; Debian Chromium from the base remains for Panther.",
+    "Chrome 157 satisfies chrome-devtools-mcp autoConnect (144+) and the WebMCP tool category (150+ with --enable-features=WebMCP).",
+    "The CfT index publishes no sha256; docker/identity.py records the installed binary hash.",
+    "xorder release groups: adopt the downstream support check before 2026-11-11 08:00 UTC if this base stays in use."
+  ]
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Unused: the xorder base image's library-entrypoint handles PUID/PGID. Kept so docker/ copies cleanly.
+set -eu
+exec "$@"
