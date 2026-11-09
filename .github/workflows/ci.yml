@@ -31,6 +31,7 @@ jobs:
           name: fast-${{ github.run_id }}-${{ github.run_attempt }}
           path: artifacts/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
 
   package:
@@ -56,6 +57,7 @@ jobs:
           name: package-${{ github.run_id }}-${{ github.run_attempt }}
           path: artifacts/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
 
   integration:
@@ -99,6 +101,7 @@ jobs:
           name: integration-${{ github.run_id }}-${{ github.run_attempt }}
           path: artifacts/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
 
   acceptance:

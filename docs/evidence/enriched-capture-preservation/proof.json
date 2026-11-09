@@ -1,0 +1,26 @@
+{
+  "kind": "controlled-regression",
+  "fault": "Restore unconditional enriched-wrapper finally writes, erasing bounded native streams after overflow or cancellation",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "/workspace/scratch/7276bb7a269f/native-capture-work/tests/integration",
+    "-p",
+    "test_enriched_capture.py",
+    "-v"
+  ],
+  "green_exit": 0,
+  "red_exit": 1,
+  "test_count": 2,
+  "source_sha256": "cd079fc2e54c9776d4c8a80d8c9500dd65376bdd5d79f8bafdb7471a7cc6895f",
+  "mutant_sha256": "8e1fab9fedb6bc2fc50b23898f595a5689115b2e3cec69ce45a1dcbcafe9fa1f",
+  "processlib_sha256": "038b311548927df6d972dbdde96ca72f195bd82b2d7eead6738e069110039e41",
+  "log_normalization": "Trailing whitespace removed; retained log digests below describe normalized files",
+  "logs": {
+    "green.log": "399cdd0c467bdd46b6d0f212bed9b866a18524d5fa30000258e068310fc9faee",
+    "red.log": "0ead5659104454c2a252aeabc2a4f45d30810932dceda7080e85d54d976004bb"
+  }
+}

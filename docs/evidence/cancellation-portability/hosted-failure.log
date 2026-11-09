@@ -1,0 +1,21 @@
+ERROR: test_sigterm_runs_owned_stop_and_records_cleanup (test_termination.TerminationContract.test_sigterm_runs_owned_stop_and_records_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/symfony-chrome/symfony-chrome/tests/integration/test_termination.py", line 66, in test_sigterm_runs_owned_stop_and_records_cleanup
+    self.exercise('healthy')
+  File "/home/runner/work/symfony-chrome/symfony-chrome/tests/integration/test_termination.py", line 51, in exercise
+    stdout, stderr = process.communicate(timeout=5)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/opt/hostedtoolcache/Python/3.12.16/x64/bin/python3', '-u', '-c', "\nimport json,pathlib,sys,time\nsys.path.insert(0,sys.argv[1])\nimport contracts\nroot=pathlib.Path(sys.argv[2]);root.mkdir(exist_ok=True)\nevidence=root/'evidence';evidence.mkdir()\ndata={'run_id':'controlled-signal','evidence':str(evidence)}\ncontracts.prepare=lambda *args,**kwargs:data\ncontracts.start=lambda *args,**kwargs:None\ncontracts.install_contract_fixture=lambda *args:None\ndef stop(value,purge=False):\n (root/'stop.json').write_text(json.dumps({'run_id':value['run_id'],'purge':purge}))\n if sys.argv[3]=='cleanup-error': raise RuntimeError('controlled cleanup failure')\ncontracts.stop=stop\ntry:\n with contracts.workspace():\n  (root/'ready').write_text('owned context entered')\n  checks=contracts.Checks(root/'native-checks')\n  checks.check('controlled-blocking-contract',lambda:(time.sleep(60),1))\n  (root/'continued').write_text('unexpected next-contract path')\n  time.sleep(60)\nexcept InterruptedError:\n sys.exit(130)\n", '/home/runner/work/symfony-chrome/symfony-chrome/tests/integration', '/tmp/tmp4pdkll22', 'healthy']' timed out after 5 seconds
+
+----------------------------------------------------------------------
+Ran 113 tests in 12.513s
+
+FAILED (errors=1)

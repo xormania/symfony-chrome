@@ -1,0 +1,16 @@
+test_filesystem_oserror_handling_cannot_swallow_cancellation (test_termination.TerminationContract.test_filesystem_oserror_handling_cannot_swallow_cancellation) ... FAIL
+
+======================================================================
+FAIL: test_filesystem_oserror_handling_cannot_swallow_cancellation (test_termination.TerminationContract.test_filesystem_oserror_handling_cannot_swallow_cancellation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_termination.py", line 92, in test_filesystem_oserror_handling_cannot_swallow_cancellation
+    self.exercise('mkdir-signal')
+  File "/workspace/scratch/7276bb7a269f/tests-portability/tests/integration/test_termination.py", line 73, in exercise
+    self.assertEqual(process.returncode, 130, stderr.decode())
+AssertionError: 0 != 130 :
+
+----------------------------------------------------------------------
+Ran 1 test in 0.053s
+
+FAILED (failures=1)

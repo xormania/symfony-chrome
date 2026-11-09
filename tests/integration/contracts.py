@@ -21,6 +21,10 @@ sys.path.insert(0, str(ROOT / 'bin'))
 from devlib import execute, host_port, load, prepare, require_running, start, stop
 
 
+class ContractCancelled(BaseException):
+    """Cancellation must bypass ordinary provider/filesystem exception handlers."""
+
+
 class Checks:
     def __init__(self, directory):
         self.directory = Path(directory)
@@ -33,7 +37,7 @@ class Checks:
         try:
             detail, assertions = function()
             row = {'id': identity, 'outcome': 'passed', 'assertions': assertions, 'detail': detail}
-        except InterruptedError:
+        except (ContractCancelled, InterruptedError):
             # Cancellation must unwind the owned workspace immediately, rather
             # than continue to the next potentially expensive contract.
             raise
@@ -79,7 +83,7 @@ def termination_handler():
         # The parent retains its bounded SIGKILL fallback if cleanup stalls.
         if not interrupted:
             interrupted = True
-            raise InterruptedError('Received SIGTERM; cleaning owned integration resources')
+            raise ContractCancelled('Received SIGTERM; cleaning owned integration resources')
     signal.signal(signal.SIGTERM, terminate)
     try:
         yield
@@ -104,7 +108,7 @@ def workspace():
             cleanup = {'run_id': data['run_id'], 'outcome': 'passed'}
             try:
                 stop(data, purge=True)
-            except Exception as exc:
+            except BaseException as exc:
                 cleanup.update(outcome='error', detail=str(exc))
                 if primary is not None:
                     primary.add_note('Cleanup also failed: ' + str(exc))

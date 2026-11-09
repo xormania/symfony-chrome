@@ -7,6 +7,7 @@ import time
 import uuid
 from pathlib import Path
 
+from processlib import NativeCaptureError, run_captured
 from devlib import ROOT, environment, exec_command, execute, load, require_running, sha, write_json
 
 MAGO_REV = '46df50c96d93d0ac3655c116c375574277cf0b30'
@@ -108,7 +109,7 @@ def run_native(data, argv, *, echo=False):
     command = exec_command(data, 'mago', '--workspace', '/workspace', '--config', identity['config'],
                            '--php-version', PHP_TARGET, '--colors', 'never', *argv)
     started = time.monotonic()
-    result = subprocess.run(command, env=environment(data), capture_output=True)
+    result = run_captured(command, directory, env=environment(data))
     (directory / 'stdout').write_bytes(result.stdout)
     (directory / 'stderr').write_bytes(result.stderr)
     write_json(directory / 'invocation.json', {'run_id': data['run_id'], 'host_workspace': data['app'], 'argv': command,
@@ -193,7 +194,20 @@ def run_enriched(data, argv, *, symbols=(), echo=False, wiring_enabled=True):
                                'mago', '--workspace', '/workspace', '--config', identity['config'],
                                '--php-version', PHP_TARGET, '--threads', '1', '--colors', 'never', *argv)
         row['argv'] = command
-        process = subprocess.run(command, env=environment(data), capture_output=True)
+        try:
+            process = run_captured(command, directory, env=environment(data))
+        except BaseException as exc:
+            # Preserve native streams for every incomplete call, including a
+            # cancellation that must propagate through the owned workspace.
+            row.update(incomplete_capture=True, status='tool_failure', exit=3,
+                       reason=type(exc).__name__ + ' during native capture')
+            try:
+                captured = json.loads((directory / 'native-capture.json').read_text())
+                row.update(native_exit=captured['native_exit'], timed_out=captured['timed_out'],
+                           truncated=captured['truncated'])
+            except (OSError, ValueError, KeyError):
+                row['capture_status_unavailable'] = True
+            raise
         stdout, stderr = process.stdout, process.stderr
         row.update(exit=process.returncode, native_exit=process.returncode, status='tool_failure')
         path = directory / 'graph.json'
@@ -214,16 +228,22 @@ def run_enriched(data, argv, *, symbols=(), echo=False, wiring_enabled=True):
         else:
             row['reason'] = 'Mago did not complete its after-analysis observer; inspect native stderr'
         return row
+    except NativeCaptureError as exc:
+        row.update(status='tool_failure', exit=3, native_exit=exc.native_exit,
+                   timed_out=exc.timed_out, truncated=exc.truncated,
+                   incomplete_capture=True, reason=str(exc))
+        return row
     except (AssertionError, OSError, ValueError, KeyError) as exc:
         row.update(status='tool_failure', reason=str(exc))
         return row
     finally:
-        if row['status'] == 'tool_failure':
+        if row['status'] == 'tool_failure' and not row.get('incomplete_capture'):
             if row['exit'] in (0, 1):
                 row['exit'] = 3
             stderr += ('mago-enriched: ' + row.get('reason', 'Enriched analysis failed') + ' (native exit ' + str(row['native_exit']) + ')\n').encode()
-        (directory / 'stdout').write_bytes(stdout)
-        (directory / 'stderr').write_bytes(stderr)
+        if not row.get('incomplete_capture'):
+            (directory / 'stdout').write_bytes(stdout)
+            (directory / 'stderr').write_bytes(stderr)
         row['elapsed_s'] = round(time.monotonic() - started, 6)
         write_json(directory / 'invocation.json', row)
         if echo:

@@ -1,0 +1,14 @@
+{
+  "native_exit": 1,
+  "subject_revision": "5e3004cbb1b7d24102cb95d72d7cfc0bbaa5e65d",
+  "contracts_sha256": "5ff721ae6c6b9ef6134d92b5cd8d1f4c24f712413588115aae1c2acf8e925bf1",
+  "test_sha256": "7adde5e6ca2a588b81e9c9f03b057f03ee7a4517933a6863b65cc9d9f59c65d6",
+  "condition": "Actual SIGTERM delivered from os.mkdir after directory creation, while pathlib.mkdir(exist_ok=True) has an OSError handler on its stack",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-m",
+    "unittest",
+    "test_termination.TerminationContract.test_filesystem_oserror_handling_cannot_swallow_cancellation",
+    "-v"
+  ]
+}

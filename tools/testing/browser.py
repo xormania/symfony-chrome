@@ -12,7 +12,7 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tests/integration'))
-from contracts import Checks, correlation, workspace
+from contracts import ContractCancelled, Checks, correlation, workspace
 from browser_report import verify as verify_browser_report
 from chrome_oracle import controlled_page_id
 from protocol import StdioClient, text_of
@@ -162,6 +162,7 @@ def main():
     parser.add_argument('--contract', choices=['browser.chrome-mcp', 'browser.borrowed-endpoint', 'browser.request-profile', 'browser.guards'], help='Run one named contract in a fresh owned workspace')
     args = parser.parse_args()
     checks = Checks(args.evidence)
+    cancelled = False
     try:
         with workspace() as data:
             checks.context.update(workspace_run_id=data['run_id'], native_evidence=data['evidence'])
@@ -173,13 +174,17 @@ def main():
                 checks.check('browser.request-profile', lambda: correlation(data, args.evidence))
             if args.contract in (None, 'browser.guards'):
                 checks.check('browser.guards', lambda: playwright(data, args.evidence))
+    except ContractCancelled as exc:
+        cancelled = True
+        checks.rows.append({'id': 'browser.environment', 'outcome': 'error', 'assertions': 0,
+                            'detail': 'ContractCancelled: ' + str(exc)})
     except Exception as exc:
         checks.rows.append({'id': 'browser.environment', 'outcome': 'error', 'assertions': 0,
                             'detail': type(exc).__name__ + ': ' + str(exc)[-4000:]})
-    checks.save(capability_scope={'requested_mode': 'owned_and_controlled_borrowed_endpoint', 'host_auto_connect': 'not_executed',
+    checks.save(execution_interrupted=cancelled, capability_scope={'requested_mode': 'owned_and_controlled_borrowed_endpoint', 'host_auto_connect': 'not_executed',
                                  'package_correlation_api': 'not_implemented',
                                  'package_session_api': 'not_implemented'})
-    return checks.exit()
+    return 130 if cancelled else checks.exit()
 
 
 if __name__ == '__main__':

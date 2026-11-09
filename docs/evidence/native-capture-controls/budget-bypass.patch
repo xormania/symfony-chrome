@@ -1,0 +1,7 @@
+--- a/bin/processlib.py
++++ b/bin/processlib.py
+@@ -47,3 +47,3 @@
+ def capture(command, directory, timeout, cwd=None, env=None, *, separate=False,
+-            limit=LOG_LIMIT, metadata_path=None, visibility='caller_owned', **popen_kwargs):
++            limit=2 * LOG_LIMIT, metadata_path=None, visibility='caller_owned', **popen_kwargs):
+     """Drain bounded streams without buffering the producer's arbitrary output in RAM.
