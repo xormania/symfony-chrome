@@ -1,0 +1,23 @@
+{
+  "selection_binding_control": {
+    "mutation": "Remove configured-parent and support-lock identity comparison",
+    "red_exit": 1,
+    "expected_failure": "Unrelated locked repository accepted"
+  },
+  "acquisition_regression": {
+    "parent": "027f3b4a6cbaece6726939edb272bc4ad18514db",
+    "red_exit": 1,
+    "expected_failure": "Failed fetch leaves a partial final checkout directory"
+  },
+  "dockerfile_and_cleanup_regressions": {
+    "parent": "9796ed6",
+    "red_exit": 1,
+    "expected_failures": [
+      "Mismatched final Dockerfile parent accepted",
+      "Successful leader leaves running background child"
+    ]
+  },
+  "green_exit": 0,
+  "green_tests": 7,
+  "scope": "Controlled wrapper mutation/regressions; no Docker workload execution is claimed"
+}

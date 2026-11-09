@@ -1,0 +1,1 @@
+{"ok": false, "status": "unsupported", "code": "support_check_failed", "reason": "Support policy snapshot is expired or has invalid freshness dates; refresh it with support-fetch"}

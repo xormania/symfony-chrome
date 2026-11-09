@@ -22,7 +22,7 @@
         "symfony/ux-live-component": "^3.6",
         "symfony/ux-twig-component": "^3.6",
         "symfony/yaml": "8.1.*",
-        "xormania/chrome-bundle": "@dev"
+        "xormania/chrome-bundle": "^0.1@dev"
     },
     "require-dev": {
         "byte-kitsune/mago-symfony-wiring": "dev-poc-28c3f54",
@@ -38,21 +38,27 @@
         "symfony/stopwatch": "8.1.*",
         "symfony/var-dumper": "8.1.*",
         "symfony/web-profiler-bundle": "8.1.*",
-        "xormania/chrome-devtools-bundle": "@dev"
+        "xormania/chrome-devtools-bundle": "^0.1@dev"
     },
     "repositories": [
         {
             "type": "path",
-            "url": "/packages/chrome-bundle",
+            "url": "../../packages/chrome-bundle",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "xormania/chrome-bundle": "0.1.x-dev"
+                }
             }
         },
         {
             "type": "path",
-            "url": "/packages/chrome-devtools-bundle",
+            "url": "../../packages/chrome-devtools-bundle",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "xormania/chrome-devtools-bundle": "0.1.x-dev"
+                }
             }
         },
         {
@@ -128,7 +134,10 @@
             "symfony/flex": true,
             "symfony/runtime": true
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.4.26"
+        }
     },
     "autoload": {
         "psr-4": {

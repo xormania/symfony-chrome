@@ -51,17 +51,24 @@ def prepare(run_id, port=0, app_env='dev', private=None):
     validate_id(run_id)
     workspace = ROOT / 'workspaces' / run_id
     if workspace.exists():
-        return load(run_id)
+        data = load(run_id)
+        for key, requested in [('app_env', app_env), ('private', private), ('port', port)]:
+            if data.get(key) != requested:
+                raise ValueError(f'Existing run {run_id!r} has {key}={data.get(key)!r}; requested {requested!r}. Create a new run.')
+        environment(data)
+        return data
     workspace.mkdir(parents=True)
-    shutil.copytree(ROOT / 'fixtures/app', workspace / 'app', ignore=FIXTURE_IGNORE)
-    (workspace / 'app/.serena').mkdir()
-    shutil.copy2(ROOT / 'tools/serena/config/project.yml', workspace / 'app/.serena/project.yml')
+    app = workspace / 'fixtures/app'
+    shutil.copytree(ROOT / 'fixtures/app', app, ignore=FIXTURE_IGNORE)
+    (workspace / 'packages').symlink_to(ROOT / 'packages', target_is_directory=True)
+    (app / '.serena').mkdir()
+    shutil.copy2(ROOT / 'tools/serena/config/project.yml', app / '.serena/project.yml')
     (workspace / 'state').mkdir()
     (workspace / 'trusted').mkdir()
     (ROOT / 'artifacts' / run_id).mkdir(parents=True, exist_ok=True)
     digest = hashlib.sha256(str(ROOT).encode()).hexdigest()[:8]
     data = {'schema': 1, 'run_id': run_id, 'repository': str(ROOT),
-            'project': f'symfony-chrome-{digest}-{run_id}', 'app': str(workspace / 'app'),
+            'project': f'symfony-chrome-{digest}-{run_id}', 'app': str(app),
             'state': str(workspace / 'state'), 'trusted': str(workspace / 'trusted'),
             'evidence': str(ROOT / 'artifacts' / run_id),
             'port': port, 'app_env': app_env, 'private': private,

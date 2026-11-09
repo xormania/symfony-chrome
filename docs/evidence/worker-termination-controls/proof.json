@@ -1,0 +1,67 @@
+{
+  "test_file": "tests/fast/test_worker_termination.py",
+  "test_sha256": "e2ef897a800145b6f0ab9ee7ede555fe3a004103ee48ff9d4ea0d23af517cba6",
+  "boundary": "Actual subprocesses/signals and public worker/CLI entry points; Docker/devlib side effects controlled; no daemon used",
+  "variants": [
+    {
+      "name": "parent",
+      "subject_revision": "c828a9a812b1eea47d896b3ef09f6a330ec6c590",
+      "source_sha256": {
+        "bin/chrome-mcp": "9d501ee2e46f317d909f5cda72244700fd64af2d062aef5beb9d68d2a59fc3e9",
+        "bin/dev": "ac8e06998cb4a5a6d2f4e1b448d3a653abd9d1e03d9f799c2c948f2c45a167a9",
+        "bin/devlib.py": "bee423ec9abc08da7091cd42b1b709f314276b04e3d1f972833ebd6ae3611348",
+        "bin/mago": "950848e391e9d76a0c8cafece944f82ebfe8c1450c2d4f07e26e21111d4788ec",
+        "bin/magolib.py": "1c4d0691aa8d7523ec7e3e4d4bd626deb17a7c365a7d54b31e7dd092509d377e",
+        "bin/mate": "2c4e025d84d7918ea28b305a09c71382dee65ccc7d10d3061703491850998fd0",
+        "bin/matelib.py": "cb6999cc9e8b2eeb5603d2fbb7cf974966e2cb52e84cd5f83aec7d2a1cb9730f",
+        "bin/serena-mcp": "94d2fd97ed10a3d9b97be48a3348d31e0bf22365168cb163bcafe16e055020b6",
+        "toolchain.lock.json": "1912eea86376e97cdf172bf6f7e0d89fa04522d2627295808aeebd0406d8c53e",
+        "tools/testing/runner.py": "7f18381435d5cad253b49eba8e3042830fd88831742692cf75050d621b44f788",
+        "tools/testing/environment.py": "d064c4e3c996eeb4faef791a027e5a226ab328260d5486c36d1892ab42a189ed"
+      },
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-p",
+        "test_worker_termination.py",
+        "-v"
+      ],
+      "native_exit": 1,
+      "expected_exit": 1
+    },
+    {
+      "name": "candidate",
+      "subject_revision": "2590769f9ff4f9310f8052c58cfbe8a3dc4ac578",
+      "source_sha256": {
+        "bin/chrome-mcp": "9d501ee2e46f317d909f5cda72244700fd64af2d062aef5beb9d68d2a59fc3e9",
+        "bin/dev": "ac8e06998cb4a5a6d2f4e1b448d3a653abd9d1e03d9f799c2c948f2c45a167a9",
+        "bin/devlib.py": "bee423ec9abc08da7091cd42b1b709f314276b04e3d1f972833ebd6ae3611348",
+        "bin/mago": "950848e391e9d76a0c8cafece944f82ebfe8c1450c2d4f07e26e21111d4788ec",
+        "bin/magolib.py": "1c4d0691aa8d7523ec7e3e4d4bd626deb17a7c365a7d54b31e7dd092509d377e",
+        "bin/mate": "2c4e025d84d7918ea28b305a09c71382dee65ccc7d10d3061703491850998fd0",
+        "bin/matelib.py": "cb6999cc9e8b2eeb5603d2fbb7cf974966e2cb52e84cd5f83aec7d2a1cb9730f",
+        "bin/serena-mcp": "94d2fd97ed10a3d9b97be48a3348d31e0bf22365168cb163bcafe16e055020b6",
+        "toolchain.lock.json": "1912eea86376e97cdf172bf6f7e0d89fa04522d2627295808aeebd0406d8c53e",
+        "tools/testing/runner.py": "d55f613e2c01a94694c18c541391c1561b683bccb111d432b7b207e76f4c4fe3",
+        "tools/testing/environment.py": "1dcdf448a323ced44f4b8c6e1ca2bde875587172749265175de8ad23e7c507d5"
+      },
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fast",
+        "-p",
+        "test_worker_termination.py",
+        "-v"
+      ],
+      "native_exit": 0,
+      "expected_exit": 0
+    }
+  ]
+}

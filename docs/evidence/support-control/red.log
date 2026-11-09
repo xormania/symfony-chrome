@@ -1,0 +1,21 @@
+test_dockerfile_parent_must_match_the_selected_support_resource (test_support_contract.SupportSelectionContract.test_dockerfile_parent_must_match_the_selected_support_resource) ... ok
+test_failed_fetch_does_not_publish_a_partial_cached_checkout (test_support_contract.SupportSelectionContract.test_failed_fetch_does_not_publish_a_partial_cached_checkout) ... ok
+test_healthy_selection_preserves_actual_tagged_digest_reference (test_support_contract.SupportSelectionContract.test_healthy_selection_preserves_actual_tagged_digest_reference) ... ok
+test_modified_checker_is_rejected_before_execution (test_support_contract.SupportSelectionContract.test_modified_checker_is_rejected_before_execution) ... ok
+test_mutable_source_ref_and_unpinned_parent_are_rejected (test_support_contract.SupportSelectionContract.test_mutable_source_ref_and_unpinned_parent_are_rejected) ... ok
+test_successful_command_does_not_leave_background_children (test_support_contract.SupportSelectionContract.test_successful_command_does_not_leave_background_children) ... ok
+test_unrelated_locked_repository_cannot_satisfy_selected_parent (test_support_contract.SupportSelectionContract.test_unrelated_locked_repository_cannot_satisfy_selected_parent) ... FAIL
+
+======================================================================
+FAIL: test_unrelated_locked_repository_cannot_satisfy_selected_parent (test_support_contract.SupportSelectionContract.test_unrelated_locked_repository_cannot_satisfy_selected_parent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tmpnb22j1wt/tests/fast/test_support_contract.py", line 44, in test_unrelated_locked_repository_cannot_satisfy_selected_parent
+    with self.assertRaisesRegex(ValueError, 'does not select'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.045s
+
+FAILED (failures=1)

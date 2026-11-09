@@ -1,0 +1,36 @@
+{
+  "test_file": "tests/fast/test_dev_contract.py",
+  "test_sha256": "8244fa212e8baec69f44294d04273d676e658cd9f7475791161aadc8e0efb95f",
+  "parent": {
+    "subject_revision": "a7e0a4c9da28813130bac699c8415bcac667664a",
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests/fast",
+      "-p",
+      "test_dev_contract.py",
+      "-v"
+    ],
+    "native_exit": 1,
+    "expected_failures": [
+      "test_doctor_preserves_platform_check_failure",
+      "test_existing_run_never_silently_uses_another_environment"
+    ],
+    "healthy_tests": 6,
+    "boundary": "real public launcher with controlled Docker executable; no daemon"
+  },
+  "candidate": {
+    "subject_revision": "a7e0a4c9da28813130bac699c8415bcac667664a",
+    "working_tree_changes": true,
+    "tested_files_sha256": {
+      "bin/dev": "d8a94ccae28a0e8756d31c9ae4e414b54af1cd87e868fd4d431bb2efe5fc24ef",
+      "bin/devlib.py": "bee423ec9abc08da7091cd42b1b709f314276b04e3d1f972833ebd6ae3611348"
+    },
+    "native_exit": 0,
+    "tests": 8,
+    "boundary": "real public launcher with controlled Docker executable; no daemon"
+  }
+}

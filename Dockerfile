@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # Development image for writing the Symfony-Chrome package.
-# Base: xorder php-browser 8.4-trixie v1.2.4 (PHP 8.4.27, Composer, Symfony CLI, Chromium 156 + runtime libs,
+# Base: xorder php-browser 8.4-trixie v1.2.4 (PHP 8.4.26, Composer, Symfony CLI, Chromium 155 + runtime libs,
 # PUID/PGID entrypoint, HOME=/home/dev, workspace /workspace). This file adds Node 22, Chrome for Testing
 # (the browser chrome-devtools-mcp officially supports) and chrome-devtools-mcp. Pins: toolchain.lock.json.
 # Candidate for a dedicated xorder line once the contract settles.
@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
     && sha256sum Cargo.lock > /mago-cargo-lock.sha256 && sha256sum /candidate.patch > /mago-patch.sha256 \
     && git rev-parse HEAD > /mago-source.sha && rustc --version > /mago-rust-version.txt
 
-FROM ghcr.io/xormania/php-browser:8.4-trixie-v1.2.4@sha256:628021c4e31dbd226183aefb2186b363849475bcba8a5e176e684e7491054ee7
+FROM ghcr.io/xormania/php-browser:8.4-trixie-v1.2.3@sha256:ad37c8138c4aacdbba8c64f0436669104e0e57dd206aa6f5099c512440f65a3e
 ARG CHROME_VERSION=157.0.8103.38
 ARG CHROME_MCP_VERSION=1.12.0
 

@@ -1,0 +1,11 @@
+{
+  "native_exit": 1,
+  "tests": [
+    "test_runner_contract.CaptureContract.test_parent_exit_does_not_waive_descendant_output_deadline",
+    "test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero",
+    "test_runner_cli.RunnerCliContract.test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks"
+  ],
+  "subject_files_sha256": {
+    "tools/testing/runner.py": "f0c8f38e17d7f3e4095de4def72821bee64f1dbbc4d4a341d9955e3db99ceaef"
+  }
+}

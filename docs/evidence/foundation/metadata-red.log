@@ -1,0 +1,16 @@
+test_archive_dependency_change_is_rejected_with_old_consumer_metadata (test_package_artifact.ArtifactMetadataTest.test_archive_dependency_change_is_rejected_with_old_consumer_metadata) ... FAIL
+test_current_archive_matches_consumer_definition_and_genuine_lock (test_package_artifact.ArtifactMetadataTest.test_current_archive_matches_consumer_definition_and_genuine_lock) ... ok
+
+======================================================================
+FAIL: test_archive_dependency_change_is_rejected_with_old_consumer_metadata (test_package_artifact.ArtifactMetadataTest.test_archive_dependency_change_is_rejected_with_old_consumer_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/metadata-fault-eo_9t9_g/tests/fast/test_package_artifact.py", line 34, in test_archive_dependency_change_is_rejected_with_old_consumer_metadata
+    with self.assertRaisesRegex(RuntimeError, 'Stale consumer package metadata'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.005s
+
+FAILED (failures=1)

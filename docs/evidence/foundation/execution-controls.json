@@ -1,0 +1,30 @@
+{
+  "kind": "controlled-regression-of-original-count-only-JUnit-semantics-and-Docker-read-only-contract",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/fast",
+    "-p",
+    "test_package_execution.py",
+    "-v"
+  ],
+  "source_sha256": "514ce0536826cb985ffeea2eb68eb3454af866253826539f122215099442877c",
+  "controls": [
+    {
+      "fault": "count-only-junit",
+      "green_exit": 0,
+      "red_exit": 1,
+      "mutant_sha256": "cbe2cd0db54f6e6f2a817905b176b63c19cd5fa0c22347fde6d98703ec8e3ae9"
+    },
+    {
+      "fault": "writable-source-mount",
+      "green_exit": 0,
+      "red_exit": 1,
+      "mutant_sha256": "268934c27a44d07ef4e5109de8461a9c49a8717e2103379c0ea00e57c81c57f0"
+    }
+  ],
+  "runtime_limitation": "Docker invocation controls are mocked; no local Docker daemon execution claimed."
+}

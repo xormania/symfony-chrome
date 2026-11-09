@@ -1,0 +1,7 @@
+test_environment_sigterm_runs_cleanup_after_setup_started (test_worker_termination.WorkerTerminationContract.test_environment_sigterm_runs_cleanup_after_setup_started) ... ok
+test_runner_sigterm_stops_owned_worker_and_does_not_start_later_suite (test_worker_termination.WorkerTerminationContract.test_runner_sigterm_stops_owned_worker_and_does_not_start_later_suite) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.199s
+
+OK

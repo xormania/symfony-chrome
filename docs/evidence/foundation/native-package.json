@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "checks": [
+    {
+      "id": "package.archives",
+      "outcome": "passed",
+      "assertions": 8,
+      "detail": "Both distribution payloads independently checked."
+    },
+    {
+      "id": "package.kernel",
+      "outcome": "passed",
+      "assertions": 5,
+      "detail": "1 native PHPUnit tests; JUnit retained."
+    },
+    {
+      "id": "consumer.prod",
+      "outcome": "passed",
+      "assertions": 12,
+      "detail": "Native kernel assertions retained; additional Python checks verify archive bytes, dependency sets and real HTTP response."
+    },
+    {
+      "id": "consumer.dev",
+      "outcome": "passed",
+      "assertions": 5,
+      "detail": "Native kernel assertions retained; additional Python checks verify archive bytes, dependency sets and real HTTP response."
+    }
+  ],
+  "archives": [
+    {
+      "name": "xormania/chrome-bundle",
+      "version": "0.1.x-dev",
+      "sha256": "6a4c915ca5ed1a761907d2988ed12e4ec95dfed8439ae735c5dd1297b0c20f92"
+    },
+    {
+      "name": "xormania/chrome-devtools-bundle",
+      "version": "0.1.x-dev",
+      "sha256": "fddfb84e7ffb47ebebfddda1cc1163033c73ee32b423442313f0145a4db55425"
+    }
+  ],
+  "runtime": {
+    "php": "8.4.24",
+    "composer": "2.10.3",
+    "solver_platform": "8.4.26"
+  },
+  "scope": "Native package/kernel/archive/consumer qualification with exact native consumer assertion counts; Docker/Mago/browser not included.",
+  "native_consumer_assertions": {
+    "prod": 12,
+    "dev": 5
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "pre-fix-metadata-regression",
+  "field": "require.xormania/chrome-bundle",
+  "before": "@dev",
+  "after": "^0.1@dev",
+  "command": [
+    "composer",
+    "validate",
+    "--strict",
+    "--no-check-publish"
+  ],
+  "red_exit": 1,
+  "green_exit": 0,
+  "reason": "Strict Composer validation rejects the original unbound companion constraint."
+}

@@ -1,0 +1,468 @@
+test_doctor_healthy_platform_control (test_dev_contract.LauncherContract.test_doctor_healthy_platform_control) ... ok
+test_doctor_preserves_platform_check_failure (test_dev_contract.LauncherContract.test_doctor_preserves_platform_check_failure) ... ok
+test_existing_run_accepts_its_recorded_environment (test_dev_contract.LauncherContract.test_existing_run_accepts_its_recorded_environment) ... ok
+test_existing_run_never_silently_uses_another_environment (test_dev_contract.LauncherContract.test_existing_run_never_silently_uses_another_environment) ... ok
+test_foreign_workspace_marker_is_rejected_before_docker (test_dev_contract.LauncherContract.test_foreign_workspace_marker_is_rejected_before_docker) ... ok
+test_image_override_mismatch_never_starts_a_workload (test_dev_contract.LauncherContract.test_image_override_mismatch_never_starts_a_workload) ... ok
+test_purge_removes_only_its_workspace_and_keeps_evidence (test_dev_contract.LauncherContract.test_purge_removes_only_its_workspace_and_keeps_evidence) ... ok
+test_unsafe_run_ids_do_not_create_or_start_workspaces (test_dev_contract.LauncherContract.test_unsafe_run_ids_do_not_create_or_start_workspaces) ... ok
+test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks (test_runner_cli.RunnerCliContract.test_deleting_artifact_inventory_cannot_hide_corrupted_native_checks) ... ok
+test_healthy_public_run_and_retained_report (test_runner_cli.RunnerCliContract.test_healthy_public_run_and_retained_report) ... ok
+test_list_is_side_effect_free (test_runner_cli.RunnerCliContract.test_list_is_side_effect_free) ... ok
+test_matching_plan_and_report_must_still_belong_to_requested_attempt (test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt) ... ok
+test_missing_and_substituted_evidence_fail_a_native_zero (test_runner_cli.RunnerCliContract.test_missing_and_substituted_evidence_fail_a_native_zero) ... 
+  test_missing_and_substituted_evidence_fail_a_native_zero (test_runner_cli.RunnerCliContract.test_missing_and_substituted_evidence_fail_a_native_zero) (mode='substitution') ... FAIL
+test_native_failure_is_retained_despite_passing_check_record (test_runner_cli.RunnerCliContract.test_native_failure_is_retained_despite_passing_check_record) ... FAIL
+test_rerun_retains_the_original_attempt (test_runner_cli.RunnerCliContract.test_rerun_retains_the_original_attempt) ... ok
+test_retained_artifact_hash_and_presence_are_checked (test_runner_cli.RunnerCliContract.test_retained_artifact_hash_and_presence_are_checked) ... ok
+test_unknown_or_zero_match_selection_never_executes_a_suite (test_runner_cli.RunnerCliContract.test_unknown_or_zero_match_selection_never_executes_a_suite) ... ok
+test_parent_exit_does_not_waive_descendant_output_deadline (test_runner_contract.CaptureContract.test_parent_exit_does_not_waive_descendant_output_deadline) ... ok
+test_complete_matching_execution_is_accepted (test_runner_contract.ReportContract.test_complete_matching_execution_is_accepted) ... ok
+test_discovered_check_inventory_rejects_same_count_substitution (test_runner_contract.ReportContract.test_discovered_check_inventory_rejects_same_count_substitution) ... FAIL
+test_empty_or_duplicated_selection_cannot_pass (test_runner_contract.ReportContract.test_empty_or_duplicated_selection_cannot_pass) ... 
+  test_empty_or_duplicated_selection_cannot_pass (test_runner_contract.ReportContract.test_empty_or_duplicated_selection_cannot_pass) (selected=[]) ... FAIL
+  test_empty_or_duplicated_selection_cannot_pass (test_runner_contract.ReportContract.test_empty_or_duplicated_selection_cannot_pass) (selected=['unit', 'unit']) ... FAIL
+test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) ... 
+  test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='run_id') ... FAIL
+  test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='attempt_id') ... FAIL
+  test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='source') ... FAIL
+  test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='schema') ... FAIL
+test_input_records_are_not_repaired_or_mutated_by_validation (test_runner_contract.ReportContract.test_input_records_are_not_repaired_or_mutated_by_validation) ... ok
+test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) ... 
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=42) ... FAIL
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=True) ... FAIL
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema='1') ... FAIL
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=None) ... FAIL
+test_missing_and_duplicate_check_identity_cannot_pass (test_runner_contract.ReportContract.test_missing_and_duplicate_check_identity_cannot_pass) ... 
+  test_missing_and_duplicate_check_identity_cannot_pass (test_runner_contract.ReportContract.test_missing_and_duplicate_check_identity_cannot_pass) (checks=[]) ... FAIL
+  test_missing_and_duplicate_check_identity_cannot_pass (test_runner_contract.ReportContract.test_missing_and_duplicate_check_identity_cannot_pass) (checks=[{'id': 'boot', 'outcome': 'passed', 'assertions': 1}, {'id': 'boot', 'outcome': 'passed', 'assertions': 1}]) ... FAIL
+test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) ... 
+  test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='missing') ... FAIL
+  test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='duplicate') ... FAIL
+  test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='same-count-substitution') ... FAIL
+  test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='unexpected') ... FAIL
+test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) ... 
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='native_exit', value=7) ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='native_exit', value=None) ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='outcome', value='failed') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='outcome', value='error') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='outcome', value='skipped') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='failed') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='error') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='skipped') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='unavailable') ... FAIL
+  test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='not_started') ... FAIL
+test_report_order_is_not_execution_identity (test_runner_contract.ReportContract.test_report_order_is_not_execution_identity) ... ok
+test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) ... 
+  test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='timed_out') ... FAIL
+  test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='truncated') ... FAIL
+test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) ... 
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=0) ... FAIL
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=-1) ... FAIL
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=None) ... FAIL
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count='2') ... FAIL
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=True) ... FAIL
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=False) ... FAIL
+  test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=1.5) ... FAIL
+test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) ... FAIL
+
+======================================================================
+FAIL: test_missing_and_substituted_evidence_fail_a_native_zero (test_runner_cli.RunnerCliContract.test_missing_and_substituted_evidence_fail_a_native_zero) (mode='substitution')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_cli.py", line 79, in test_missing_and_substituted_evidence_fail_a_native_zero
+    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+AssertionError: 1 != 0 : Run substitution, attempt 94d60c8f8cab48b797e64735626ec119: PASS
+- native-contract: passed (0.04s)
+
+
+Evidence: /tmp/tmpgfc1psrn/checkout/artifacts/substitution/94d60c8f8cab48b797e64735626ec119
+
+
+======================================================================
+FAIL: test_native_failure_is_retained_despite_passing_check_record (test_runner_cli.RunnerCliContract.test_native_failure_is_retained_despite_passing_check_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_cli.py", line 87, in test_native_failure_is_retained_despite_passing_check_record
+    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+AssertionError: 1 != 0 : Run native-failure, attempt a321604feb4849d696695f0615a11564: PASS
+- native-contract: failed (0.04s)
+
+
+Evidence: /tmp/tmp147rq6ah/checkout/artifacts/native-failure/a321604feb4849d696695f0615a11564
+
+
+======================================================================
+FAIL: test_discovered_check_inventory_rejects_same_count_substitution (test_runner_contract.ReportContract.test_discovered_check_inventory_rejects_same_count_substitution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 92, in test_discovered_check_inventory_rejects_same_count_substitution
+    self.assertRejected()
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_empty_or_duplicated_selection_cannot_pass (test_runner_contract.ReportContract.test_empty_or_duplicated_selection_cannot_pass) (selected=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 79, in test_empty_or_duplicated_selection_cannot_pass
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_empty_or_duplicated_selection_cannot_pass (test_runner_contract.ReportContract.test_empty_or_duplicated_selection_cannot_pass) (selected=['unit', 'unit'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 79, in test_empty_or_duplicated_selection_cannot_pass
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='run_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 65, in test_foreign_run_attempt_source_and_schema_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='attempt_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 65, in test_foreign_run_attempt_source_and_schema_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='source')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 65, in test_foreign_run_attempt_source_and_schema_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_foreign_run_attempt_source_and_schema_are_rejected (test_runner_contract.ReportContract.test_foreign_run_attempt_source_and_schema_are_rejected) (key='schema')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 65, in test_foreign_run_attempt_source_and_schema_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=42)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_missing_and_duplicate_check_identity_cannot_pass (test_runner_contract.ReportContract.test_missing_and_duplicate_check_identity_cannot_pass) (checks=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 86, in test_missing_and_duplicate_check_identity_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_missing_and_duplicate_check_identity_cannot_pass (test_runner_contract.ReportContract.test_missing_and_duplicate_check_identity_cannot_pass) (checks=[{'id': 'boot', 'outcome': 'passed', 'assertions': 1}, {'id': 'boot', 'outcome': 'passed', 'assertions': 1}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 86, in test_missing_and_duplicate_check_identity_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 57, in test_missing_duplicated_and_substituted_suites_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 57, in test_missing_duplicated_and_substituted_suites_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='same-count-substitution')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 57, in test_missing_duplicated_and_substituted_suites_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_missing_duplicated_and_substituted_suites_are_rejected (test_runner_contract.ReportContract.test_missing_duplicated_and_substituted_suites_are_rejected) (mutation='unexpected')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 57, in test_missing_duplicated_and_substituted_suites_are_rejected
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='native_exit', value=7)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 101, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='native_exit', value=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 101, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='outcome', value='failed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 101, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='outcome', value='error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 101, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (key='outcome', value='skipped')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 101, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='failed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='skipped')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='unavailable')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_native_or_assertion_failure_cannot_be_hidden_by_passed_label (test_runner_contract.ReportContract.test_native_or_assertion_failure_cannot_be_hidden_by_passed_label) (check_outcome='not_started')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 106, in test_native_or_assertion_failure_cannot_be_hidden_by_passed_label
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='timed_out')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 113, in test_timeout_or_truncation_cannot_be_hidden_by_native_zero
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_timeout_or_truncation_cannot_be_hidden_by_native_zero (test_runner_contract.ReportContract.test_timeout_or_truncation_cannot_be_hidden_by_native_zero) (flag='truncated')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 113, in test_timeout_or_truncation_cannot_be_hidden_by_native_zero
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count='2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass) (count=1.5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 120, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass (test_runner_contract.ReportContract.test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 123, in test_zero_missing_invalid_and_boolean_assertion_counts_cannot_pass
+    self.assertRejected(report)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+----------------------------------------------------------------------
+Ran 30 tests in 2.555s
+
+FAILED (failures=39)

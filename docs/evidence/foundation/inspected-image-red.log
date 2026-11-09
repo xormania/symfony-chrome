@@ -1,0 +1,23 @@
+test_explicit_unavailable_image_never_silently_runs_the_parent (test_package_execution.DockerFallbackTest.test_explicit_unavailable_image_never_silently_runs_the_parent) ... ok
+test_failed_support_preflight_never_starts_a_container (test_package_execution.DockerFallbackTest.test_failed_support_preflight_never_starts_a_container) ... ok
+test_input_view_keeps_candidate_code_and_excludes_private_local_state (test_package_execution.DockerFallbackTest.test_input_view_keeps_candidate_code_and_excludes_private_local_state) ... ok
+test_native_only_failure_cannot_recurse_into_docker (test_package_execution.DockerFallbackTest.test_native_only_failure_cannot_recurse_into_docker) ... Native package execution requires php, composer
+ok
+test_same_script_uses_read_only_checkout_and_owned_writable_state (test_package_execution.DockerFallbackTest.test_same_script_uses_read_only_checkout_and_owned_writable_state) ... FAIL
+test_named_dataset_identity_keeps_quotes_and_delimiters (test_package_execution.NativeInventoryTest.test_named_dataset_identity_keeps_quotes_and_delimiters) ... ok
+test_native_inventory_matches_actual_passing_case (test_package_execution.NativeInventoryTest.test_native_inventory_matches_actual_passing_case) ... ok
+test_required_kernel_contract_must_be_selected (test_package_execution.NativeInventoryTest.test_required_kernel_contract_must_be_selected) ... ok
+test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) ... ok
+
+======================================================================
+FAIL: test_same_script_uses_read_only_checkout_and_owned_writable_state (test_package_execution.DockerFallbackTest.test_same_script_uses_read_only_checkout_and_owned_writable_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/symfony-chrome/tests/fast/test_package_execution.py", line 130, in test_same_script_uses_read_only_checkout_and_owned_writable_state
+    self.assertIn('sha256:derived', argv)
+AssertionError: 'sha256:derived' not found in ['docker', 'run', '--rm', '--init', '--name', 'symfony-chrome-package-80ab571383bd', '--mount', 'type=bind,src=/tmp/symfony-chrome-inputs-lth0cw0i,dst=/repo,readonly', '--mount', 'type=bind,src=/tmp/tmpbpuxfm5c/evidence,dst=/evidence', '--tmpfs', '/tmp:rw,mode=1777', '--tmpfs', '/home/dev:rw,mode=1777', '-e', 'PUID=1000', '-e', 'PGID=1000', '-e', 'HOME=/home/dev', '-e', 'COMPOSER_HOME=/home/dev/.composer', '-w', '/repo', 'prepared:local', 'python3', '/repo/tools/testing/package.py', '--native-only', '--evidence', '/evidence']
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.013s
+
+FAILED (failures=1)

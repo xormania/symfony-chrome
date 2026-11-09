@@ -7,6 +7,8 @@ Status: scaffold, 2026-11-09. No package functionality exists yet.
 - Specification: [docs/Symfony-Chrome-Scope-Specification-2026-11-07.md](docs/Symfony-Chrome-Scope-Specification-2026-11-07.md)
 - Research: [docs/Symfony-Chrome-Background-Examples-Research-2026-11-07.md](docs/Symfony-Chrome-Background-Examples-Research-2026-11-07.md)
 - Development environment: [docs/dev-environment.md](docs/dev-environment.md)
+- Testing: [docs/TESTING.md](docs/TESTING.md)
+- CI and required acceptance: [docs/CI.md](docs/CI.md)
 
 Layout:
 

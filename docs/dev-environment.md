@@ -7,7 +7,7 @@ Created 2026-11-09. Adapted from the launcher, workspace, and evidence conventio
 
 | Host | Container (`php` service) |
 | --- | --- |
-| `bin/dev` launcher, your editor, your own Chrome, an MCP client | xorder `php-browser` 8.4 base (PHP 8.4.27, Composer, Symfony CLI, Chromium) plus Node 22, Chrome for Testing, `chrome-devtools-mcp` |
+| `bin/dev` launcher, your editor, your own Chrome, an MCP client | xorder `php-browser` 8.4 base (PHP 8.4.26, Composer, Symfony CLI, Chromium) plus Node 22, Chrome for Testing, `chrome-devtools-mcp` |
 | `packages/` edited in place | mounted at `/packages`, symlinked into the fixture's `vendor/` |
 | `workspaces/<run>/app/` disposable copy of `fixtures/app/` | `/workspace`, served by PHP's built-in server on port 8000 |
 | `workspaces/<run>/state/` | `/home/dev`: Composer and npm caches, `$HOME` |
@@ -20,7 +20,7 @@ The first build compiles the patched Mago in Rust: allow several minutes and sev
 
 ## Base image from xorder
 
-The Dockerfile starts from `ghcr.io/xormania/php-browser:8.4-trixie-v1.2.4` by digest and adds three things:
+The Dockerfile starts from `ghcr.io/xormania/php-browser:8.4-trixie-v1.2.3` by digest and adds three things:
 Node 22 (copied from the node image xorder's own record pins), Chrome for Testing 157, and `chrome-devtools-mcp` 1.12.0.
 Chrome for Testing is added rather than reusing the base's Debian Chromium because the MCP server states it
 supports Google Chrome and Chrome for Testing only. The base's PUID/PGID entrypoint is kept; compose passes
@@ -72,7 +72,7 @@ standalone `mago.toml` for lint and format without vendor context.
 ```sh
 ./bin/dev mago -- analyze --reporting-format json
 ./bin/dev mago -- lint --reporting-format json
-./bin/dev mago -- guard --structural --reporting-format json
+./bin/dev mago -- guard --perimeter --reporting-format json
 ./bin/dev mago -- format --check vendor/xormania/chrome-bundle/src/ChromeBundle.php
 ```
 
@@ -80,7 +80,7 @@ standalone `mago.toml` for lint and format without vendor context.
 generic `fix` command, requires explicit workspace-relative `.php` targets for `format` and `--fix`, and
 records each invocation under `artifacts/<run>/mago/invocations/`.
 
-The structural guard rule encodes spec PKG-02: nothing under the runtime bundle namespace may use the Profiler
+The dependency perimeter rule encodes spec PKG-02: nothing under the runtime bundle namespace may use the Profiler
 or the devtools bundle. Exit `1` with a report means findings, not a broken tool. Whether Mago accepts the
 symlinked `vendor/xormania/...` entries in `paths` is unverified until the first run; if it refuses, analyze the
 packages from `/packages/<name>` with their own configuration instead.

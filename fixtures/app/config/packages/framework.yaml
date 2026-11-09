@@ -1,0 +1,18 @@
+framework:
+    secret: 'symfony-chrome-disposable-fixture-only'
+    http_method_override: false
+    router:
+        utf8: true
+    assets: ~
+    asset_mapper:
+        paths:
+            - assets/
+    session: true
+    php_errors:
+        log: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

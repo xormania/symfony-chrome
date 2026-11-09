@@ -1,0 +1,36 @@
+test_doctor_healthy_platform_control (test_dev_contract.LauncherContract.test_doctor_healthy_platform_control) ... ok
+test_doctor_preserves_platform_check_failure (test_dev_contract.LauncherContract.test_doctor_preserves_platform_check_failure) ... FAIL
+test_existing_run_accepts_its_recorded_environment (test_dev_contract.LauncherContract.test_existing_run_accepts_its_recorded_environment) ... ok
+test_existing_run_never_silently_uses_another_environment (test_dev_contract.LauncherContract.test_existing_run_never_silently_uses_another_environment) ... FAIL
+test_foreign_workspace_marker_is_rejected_before_docker (test_dev_contract.LauncherContract.test_foreign_workspace_marker_is_rejected_before_docker) ... ok
+test_image_override_mismatch_never_starts_a_workload (test_dev_contract.LauncherContract.test_image_override_mismatch_never_starts_a_workload) ... ok
+test_purge_removes_only_its_workspace_and_keeps_evidence (test_dev_contract.LauncherContract.test_purge_removes_only_its_workspace_and_keeps_evidence) ... ok
+test_unsafe_run_ids_do_not_create_or_start_workspaces (test_dev_contract.LauncherContract.test_unsafe_run_ids_do_not_create_or_start_workspaces) ... ok
+
+======================================================================
+FAIL: test_doctor_preserves_platform_check_failure (test_dev_contract.LauncherContract.test_doctor_preserves_platform_check_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_dev_contract.py", line 75, in test_doctor_preserves_platform_check_failure
+    self.assertEqual(73, result.returncode, result.stdout + result.stderr)
+AssertionError: 73 != 0 : {"fixture": "test-image"}
+platform requirements checked
+private/ mount for this run: none
+host port: 18765
+
+
+======================================================================
+FAIL: test_existing_run_never_silently_uses_another_environment (test_dev_contract.LauncherContract.test_existing_run_never_silently_uses_another_environment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_dev_contract.py", line 89, in test_existing_run_never_silently_uses_another_environment
+    self.assertEqual('prod', marker['app_env'], 'successful up ignored the requested production mode')
+AssertionError: 'prod' != 'dev'
+- prod
++ dev
+ : successful up ignored the requested production mode
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.904s
+
+FAILED (failures=2)

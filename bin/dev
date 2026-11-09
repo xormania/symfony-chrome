@@ -66,10 +66,10 @@ def cmd_doctor(args):
     data = load(args.run)
     require_running(data)
     execute(data, 'cat', '/opt/dev/image-identity.json')
-    execute(data, 'composer', 'check-platform-reqs', '--no-interaction', check=False)
+    platform = execute(data, 'composer', 'check-platform-reqs', '--no-interaction', check=False)
     print(f"private/ mount for this run: {data.get('private') or 'none'}")
     print(f"host port: {host_port(data)}")
-    return 0
+    return platform.returncode
 
 
 def cmd_mcp_config(args):
@@ -91,6 +91,12 @@ def cmd_mcp_config(args):
 
 
 def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv[:1] == ['test']:
+        sys.path.insert(0, str(ROOT / 'tools/testing'))
+        from runner import main as test_main
+        return test_main(argv[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
 
@@ -129,6 +135,14 @@ def main(argv=None):
     p.add_argument('--run', default='dev')
     p.add_argument('--mode', default='host', choices=['host', 'owned'])
     p.set_defaults(func=cmd_mcp_config)
+
+    p = sub.add_parser('test', help='Run the same contract suites used by CI')
+    p.add_argument('test_args', nargs=argparse.REMAINDER)
+    p.set_defaults(func=lambda args: __import__('runner').main(args.test_args))
+    p = sub.add_parser('report', help='Validate retained results and artifact hashes')
+    p.add_argument('run_id')
+    p.set_defaults(func=lambda args: __import__('runner').report_run(args.run_id))
+    sys.path.insert(0, str(ROOT / 'tools/testing'))
 
     args = parser.parse_args(argv)
     if getattr(args, 'command', None) and isinstance(args.command, list) and args.command[:1] == ['--']:

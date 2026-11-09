@@ -1,0 +1,12 @@
+--- a/tools/ci/acceptance.py
++++ b/tools/ci/acceptance.py
+@@ -137,5 +137,9 @@
+     return 1 if errors else 0
+ 
+ 
++def validate_jobs(*args, **kwargs):
++    return []
++
++
+ if __name__ == '__main__':
+     sys.exit(main())

@@ -1,0 +1,9 @@
+{
+  "native_exit": 1,
+  "tests": [
+    "test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity",
+    "test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt"
+  ],
+  "subject": "Controlled pre-fix runner from git f3888bb; public launcher copied from candidate",
+  "runner_sha256": "f0c8f38e17d7f3e4095de4def72821bee64f1dbbc4d4a341d9955e3db99ceaef"
+}

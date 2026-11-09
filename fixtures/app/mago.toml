@@ -19,9 +19,19 @@ no-redundant-parentheses = { enabled = true }
 [formatter]
 print-width = 120
 
-# The runtime bundle must stay free of development-only dependencies (spec PKG-02).
-[[guard.structural.rules]]
-on = "Xormania\\ChromeBundle\\*"
-target = "class"
-must-not-use = ["Symfony\\Bundle\\WebProfilerBundle\\*", "Symfony\\Component\\HttpKernel\\Profiler\\*", "Xormania\\ChromeDevtoolsBundle\\*"]
-reason = "Profiler and development diagnostics belong to chrome-devtools-bundle; the runtime bundle installs without them."
+# Runtime-to-development dependencies are perimeter restrictions, not structural rules.
+
+[[guard.perimeter.restrictions]]
+dependency = "Symfony\\Bundle\\WebProfilerBundle\\**"
+deny-from = ["Xormania\\ChromeBundle\\**"]
+reason = "Development diagnostics belong to chrome-devtools-bundle; the runtime bundle installs without them."
+
+[[guard.perimeter.restrictions]]
+dependency = "Symfony\\Component\\HttpKernel\\Profiler\\**"
+deny-from = ["Xormania\\ChromeBundle\\**"]
+reason = "Development diagnostics belong to chrome-devtools-bundle; the runtime bundle installs without them."
+
+[[guard.perimeter.restrictions]]
+dependency = "Xormania\\ChromeDevtoolsBundle\\**"
+deny-from = ["Xormania\\ChromeBundle\\**"]
+reason = "Development diagnostics belong to chrome-devtools-bundle; the runtime bundle installs without them."

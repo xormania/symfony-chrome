@@ -1,0 +1,79 @@
+test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) ... 
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=42) ... FAIL
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=True) ... FAIL
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema='1') ... FAIL
+  test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=None) ... FAIL
+test_matching_plan_and_report_must_still_belong_to_requested_attempt (test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt) ... 
+  test_matching_plan_and_report_must_still_belong_to_requested_attempt (test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt) (identity='run_id') ... FAIL
+  test_matching_plan_and_report_must_still_belong_to_requested_attempt (test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt) (identity='attempt_id') ... FAIL
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=42)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_unknown_schema_is_not_a_valid_identity (test_runner_contract.ReportContract.test_matching_unknown_schema_is_not_a_valid_identity) (schema=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 72, in test_matching_unknown_schema_is_not_a_valid_identity
+    self.assertRejected(report, plan)
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_contract.py", line 36, in assertRejected
+    self.assertTrue(errors, 'invalid acceptance evidence was accepted')
+AssertionError: [] is not true : invalid acceptance evidence was accepted
+
+======================================================================
+FAIL: test_matching_plan_and_report_must_still_belong_to_requested_attempt (test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt) (identity='run_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_cli.py", line 132, in test_matching_plan_and_report_must_still_belong_to_requested_attempt
+    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+AssertionError: 1 != 0 : {
+  "run_id": "folder-run-id",
+  "attempt_id": "2423b585aad34b88a5bacec088328741",
+  "errors": []
+}
+
+
+======================================================================
+FAIL: test_matching_plan_and_report_must_still_belong_to_requested_attempt (test_runner_cli.RunnerCliContract.test_matching_plan_and_report_must_still_belong_to_requested_attempt) (identity='attempt_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/tests-work/tests/fast/test_runner_cli.py", line 132, in test_matching_plan_and_report_must_still_belong_to_requested_attempt
+    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+AssertionError: 1 != 0 : {
+  "run_id": "folder-attempt-id",
+  "attempt_id": "39233edf92484551b2decb642d78fa0b",
+  "errors": []
+}
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.308s
+
+FAILED (failures=6)

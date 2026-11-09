@@ -6,7 +6,7 @@
 
 ## 1. What the image replaces
 
-`Dockerfile` in this repository is an overlay on `ghcr.io/xormania/php-browser:8.4-trixie-v1.2.4`. It adds the
+`Dockerfile` in this repository is an overlay on `ghcr.io/xormania/php-browser:8.4-trixie-v1.2.3`. It adds the
 patched Mago language server compiled from Rust, Python 3.12 with uv and the pinned Serena, Node 22, Chrome for
 Testing and `chrome-devtools-mcp`, and Mago's release binary. The Rust build and the Serena install are minutes
 and gigabytes per developer and per CI run. Everything in that overlay is toolchain, not project behavior, so it
@@ -33,7 +33,7 @@ for Testing needs, and Panther stays available for consumers who want it.
 
 ## 3. Inherited from the parent
 
-From the `php-browser/8.4-trixie` v1.2.4 release record, and required to remain true:
+From the `php-browser/8.4-trixie` v1.2.3 release record, and required to remain true:
 
 - PHP 8.4.x CLI on Debian trixie, with `intl`, `mbstring`, `curl`, `zip`, `bcmath`, `dom`, `xml`, `pdo_sqlite`,
   `pdo_pgsql`, `pdo_mysql`, `gd`, `redis`, `sockets`, `pcntl`, `xdebug` (off by default), `pcov` (off by default).
@@ -175,7 +175,7 @@ Jobs this repository will run on `php-chrome-dev/8.4-trixie`, pulled by digest, 
 | --- | --- | --- |
 | identity | `cat /opt/xorder/image-identity.json`, compare pins to `toolchain.lock.json` | none |
 | fixture install | copy `fixtures/app`, `composer install` from lock, `cache:clear`, readiness probe | Packagist, GitHub for the two package repositories |
-| mago native | `analyze`, `lint`, `guard --structural`, `format --check` | none |
+| mago native | `analyze`, `lint`, `guard --perimeter`, `format --check` | none |
 | mate-prepare and enriched | `bin/dev mate-prepare`, `bin/mago --profile symfony` on and `--extension-off`, compare graph and attestation | none after install |
 | serena smoke | start Serena MCP over stdio against the fixture, `initial_instructions`, `s.info("lsp")`, one `find_symbol` | none |
 | chrome owned mode | `bin/chrome-mcp` against the fixture served in the same container, `list_pages`, one `navigate_page`, one `take_snapshot` | none |

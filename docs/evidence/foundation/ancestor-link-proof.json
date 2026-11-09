@@ -1,0 +1,8 @@
+{
+  "parent": "9e57892",
+  "parent_source_sha256": "4fce22767a8a36d844da46ad09bb114a3111ee7c2a9341b1dbc9e780941504e6",
+  "test_sha256": "f6c3acc0aaa27f629da0be36aa933c6237a52c285180b90eeaec199ce1f18386",
+  "parent_exit": 1,
+  "candidate_exit": 0,
+  "defect": "A tracked file beneath an ignored directory replaced with an outside symlink was exported"
+}
