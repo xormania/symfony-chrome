@@ -1,0 +1,36 @@
+{
+  "run_id": 42565965682,
+  "head": "0c43fcbc87a32ae75e5752c6096c8c11c74a7f01",
+  "artifact_id": 13651596954,
+  "artifact_sha256": "e1a80a3c149ca162aa538386d5e1b320f2847258086659a4faed3f79ad2d250a",
+  "checks": [
+    {
+      "id": "browser.chrome-mcp",
+      "outcome": "passed",
+      "assertions": 7,
+      "detail": "Real MCP initialization, discovery, page/navigation/snapshot and invalid-schema response; owned browser process cleanup observed",
+      "duration_s": 1.1873844950000034
+    },
+    {
+      "id": "browser.borrowed-endpoint",
+      "outcome": "passed",
+      "assertions": 5,
+      "detail": "Independently owned Chrome remains alive after real MCP attach, navigation, snapshot and detach",
+      "duration_s": 1.8191448190000017
+    },
+    {
+      "id": "browser.request-profile",
+      "outcome": "passed",
+      "assertions": 13,
+      "detail": "Two response tokens independently joined; swapped identity rejected; missing and redirect cases preserved",
+      "duration_s": 0.08305607400001236
+    },
+    {
+      "id": "browser.guards",
+      "outcome": "failed",
+      "assertions": 0,
+      "detail": "AssertionError: Playwright browser guards failed; inspect native report",
+      "duration_s": 5.4755301059999795
+    }
+  ]
+}

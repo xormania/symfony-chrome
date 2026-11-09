@@ -3,8 +3,14 @@ import { cspCompanionAllowed } from './expected-errors.mjs';
 
 const forbiddenScript = 'window.contractForbidden = true';
 
-test('real input changes state without creating a request', async ({ page }) => {
+test('real input changes state without creating a request', async ({ page, baseURL }) => {
+    // Chrome can request the icon after the document's load event. Finish this
+    // known initial resource before observing requests caused by the action.
+    const iconResponse = page.waitForResponse((response) => response.url() === new URL('/_ci/icon.svg', baseURL).href);
     await page.goto('/_ci/browser');
+    const icon = await iconResponse;
+    expect(icon.status()).toBe(200);
+    expect(await icon.finished()).toBeNull();
     const requests = [];
     page.on('request', (request) => requests.push(request.url()));
     await page.getByRole('button', { name: 'Local action' }).click();
