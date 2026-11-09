@@ -1,0 +1,33 @@
+--- a/serena/repl/api/lsp_api.py
++++ b/serena/repl/api/lsp_api.py
+@@ -392,6 +392,30 @@
+ 
+     # read operations
+ 
++    @facade_method(uses_project_server=True)
++    def get_symbol_references(self, relative_path: str, symbol: str, member: str = "") -> dict[str, Any]:
++        """
++        Gets the selected language server's current dependency graph references.
++
++        These edges express analysis dependencies, including supported external
++        analyzer contributions. They carry no source positions, do not represent
++        measured runtime calls, and are separate from find_referencing_symbols.
++        A backend without this capability reports an error.
++
++        :param relative_path: a project-relative source file selecting the workspace/backend.
++        :param symbol: the fully qualified owner symbol, using backend naming conventions.
++        :param member: optional member name, such as __construct; empty selects the owner.
++        :return: the server's source identifier and typed dependency edges, unchanged.
++        """
++        project = self._get_project()
++        project.validate_relative_path(relative_path)
++        project.ls_sync_file_system_changes()
++        server = self._create_symbol_retriever().get_language_server(relative_path)
++        request = getattr(server, "request_symbol_references", None)
++        if request is None:
++            raise ValueError("Selected language server does not support dependency graph queries")
++        return request(relative_path, symbol, member)
++
+     @facade_method(uses_project_server=True, corresponding_tool=GetSymbolsOverviewTool)
+     def get_symbols_overview(self, relative_path: str, depth: int = -1, max_answer_chars: int = -1) -> LspSymbolCollection:
+         """

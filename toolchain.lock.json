@@ -35,5 +35,12 @@
     "Chrome 157 satisfies chrome-devtools-mcp autoConnect (144+) and the WebMCP tool category (150+ with --enable-features=WebMCP).",
     "The CfT index publishes no sha256; docker/identity.py records the installed binary hash.",
     "xorder release groups: adopt the downstream support check before 2026-11-11 08:00 UTC if this base stays in use."
-  ]
+  ],
+  "mago": {
+    "version": "1.58.2",
+    "asset": "mago-1.58.2-x86_64-unknown-linux-gnu.tar.gz",
+    "sha256": "80b6e6ed3cd2fe2da348f9cd83d23e638f2ccd44988d48bebd766c20ccd30dc2",
+    "url": "https://github.com/carthage-software/mago/releases/download/1.58.2/mago-1.58.2-x86_64-unknown-linux-gnu.tar.gz",
+    "source": "Same version mago-serena_v2-poc pins (upstream rev 46df50c96d93d0ac3655c116c375574277cf0b30). Hash computed from the downloaded asset on 2026-11-09; the installer script verifies attestation with gh, which this build does not."
+  }
 }

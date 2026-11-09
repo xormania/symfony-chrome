@@ -1,0 +1,8 @@
+project_name: mago-demo
+language_servers: [mago]
+encoding: utf-8
+ignore_all_files_in_gitignore: false
+ignored_paths: [var, .serena, .phpunit.cache, public/assets]
+read_only: false
+included_apis: [lsp.restart_language_server, lsp.get_diagnostics_for_file, lsp.find_implementations, lsp.find_declaration]
+excluded_apis: []

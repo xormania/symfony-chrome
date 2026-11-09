@@ -1,0 +1,11 @@
+# Standalone lint/format configuration for this package. Full analysis with
+# Symfony declarations runs from the fixture application's mago.toml.
+version = "1.58.2"
+php-version = "8.4"
+
+[source]
+paths = ["src", "tests"]
+excludes = ["vendor"]
+
+[formatter]
+print-width = 120

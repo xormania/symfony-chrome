@@ -26,6 +26,8 @@ print(json.dumps({
     'chrome_for_testing': version('/opt/chrome-linux64/chrome', '--version'),
     'chromium_base': version('/usr/bin/chromium', '--version'),
     'symfony_cli': version('symfony', 'version', '--no-ansi'),
+    'mago': version('mago', '--version'),
+    'mago_binary_sha256': sha('/usr/local/bin/mago'),
     'chrome_binary_sha256': sha('/opt/chrome-linux64/chrome'),
     'chrome_devtools_mcp': json.loads(Path('/usr/local/lib/node_modules/chrome-devtools-mcp/package.json').read_text())['version'],
 }, indent=2))

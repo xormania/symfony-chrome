@@ -1,0 +1,459 @@
+diff --git a/crates/server/src/server.rs b/crates/server/src/server.rs
+index 1c14cc71..1c1a6f74 100644
+--- a/crates/server/src/server.rs
++++ b/crates/server/src/server.rs
+@@ -136,6 +136,15 @@ impl Server {
+         self.service.codebase()
+     }
+ 
++    /// The actual dependency graph from the current completed analysis.
++    ///
++    /// These edges carry semantic roles, not source locations or runtime calls.
++    /// Callers must check [`Self::is_initialized`] before exposing them.
++    #[must_use]
++    pub fn symbol_references(&self) -> &SymbolReferences {
++        self.service.symbol_references()
++    }
++
+     /// Whether a complete semantic analysis is available for editor queries.
+     #[must_use]
+     pub fn is_initialized(&self) -> bool {
+diff --git a/src/language_server/backend/mod.rs b/src/language_server/backend/mod.rs
+index cfbe7bc8..e0662961 100644
+--- a/src/language_server/backend/mod.rs
++++ b/src/language_server/backend/mod.rs
+@@ -39,6 +39,7 @@ mod restarts;
+ mod routing;
+ mod session;
+ mod structure;
++mod symbol_references;
+ mod sync;
+ mod watchers;
+ mod workspace_edit;
+diff --git a/src/language_server/backend/query.rs b/src/language_server/backend/query.rs
+index d08c1364..a28c3a81 100644
+--- a/src/language_server/backend/query.rs
++++ b/src/language_server/backend/query.rs
+@@ -105,6 +105,11 @@ impl Backend {
+ }
+ 
+ pub(super) fn require_analysis(workspace: &WorkspaceState) -> Result<()> {
++    if let Some(error) = &workspace.reload_failure {
++        return Err(request_failed(format!(
++            "Workspace reload failed: {error}; correct the configuration/metadata and reload or restart the server"
++        )));
++    }
+     if workspace.core.server.is_initialized() {
+         Ok(())
+     } else {
+diff --git a/src/language_server/backend/restarts.rs b/src/language_server/backend/restarts.rs
+index 28b2a952..ee68c77d 100644
+--- a/src/language_server/backend/restarts.rs
++++ b/src/language_server/backend/restarts.rs
+@@ -173,6 +173,15 @@ impl Backend {
+                     .await;
+             }
+             Some(error) => {
++                self.with_registry_mut(|registry| {
++                    if let Some(workspace) = registry.for_path_mut(&folder) {
++                        if workspace.configuration.extension_hosts.values().any(|host| host.enabled)
++                            || error.contains("external analyzer")
++                        {
++                            workspace.reload_failure = Some(error.clone());
++                        }
++                    }
++                });
+                 tracing::error!(root = %folder.display(), %error, "workspace restart failed");
+                 self.client
+                     .show_message(
+diff --git a/src/language_server/backend/session.rs b/src/language_server/backend/session.rs
+index 74e34e43..e985c734 100644
+--- a/src/language_server/backend/session.rs
++++ b/src/language_server/backend/session.rs
+@@ -98,6 +98,10 @@ impl Session {
+         if let Some(watchers) = watchers {
+             watchers.stop().await;
+         }
++
++        // `shutdown` may precede `exit` indefinitely. Release workspace-owned
++        // external workers now, using their configured bounded shutdown grace.
++        self.with_registry_mut(|registry| *registry = WorkspaceRegistry::new(Vec::new()));
+     }
+ }
+ 
+diff --git a/src/language_server/backend/session/recovery_tests.rs b/src/language_server/backend/session/recovery_tests.rs
+index 79ee8955..a0df5552 100644
+--- a/src/language_server/backend/session/recovery_tests.rs
++++ b/src/language_server/backend/session/recovery_tests.rs
+@@ -96,6 +96,7 @@ async fn failed_analysis_clears_diagnostics_and_retries_unchanged_save() {
+             let kept = server.file_analysis_for(files[2]).unwrap();
+             let previous = server.file_analysis_for(files[1]).unwrap();
+             let workspace = WorkspaceState {
++                reload_failure: None,
+                 sources: SourceFiles::new(&root),
+                 core: mago_server::workspace::Workspace::new(
+                     root.clone(),
+@@ -226,6 +227,7 @@ fn hooked_workspace(root: &std::path::Path, fail: &Arc<AtomicBool>) -> Workspace
+ 
+     server.analyze_without_collecting().unwrap();
+     WorkspaceState {
++        reload_failure: None,
+         sources: SourceFiles::new(root),
+         core: mago_server::workspace::Workspace::new(
+             root.to_path_buf(),
+diff --git a/src/language_server/backend/symbol_references.rs b/src/language_server/backend/symbol_references.rs
+new file mode 100644
+index 00000000..97c53276
+--- /dev/null
++++ b/src/language_server/backend/symbol_references.rs
+@@ -0,0 +1,102 @@
++//! Read-only access to the native semantic dependency graph. Graph edges have
++//! no source spans: this is deliberately separate from navigable LSP references.
++
++use serde::{Deserialize, Serialize};
++use tower_lsp_server::gen_lsp_types::TextDocumentIdentifier;
++use tower_lsp_server::jsonrpc::{Error, Result};
++
++use mago_codex::reference::{ReferenceOrigin, SymbolReferenceKind};
++
++use super::Backend;
++use super::query::{request_failed, require_analysis};
++use crate::language_server::uri::UriFilePath;
++
++#[derive(Deserialize)]
++#[serde(rename_all = "camelCase", deny_unknown_fields)]
++pub(crate) struct SymbolReferencesParams {
++    text_document: TextDocumentIdentifier,
++    symbol: String,
++    #[serde(default)]
++    member: String,
++}
++
++#[derive(Serialize)]
++pub(crate) struct SymbolReferencesResult {
++    source: GraphSymbol,
++    references: Vec<GraphReference>,
++}
++
++#[derive(Serialize)]
++struct GraphSymbol {
++    symbol: String,
++    member: String,
++}
++
++#[derive(Serialize)]
++struct GraphReference {
++    kind: &'static str,
++    target: GraphSymbol,
++}
++
++impl Backend {
++    pub(crate) async fn symbol_references(&self, params: SymbolReferencesParams) -> Result<SymbolReferencesResult> {
++        if params.symbol.is_empty() || params.symbol.len() > 1024 || params.member.len() > 1024 {
++            return Err(Error::invalid_params("symbol must be nonempty; symbol/member lengths must be at most 1024"));
++        }
++        let path = params
++            .text_document
++            .uri
++            .to_file_path()
++            .ok_or_else(|| Error::invalid_params("textDocument.uri must be a local file URI"))?;
++        self.with_registry_mut(|registry| {
++            let workspace = registry
++                .for_path_mut(path.as_ref())
++                .ok_or_else(|| request_failed("No loaded workspace owns textDocument.uri"))?;
++            if !self.config.analyzer {
++                return Err(request_failed("The analyzer is disabled"));
++            }
++            require_analysis(workspace)?;
++            // Classes/functions and methods use Mago's canonical lowercase keys;
++            // property/constant members retain their case-sensitive spelling.
++            let symbol = params.symbol.to_ascii_lowercase();
++            let lowercase_member = params.member.to_ascii_lowercase();
++            let member = if workspace
++                .core
++                .server
++                .codebase()
++                .get_method(symbol.as_bytes(), lowercase_member.as_bytes())
++                .is_some()
++            {
++                lowercase_member
++            } else {
++                params.member
++            };
++            let mut references = Vec::new();
++            workspace.core.server.symbol_references().for_each_reference(|source, target, kind| {
++                let ReferenceOrigin::Symbol((owner, source_member)) = source else { return };
++                if owner.as_str() == Some(symbol.as_str()) && source_member.as_str() == Some(member.as_str()) {
++                    references.push(GraphReference {
++                        kind: match kind {
++                            SymbolReferenceKind::Body => "body",
++                            SymbolReferenceKind::Signature => "signature",
++                            SymbolReferenceKind::OverriddenMember => "overridden_member",
++                            SymbolReferenceKind::FunctionLikeReturn => "function_like_return",
++                            SymbolReferenceKind::PropertyRead => "property_read",
++                            SymbolReferenceKind::PropertyWrite => "property_write",
++                        },
++                        target: GraphSymbol { symbol: target.0.to_string(), member: target.1.to_string() },
++                    });
++                }
++            });
++            references.sort_unstable_by(|left, right| {
++                (&left.kind, &left.target.symbol, &left.target.member).cmp(&(
++                    &right.kind,
++                    &right.target.symbol,
++                    &right.target.member,
++                ))
++            });
++            Ok(SymbolReferencesResult { source: GraphSymbol { symbol, member }, references })
++        })
++        .unwrap_or_else(|| Err(request_failed("Server is not initialized")))
++    }
++}
+diff --git a/src/language_server/capabilities/mod.rs b/src/language_server/capabilities/mod.rs
+index 791dffe0..59e01022 100644
+--- a/src/language_server/capabilities/mod.rs
++++ b/src/language_server/capabilities/mod.rs
+@@ -108,6 +108,7 @@ pub fn server_capabilities(config: &super::ServerConfig) -> ServerCapabilities {
+             file_operations: None,
+             text_document_content: None,
+         }),
++        experimental: config.analyzer.then(|| serde_json::json!({ "symbolReferencesProvider": true })),
+         ..ServerCapabilities::default()
+     };
+ 
+diff --git a/src/language_server/mod.rs b/src/language_server/mod.rs
+index 46102224..b01d4977 100644
+--- a/src/language_server/mod.rs
++++ b/src/language_server/mod.rs
+@@ -55,7 +55,8 @@ where
+     let config = Arc::new(config);
+     let worker = ordered_service::Worker::new()?;
+     let tasks = worker.tasks();
+-    let service = LspService::build(move |client| Backend::new(client, config, tasks));
++    let service = LspService::build(move |client| Backend::new(client, config, tasks))
++        .custom_method("mago/symbolReferences", Backend::symbol_references);
+     #[cfg(test)]
+     let service = service.custom_method("mago/testBarrier", Backend::test_barrier);
+     let (service, socket) = service.finish();
+diff --git a/src/language_server/state.rs b/src/language_server/state.rs
+index 540310d2..921f3fb5 100644
+--- a/src/language_server/state.rs
++++ b/src/language_server/state.rs
+@@ -27,6 +27,9 @@ pub struct WorkspaceState {
+     pub configuration: Configuration,
+     pub diagnostics: DiagnosticCache,
+     pub restart: RestartTriggers,
++    /// A failed configuration/metadata reload must not serve the previous
++    /// generation as if it represented the new configuration.
++    pub reload_failure: Option<String>,
+ }
+ 
+ impl WorkspaceState {
+diff --git a/src/language_server/tests/external_analyzers.rs b/src/language_server/tests/external_analyzers.rs
+new file mode 100644
+index 00000000..aad00d8a
+--- /dev/null
++++ b/src/language_server/tests/external_analyzers.rs
+@@ -0,0 +1,119 @@
++//! Native external analyzer registration and the semantic graph query contract.
++
++use super::harness::{Harness, client_capabilities};
++use crate::language_server::ServerConfig;
++use serde_json::{Value, json};
++
++const SOURCE: &str =
++    "<?php interface First {} interface Second {} class Service { public function __construct(First $value) {} }\n";
++
++async fn graph(h: &mut Harness) -> Value {
++    h.request(
++        "mago/symbolReferences",
++        json!({
++            "textDocument": { "uri": h.url("a.php") },
++            "symbol": "Service", "member": "__construct",
++        }),
++    )
++    .await
++}
++
++async fn restarted(h: &mut Harness) {
++    loop {
++        let message = h.client.await_notification("window/logMessage").await;
++        if message["params"]["message"].as_str().is_some_and(|s| s.starts_with("mago-server: restarted")) {
++            return;
++        }
++    }
++}
++
++#[tokio::test]
++async fn external_graph_uses_current_unsaved_buffers_without_inventing_locations() {
++    let mut h = Harness::start(&[("a.php", SOURCE)]).await;
++    assert_eq!(h.server_capabilities["experimental"]["symbolReferencesProvider"], true);
++    let initial = graph(&mut h).await;
++    assert!(
++        initial["references"].as_array().unwrap().iter().any(|r| r
++            == &json!({
++                "kind": "signature", "target": { "symbol": "first", "member": "" },
++            })),
++        "{initial}"
++    );
++    h.open("a.php", SOURCE).await;
++    h.change("a.php", &SOURCE.replace("First $value", "Second $value"), 2).await;
++    let changed = graph(&mut h).await;
++    let text = changed.to_string();
++    assert!(text.contains("second"), "{changed}");
++    assert!(!text.contains("first"), "{changed}");
++    assert!(!text.contains("range") && !text.contains("location"), "{changed}");
++    assert_eq!(std::fs::read_to_string(h.workspace.join("a.php")).unwrap(), SOURCE);
++    h.close("a.php").await;
++    assert_eq!(graph(&mut h).await, initial);
++}
++
++#[tokio::test]
++async fn external_disabled_hosts_do_not_start_and_native_graph_still_works() {
++    let mut h = Harness::start(&[
++        ("a.php", SOURCE),
++        (
++            "mago.toml",
++            r#"
++[extension-hosts.unavailable]
++enabled = false
++command = ["/no/such/external-worker"]
++"#,
++        ),
++    ])
++    .await;
++    assert!(!graph(&mut h).await["references"].as_array().unwrap().is_empty());
++}
++
++#[tokio::test]
++async fn external_failed_reload_refuses_old_graph_and_recovers_after_disable() {
++    let mut h = Harness::start(&[("a.php", SOURCE), ("mago.toml", "")]).await;
++    let initial = graph(&mut h).await;
++    let broken = "[extension-hosts.unavailable]\ncommand = [\"/no/such/external-worker\"]\nrequest-timeout-ms = 100\n";
++    std::fs::write(h.workspace.join("mago.toml"), broken).unwrap();
++    h.watched("mago.toml", 2).await;
++    loop {
++        let message = h.client.await_notification("window/showMessage").await;
++        if message["params"]["message"].as_str().is_some_and(|s| s.contains("cannot restart")) {
++            break;
++        }
++    }
++    let failed = h
++        .try_request(
++            "mago/symbolReferences",
++            json!({
++                "textDocument": { "uri": h.url("a.php") }, "symbol": "Service", "member": "__construct",
++            }),
++        )
++        .await
++        .unwrap_err();
++    assert!(failed["message"].as_str().unwrap().contains("Workspace reload failed"), "{failed}");
++    std::fs::write(h.workspace.join("mago.toml"), "").unwrap();
++    h.watched("mago.toml", 2).await;
++    restarted(&mut h).await;
++    assert_eq!(graph(&mut h).await, initial);
++}
++
++#[tokio::test]
++async fn external_graph_rejects_disabled_analysis_and_unowned_uri() {
++    let mut h = Harness::start_with(
++        &[("a.php", SOURCE)],
++        ServerConfig { analyzer: false, ..Default::default() },
++        client_capabilities(),
++    )
++    .await;
++    assert!(h.server_capabilities["experimental"].is_null());
++    let error = h
++        .try_request(
++            "mago/symbolReferences",
++            json!({
++                "textDocument": { "uri": h.url("a.php") }, "symbol": "Service", "member": "__construct",
++            }),
++        )
++        .await
++        .unwrap_err();
++    assert!(error["message"].as_str().unwrap().contains("disabled"));
++}
+diff --git a/src/language_server/tests/mod.rs b/src/language_server/tests/mod.rs
+index 2552d519..2ad4190e 100644
+--- a/src/language_server/tests/mod.rs
++++ b/src/language_server/tests/mod.rs
+@@ -35,6 +35,7 @@ mod diagnostic_messages;
+ mod document_links;
+ mod document_symbols;
+ mod external_navigation;
++mod external_analyzers;
+ mod folding;
+ mod git_ignores;
+ mod global_navigation;
+diff --git a/src/language_server/workspace/loading.rs b/src/language_server/workspace/loading.rs
+index bbf04846..427bb592 100644
+--- a/src/language_server/workspace/loading.rs
++++ b/src/language_server/workspace/loading.rs
+@@ -27,6 +27,7 @@ use mago_server::workspace::directory_aliases::DirectoryAliases;
+ 
+ use crate::config::Configuration;
+ use crate::error::Error;
++use crate::extensions::start_external_analyzer;
+ use crate::language_server::ServerConfig;
+ use crate::language_server::diagnostic_cache::DiagnosticCache;
+ use crate::language_server::sources::SourceFiles;
+@@ -80,16 +81,37 @@ fn build(folder: PathBuf, server_config: &ServerConfig, strict: bool) -> Result<
+         matcher = matcher.with_git_ignores(Arc::clone(ignores));
+         loader = loader.with_git_ignores(Arc::clone(ignores));
+     }
+-    let (database, directory_symlinks) =
++    let (mut database, directory_symlinks) =
+         loader.load_with_directory_symlinks().map_err(|err| format!("load database: {err}"))?;
+     let directory_aliases = DirectoryAliases::new(directory_symlinks, &matcher);
+ 
+     let features =
+         Features { analyzer: server_config.analyzer, linter: server_config.linter, formatter: server_config.formatter };
+-    let plugin_registry = Arc::new(create_registry_with_plugins(
+-        &configuration.analyzer.plugins,
+-        configuration.analyzer.disable_default_plugins,
+-    ));
++    let mut plugin_registry =
++        create_registry_with_plugins(&configuration.analyzer.plugins, configuration.analyzer.disable_default_plugins);
++    // One handle belongs to this workspace generation. The incremental service
++    // runs its hooks against the same in-memory database as native analysis;
++    // workspace replacement/drop releases its pools and their child processes.
++    if features.analyzer
++        && let Some(external) = start_external_analyzer(
++            &configuration.extension_hosts,
++            configuration.php_version,
++            configuration.threads,
++            &configuration.analyzer.plugins,
++            configuration.analyzer.disable_default_plugins,
++        )
++    {
++        plugin_registry.set_external_analyzer(external);
++    }
++    // Initialization stubs are plugin-owned, in-memory sources just as in the
++    // CLI pipeline. Load them before constructing the service's baseline.
++    for file in plugin_registry
++        .external_initialization_files()
++        .map_err(|error| format!("initialize external analyzer: {error}"))?
++    {
++        database.add(file);
++    }
++    let plugin_registry = Arc::new(plugin_registry);
+ 
+     let tool_excludes = |patterns: &[String]| {
+         matcher.exclusions(&exclusions(&root, patterns), glob).map_err(|err| format!("compile excludes: {err}"))
+@@ -120,7 +142,14 @@ fn build(folder: PathBuf, server_config: &ServerConfig, strict: bool) -> Result<
+     let mut core = Workspace::new(folder, root, server, matcher, analyzer_ignores);
+     core.directory_aliases = directory_aliases;
+     core.set_source_root(sources.root().to_path_buf());
+-    let workspace = WorkspaceState { core, sources, configuration, diagnostics: DiagnosticCache::default(), restart };
++    let workspace = WorkspaceState {
++        core,
++        sources,
++        configuration,
++        diagnostics: DiagnosticCache::default(),
++        restart,
++        reload_failure: None,
++    };
+ 
+     Ok(workspace)
+ }

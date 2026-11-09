@@ -1,0 +1,27 @@
+# Native Mago checks for the fixture application and, through the Composer path
+# symlinks under vendor/xormania, the two packages. Adapted from mago-serena_v2-poc.
+version = "1.58.2"
+php-version = "8.4"
+threads = 4
+
+[source]
+paths = ["src", "tests", "vendor/xormania/chrome-bundle/src", "vendor/xormania/chrome-devtools-bundle/src"]
+includes = ["vendor"]
+excludes = ["var", "public/assets"]
+
+[linter]
+integrations = ["symfony", "phpunit"]
+
+[linter.rules]
+no-debug-symbols = { enabled = true, level = "error" }
+no-redundant-parentheses = { enabled = true }
+
+[formatter]
+print-width = 120
+
+# The runtime bundle must stay free of development-only dependencies (spec PKG-02).
+[[guard.structural.rules]]
+on = "Xormania\\ChromeBundle\\*"
+target = "class"
+must-not-use = ["Symfony\\Bundle\\WebProfilerBundle\\*", "Symfony\\Component\\HttpKernel\\Profiler\\*", "Xormania\\ChromeDevtoolsBundle\\*"]
+reason = "Profiler and development diagnostics belong to chrome-devtools-bundle; the runtime bundle installs without them."

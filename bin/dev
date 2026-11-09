@@ -41,6 +41,12 @@ def cmd_composer(args):
     return execute(data, 'composer', *args.command, check=False).returncode
 
 
+def cmd_mago(args):
+    data = load(args.run)
+    require_running(data)
+    return execute(data, 'mago', *args.command, check=False).returncode
+
+
 def cmd_doctor(args):
     data = load(args.run)
     require_running(data)
@@ -86,7 +92,8 @@ def main(argv=None):
 
     for name, func, help_text in (('exec', cmd_exec, 'Run a command in /workspace'),
                                   ('console', cmd_console, 'Run bin/console in /workspace'),
-                                  ('composer', cmd_composer, 'Run composer in /workspace')):
+                                  ('composer', cmd_composer, 'Run composer in /workspace'),
+                                  ('mago', cmd_mago, 'Run Mago (analyze, lint, format, guard) in /workspace')):
         p = sub.add_parser(name, help=help_text)
         p.add_argument('--run', default='dev')
         p.add_argument('command', nargs=argparse.REMAINDER)

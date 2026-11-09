@@ -60,6 +60,24 @@ in the workspace.
 
 A run id other than `dev` gets a Docker-assigned host port; `up` prints the URL.
 
+## Mago: analysis, lint, format, guard
+
+Mago 1.58.2 is in the image as the upstream release binary, hash-pinned. The fixture's `mago.toml` analyzes the
+app and, through the Composer path symlinks under `vendor/xormania`, both packages. Each package also has a
+standalone `mago.toml` for lint and format without vendor context.
+
+```sh
+./bin/dev mago -- analyze --reporting-format json
+./bin/dev mago -- lint --reporting-format json
+./bin/dev mago -- guard --structural --reporting-format json
+./bin/dev mago -- format --check vendor/xormania/chrome-bundle/src/ChromeBundle.php
+```
+
+The structural guard rule encodes spec PKG-02: nothing under the runtime bundle namespace may use the Profiler
+or the devtools bundle. Exit `1` with a report means findings, not a broken tool. Whether Mago accepts the
+symlinked `vendor/xormania/...` entries in `paths` is unverified until the first run; if it refuses, analyze the
+packages from `/packages/<name>` with their own configuration instead.
+
 ## Two Chrome attachment modes
 
 These map onto RUN-01 in the specification: an owned browser and an explicitly attached existing session.
