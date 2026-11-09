@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path
 import sys
+import signal
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,12 +22,20 @@ class Result(unittest.TextTestResult):
         super().__init__(*args, **kwargs)
         self.identities = []
 
+    def addError(self, test, err):
+        super().addError(test, err)
+        if issubclass(err[0], InterruptedError):
+            self.stop()
+
     def startTest(self, test):
         self.identities.append(test.id())
         super().startTest(test)
 
 
 def main(argv=None):
+    def interrupted(signum, frame):
+        raise InterruptedError('Acceptance worker interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, interrupted)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence', type=Path, required=True)
     args = parser.parse_args(argv)

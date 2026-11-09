@@ -132,7 +132,7 @@ def terminate(process):
     except ProcessLookupError:
         return
     try:
-        process.wait(timeout=3)
+        process.wait(timeout=20)
     except subprocess.TimeoutExpired:
         pass
     try:
@@ -241,6 +241,7 @@ def run_suites(args):
             'github_attempt': os.environ.get('GITHUB_RUN_ATTEMPT')}
     write_json(directory / 'plan.json', plan)
     results = []
+    cancelled = False
     for name in names:
         entry = config['suites'][name]
         evidence = directory / name
@@ -248,6 +249,8 @@ def run_suites(args):
         started = time.monotonic()
         row = {'suite_id': name, 'outcome': 'error', 'native_exit': None, 'checks': []}
         try:
+            if cancelled:
+                raise InterruptedError('Earlier suite was interrupted; remaining selection did not execute')
             command = [sys.executable, entry['script'], '--evidence', str(evidence)]
             code, timed_out, truncated = capture(command, evidence, entry.get('timeout', 900))
             row.update(native_exit=code, timed_out=timed_out, truncated=truncated)
@@ -256,6 +259,9 @@ def run_suites(args):
                 raise ValueError('Unknown native check schema')
             row['checks'] = native['checks']
             row['outcome'] = 'passed' if code == 0 and not timed_out and not truncated else 'failed'
+        except (KeyboardInterrupt, InterruptedError) as exc:
+            row.update(outcome='cancelled', native_exit=130, detail=str(exc))
+            cancelled = True
         except Exception as exc:
             row['detail'] = str(exc)
         row['duration_seconds'] = time.monotonic() - started
@@ -281,7 +287,7 @@ def run_suites(args):
     (directory / 'summary.md').write_text(summary)
     print(summary)
     print(f'Evidence: {directory}')
-    return 1 if errors else 0
+    return 130 if cancelled else 1 if errors else 0
 
 
 def report_run(run_id):
@@ -304,6 +310,9 @@ def report_run(run_id):
 
 
 def main(argv=None):
+    def interrupted(signum, frame):
+        raise InterruptedError('Acceptance worker interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, interrupted)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--suite', action='append', default=[])
     parser.add_argument('--profile')

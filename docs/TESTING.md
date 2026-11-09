@@ -14,7 +14,9 @@ their native results, selected check identities, source commit and retained byte
 ```
 
 `fast` uses Python 3.12 or later and needs no Docker, PHP, browser or credentials.
-`package` uses PHP 8.4 with the locked fixture's extensions and Composer 2.10.3.
+`package` uses PHP 8.4 with the locked fixture's extensions and Composer 2.10.3,
+or automatically runs the same script through the validated Docker parent when
+the native tools are absent; see [package-runtime.md](package-runtime.md).
 `support` and `environment` use Docker with Compose v2; the latter builds the
 selected development image unless `DEV_SKIP_BUILD=1` selects a prepared image.
 Use `DEV_IMAGE` consistently when preparing and exercising a different image.
@@ -51,7 +53,9 @@ contract test, rewrite a failure as a clean pass, or update screenshot baselines
 Intentional reruns receive new attempt identities.
 
 The process deadline includes descendants that retain stdout after their parent
-exits. The runner cleans its owned process group on completion or interruption.
+exits. After the execution deadline, an owned worker has up to 20 seconds
+to finish cleanup before its process group is killed. The runner also cleans
+its owned process group on normal completion or interruption.
 Optimized Python is rejected because it would disable assertion-based contracts.
 
 The controlled red/green and mutation evidence is indexed in

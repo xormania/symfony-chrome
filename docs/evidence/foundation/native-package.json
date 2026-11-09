@@ -16,14 +16,14 @@
     {
       "id": "consumer.prod",
       "outcome": "passed",
-      "assertions": 10,
-      "detail": "Independent archive install, native kernel oracle and real HTTP response."
+      "assertions": 12,
+      "detail": "Native kernel assertions retained; additional Python checks verify archive bytes, dependency sets and real HTTP response."
     },
     {
       "id": "consumer.dev",
       "outcome": "passed",
-      "assertions": 10,
-      "detail": "Independent archive install, native kernel oracle and real HTTP response."
+      "assertions": 5,
+      "detail": "Native kernel assertions retained; additional Python checks verify archive bytes, dependency sets and real HTTP response."
     }
   ],
   "archives": [
@@ -43,7 +43,7 @@
     "composer": "2.10.3",
     "solver_platform": "8.4.26"
   },
-  "scope": "Native package/kernel/archive/consumer qualification; Docker/Mago/browser not included.",
+  "scope": "Native package/kernel/archive/consumer qualification with exact native consumer assertion counts; Docker/Mago/browser not included.",
   "native_consumer_assertions": {
     "prod": 12,
     "dev": 5

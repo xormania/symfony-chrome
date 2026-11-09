@@ -152,6 +152,9 @@ def acquire_checker(root: Path, revision: str, evidence: Path,
 
 
 def main(argv: list[str] | None = None) -> int:
+    def interrupted(signum, frame):
+        raise InterruptedError('Acceptance worker interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, interrupted)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence', required=True, type=Path)
     parser.add_argument('--xorder-root', type=Path)

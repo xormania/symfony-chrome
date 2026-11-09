@@ -7,7 +7,9 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
+import signal
 import socket
 import subprocess
 import sys
@@ -17,9 +19,126 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGES = {'chrome-bundle': 'src/ChromeBundle.php', 'chrome-devtools-bundle': 'src/ChromeDevtoolsBundle.php'}
+
+
+def readonly_checkout(root, destination):
+    """Export current test inputs without ignored dependencies, private state or Git metadata."""
+    selected = ['fixtures/app', 'fixtures/consumer', 'packages', 'tests/consumers', 'tools/testing/package.py', 'LICENSE', 'toolchain.lock.json']
+    names = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard', '--', *selected], cwd=root).split(b'\0')
+    for value in filter(None, names):
+        relative = Path(os.fsdecode(value))
+        if relative.is_absolute() or '..' in relative.parts or not any(relative == Path(name) or Path(name) in relative.parents for name in selected):
+            raise RuntimeError('Invalid package runtime input path')
+        if any(part in {'vendor', 'var', 'node_modules', '__pycache__'} for part in relative.parts) or relative.name == '.env.local' or relative.name.endswith('.local.php') or relative.name.endswith('.local'):
+            continue
+        source = root / relative
+        if (not source.resolve().is_relative_to(root.resolve()) or
+                any(root.joinpath(*relative.parts[:count]).is_symlink() for count in range(1, len(relative.parts) + 1))):
+            raise RuntimeError(f'Package runtime input must not link outside the input view: {relative}')
+        if source.is_file():
+            target = destination / relative
+            if not target.resolve().is_relative_to(destination.resolve()):
+                raise RuntimeError('Package runtime output path escapes the input view')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+    return destination
+
+
+def docker_fallback(root, evidence):
+    """Run this identical package entry point using the supported PHP parent."""
+    if not shutil.which('docker'):
+        raise RuntimeError('Package tests require PHP 8.4 and Composer, or Docker for the pinned PHP runtime')
+    support = evidence / 'support'
+    command([sys.executable, str(root / 'tools/testing/support.py'), '--evidence', str(support)], root, evidence / 'support.log', timeout=900)
+    base = json.loads((root / 'toolchain.lock.json').read_text())['images']['base']
+    image = base
+    requested = os.environ.get('DEV_IMAGE')
+    if requested:
+        if subprocess.run(['docker', 'image', 'inspect', requested], capture_output=True, check=False).returncode != 0:
+            raise RuntimeError('The explicitly selected DEV_IMAGE is unavailable; prepare that image before acceptance')
+        image = requested
+    observed = json.loads(subprocess.check_output(['docker', 'image', 'inspect', base, image], text=True))
+    base_info, selected = observed[0], observed[-1]
+    layers = base_info['RootFS']['Layers']
+    if selected['RootFS']['Layers'][:len(layers)] != layers:
+        raise RuntimeError('The selected prepared DEV_IMAGE does not derive from the validated parent filesystem')
+    (evidence / 'package-runtime.json').write_text(json.dumps({'mode': 'docker', 'selected_image': image, 'actual_image_id': selected['Id'], 'released_parent': base, 'actual_parent_id': base_info['Id']}, indent=2) + '\n')
+    name = 'symfony-chrome-package-' + uuid.uuid4().hex[:12]
+    with tempfile.TemporaryDirectory(prefix='symfony-chrome-inputs-') as temporary:
+        checkout = readonly_checkout(root, Path(temporary))
+        argv = ['docker', 'run', '--rm', '--init', '--name', name,
+                '--mount', f'type=bind,src={checkout},dst=/repo,readonly',
+                '--mount', f'type=bind,src={evidence},dst=/evidence',
+                '--tmpfs', '/tmp:rw,mode=1777', '--tmpfs', '/home/dev:rw,mode=1777',
+                '-e', f'PUID={os.getuid()}', '-e', f'PGID={os.getgid()}',
+                '-e', 'HOME=/home/dev', '-e', 'COMPOSER_HOME=/home/dev/.composer',
+                '-w', '/repo', selected['Id'], 'python3', '/repo/tools/testing/package.py',
+                '--native-only', '--evidence', '/evidence']
+        def interrupted(signum, frame):
+            raise InterruptedError('Package container execution interrupted')
+        previous_handler = signal.signal(signal.SIGTERM, interrupted)
+        try:
+            return subprocess.run(argv, check=False, timeout=1200).returncode
+        finally:
+            signal.signal(signal.SIGTERM, previous_handler)
+            if subprocess.run(['docker', 'container', 'inspect', name], capture_output=True, check=False, timeout=20).returncode == 0:
+                command(['docker', 'rm', '--force', name], root, evidence / 'container-cleanup.log', timeout=20)
+
+
+def phpunit_inventory(path, required_file):
+    """Read native discovery before execution; keep dataset IDs rather than counts."""
+    tree = ET.parse(path)
+    if tree.findall('.//{*}phpt'):
+        raise RuntimeError('PHPT inventory requires an explicit result adapter')
+    selected = set()
+    for test_class in tree.findall('.//{*}testClass'):
+        class_name = test_class.attrib['name']
+        file = str(Path(test_class.attrib['file']).resolve())
+        for method in test_class.findall('{*}testMethod'):
+            key = (class_name, method.attrib['id'], file)
+            prefix = class_name + '::' + method.attrib['name']
+            if key in selected or not (method.attrib['id'] == prefix or method.attrib['id'].startswith(prefix + '#')):
+                raise RuntimeError('Duplicate or inconsistent PHPUnit discovery identity')
+            selected.add(key)
+    required = ('BundleKernelTest', 'BundleKernelTest::testBundlesAreRegisteredAndRealRequestIsHandled', str(required_file.resolve()))
+    if required not in selected:
+        raise RuntimeError('Required bundle/kernel contract is absent from PHPUnit selection')
+    return selected
+
+
+def validate_phpunit_result(inventory, path):
+    observed = set()
+    assertions = 0
+    for case in ET.parse(path).findall('.//testcase'):
+        class_name = case.attrib.get('class', case.attrib.get('classname', ''))
+        if 'class' in case.attrib and 'classname' in case.attrib and case.attrib['class'] != case.attrib['classname']:
+            raise RuntimeError('PHPUnit class and classname disagree')
+        name = case.attrib.get('name', '')
+        method, separator, encoded = name.partition(' with data set ')
+        if separator:
+            if encoded.startswith('#') and re.fullmatch(r'-?\d+', encoded[1:]):
+                dataset = encoded[1:]
+            elif len(encoded) >= 2 and encoded.startswith('"') and encoded.endswith('"'):
+                dataset = encoded[1:-1]
+            else:
+                raise RuntimeError('Unrecognized PHPUnit dataset identity')
+            identifier = class_name + '::' + method + '#' + dataset
+        else:
+            identifier = class_name + '::' + name
+        file = case.attrib.get('file')
+        key = (class_name, identifier, str(Path(file).resolve()) if file else '')
+        count = int(case.attrib.get('assertions', '0'))
+        if key in observed or key not in inventory or count <= 0 or any(c.tag in {'failure', 'error', 'skipped'} for c in case):
+            raise RuntimeError('PHPUnit returned a duplicate, foreign, failed, skipped, or zero-assertion test identity')
+        observed.add(key)
+        assertions += count
+    if observed != inventory:
+        raise RuntimeError('PHPUnit result inventory does not match the pre-execution selection')
+    return assertions
 
 
 def build_archives(root: Path, destination: Path) -> list[dict]:
@@ -170,17 +289,23 @@ def bootstrap_locks(root: Path, evidence: Path):
 
 
 def main(argv=None):
+    def interrupted(signum, frame):
+        raise InterruptedError('Acceptance worker interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, interrupted)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence', type=Path, required=True)
     parser.add_argument('--bootstrap-locks', action='store_true')
+    parser.add_argument('--native-only', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     evidence = args.evidence.resolve()
     evidence.mkdir(parents=True, exist_ok=True)
     rows = []
     try:
-        for executable in ['php', 'composer']:
-            if not shutil.which(executable):
-                raise RuntimeError(f'{executable} is required for native package tests')
+        missing = [executable for executable in ['php', 'composer'] if not shutil.which(executable)]
+        if missing:
+            if args.native_only or args.bootstrap_locks:
+                raise RuntimeError(f'Native package execution requires {", ".join(missing)}')
+            return docker_fallback(ROOT, evidence)
         if args.bootstrap_locks:
             archives = bootstrap_locks(ROOT, evidence)
             rows.append({'id': 'maintenance.locks', 'outcome': 'passed', 'assertions': 4, 'detail': 'Genuine Composer resolution; maintenance only, not acceptance.'})
@@ -197,12 +322,13 @@ def main(argv=None):
                 app = seed_layout(ROOT, base / 'app', 'app')
                 command(['composer', 'install', '--no-interaction', '--no-progress', '--prefer-dist', '--no-scripts'], app, evidence / 'fixture-install.log')
                 command(['composer', 'check-platform-reqs'], app, evidence / 'platform.log')
+                listing = evidence / 'phpunit-inventory.xml'
+                command(['php', 'vendor/bin/phpunit', '--configuration', 'phpunit.xml.dist', '--list-tests-xml', str(listing)], app, evidence / 'phpunit-discovery.log')
+                inventory = phpunit_inventory(listing, ROOT / 'packages/tests/BundleKernelTest.php')
                 junit = evidence / 'phpunit.xml'
                 command(['php', 'vendor/bin/phpunit', '--configuration', 'phpunit.xml.dist', '--log-junit', str(junit)], app, evidence / 'phpunit.log', env={**os.environ, 'APP_ENV': 'test', 'APP_DEBUG': '0'})
-                cases = ET.parse(junit).findall('.//testcase')
-                if not cases or any(any(c.tag in {'failure', 'error', 'skipped'} for c in case) or int(case.attrib.get('assertions', '0')) == 0 for case in cases):
-                    raise RuntimeError('PHPUnit did not execute passing assertions for every selected test')
-                rows.append({'id': 'package.kernel', 'outcome': 'passed', 'assertions': sum(int(c.attrib['assertions']) for c in cases), 'detail': f'{len(cases)} native PHPUnit tests; JUnit retained.'})
+                assertions = validate_phpunit_result(inventory, junit)
+                rows.append({'id': 'package.kernel', 'outcome': 'passed', 'assertions': assertions, 'detail': f'{len(inventory)} native PHPUnit tests; discovered identities and exact JUnit retained.'})
                 for mode in ['prod', 'dev']:
                     consumer = prepare_consumer(ROOT, base / mode, archives, mode=mode)
                     env = {**os.environ, 'APP_ENV': mode, 'APP_DEBUG': '0'}

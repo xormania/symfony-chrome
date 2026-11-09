@@ -1,0 +1,64 @@
+test_failed_support_preflight_never_starts_a_container (test_package_execution.DockerFallbackTest.test_failed_support_preflight_never_starts_a_container) ... ok
+test_input_view_keeps_candidate_code_and_excludes_private_local_state (test_package_execution.DockerFallbackTest.test_input_view_keeps_candidate_code_and_excludes_private_local_state) ... ok
+test_native_only_failure_cannot_recurse_into_docker (test_package_execution.DockerFallbackTest.test_native_only_failure_cannot_recurse_into_docker) ... Native package execution requires php, composer
+ok
+test_same_script_uses_read_only_checkout_and_owned_writable_state (test_package_execution.DockerFallbackTest.test_same_script_uses_read_only_checkout_and_owned_writable_state) ... ok
+test_named_dataset_identity_keeps_quotes_and_delimiters (test_package_execution.NativeInventoryTest.test_named_dataset_identity_keeps_quotes_and_delimiters) ... ok
+test_native_inventory_matches_actual_passing_case (test_package_execution.NativeInventoryTest.test_native_inventory_matches_actual_passing_case) ... ok
+test_required_kernel_contract_must_be_selected (test_package_execution.NativeInventoryTest.test_required_kernel_contract_must_be_selected) ... ok
+test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) ... 
+  test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='class') ... FAIL
+  test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='method') ... FAIL
+  test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='file') ... FAIL
+  test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='dataset') ... FAIL
+  test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='duplicate') ... FAIL
+
+======================================================================
+FAIL: test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='class')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/execution-control-tq_gfxb0/tests/fast/test_package_execution.py", line 64, in test_same_count_substitutions_and_nonexecution_are_rejected
+    with self.assertRaises(RuntimeError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='method')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/execution-control-tq_gfxb0/tests/fast/test_package_execution.py", line 64, in test_same_count_substitutions_and_nonexecution_are_rejected
+    with self.assertRaises(RuntimeError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/execution-control-tq_gfxb0/tests/fast/test_package_execution.py", line 64, in test_same_count_substitutions_and_nonexecution_are_rejected
+    with self.assertRaises(RuntimeError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='dataset')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/execution-control-tq_gfxb0/tests/fast/test_package_execution.py", line 64, in test_same_count_substitutions_and_nonexecution_are_rejected
+    with self.assertRaises(RuntimeError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_same_count_substitutions_and_nonexecution_are_rejected (test_package_execution.NativeInventoryTest.test_same_count_substitutions_and_nonexecution_are_rejected) (fault='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/execution-control-tq_gfxb0/tests/fast/test_package_execution.py", line 64, in test_same_count_substitutions_and_nonexecution_are_rejected
+    with self.assertRaises(RuntimeError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.014s
+
+FAILED (failures=5)

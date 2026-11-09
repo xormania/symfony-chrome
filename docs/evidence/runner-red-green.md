@@ -85,3 +85,21 @@ verdict causes the same controls to fail with native exit 1, including the CLI's
 skipped-job check. Source/test hashes, native outcomes, logs, and the small bypass
 patch are retained under `aggregate-controls/`. These are synthetic downloaded
 job fixtures; hosted acceptance still has to execute on the candidate PR.
+
+## SIGTERM cleanup
+
+Two subprocess controls in `tests/fast/test_worker_termination.py` deliver an
+actual SIGTERM after an explicit worker-ready handshake. The environment
+control invokes its public entry point with controlled Docker/devlib boundaries
+and verifies that `finally` calls cleanup with `purge=True`. The runner control
+invokes public `bin/dev test`, verifies its owned native worker's cleanup marker
+and terminated process state, verifies later selected work never starts, and
+requires cancelled execution records and native exit 130.
+
+The exact same tests fail against parent `c828a9a` because default SIGTERM
+termination bypasses both cleanup paths. They pass against the candidate.
+Every test also kills any remaining controlled process groups in teardown, so
+the red run does not leave workers behind. `termination-controls/proof.json`
+records the test/source hashes and native outcomes; `parent.log` and
+`candidate.log` retain the actual assertion results. These controls verify signal
+handling at process and Docker-call boundaries, without running a Docker daemon.

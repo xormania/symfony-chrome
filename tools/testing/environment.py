@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import signal
 import tarfile
 import urllib.request
 import uuid
@@ -40,6 +41,9 @@ def prepare_mago(destination):
 
 
 def main(argv=None):
+    def interrupted(signum, frame):
+        raise InterruptedError('Acceptance worker interrupted by signal ' + str(signum))
+    signal.signal(signal.SIGTERM, interrupted)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence', type=Path, required=True)
     parser.add_argument('--prepare-tools', action='store_true')
@@ -123,9 +127,12 @@ def main(argv=None):
                     source = Path(data['evidence']) / name
                     if source.is_file():
                         shutil.copy2(source, evidence / name)
-                with (evidence / 'container.log.txt').open('w') as output:
-                    subprocess.run(compose(data, 'logs', '--no-color', 'php'), env=environment(data), stdout=output, stderr=subprocess.STDOUT, timeout=30, check=False)
-                stop(data, purge=True)
+                try:
+                    with (evidence / 'container.log.txt').open('w') as output:
+                        subprocess.run(compose(data, 'logs', '--no-color', 'php'), env=environment(data), stdout=output, stderr=subprocess.STDOUT, timeout=5, check=False)
+                finally:
+                    # Diagnostic collection must not suppress owned-resource cleanup.
+                    stop(data, purge=True)
             except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
                 rows.append({'id': 'environment.cleanup', 'outcome': 'error', 'assertions': 0, 'detail': str(exc)})
                 result = 2

@@ -103,10 +103,14 @@ class SupportSelectionContract(unittest.TestCase):
         try:
             status = Path(f'/proc/{pid}/stat')
             deadline = time.monotonic() + 2
-            while status.exists() and status.read_text().split()[2] != 'Z' and time.monotonic() < deadline:
+            def child_state():
+                try:
+                    return status.read_text().split()[2]
+                except (FileNotFoundError, ProcessLookupError):
+                    return 'gone'
+            while child_state() not in ('gone', 'Z') and time.monotonic() < deadline:
                 time.sleep(0.01)
-            if status.exists():
-                self.assertEqual(status.read_text().split()[2], 'Z', 'Background child remains running')
+            self.assertIn(child_state(), ('gone', 'Z'), 'Background child remains running')
         finally:
             try:
                 os.kill(pid, signal.SIGKILL)
