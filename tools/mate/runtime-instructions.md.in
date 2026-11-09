@@ -1,0 +1,23 @@
+Runtime diagnosis uses the selected disposable container and context `inspection-dev`.
+Source or dependency edits invalidate compiled service facts and Symfony-enriched Mago;
+refresh explicitly with `./bin/dev mate-prepare --run RUN` only after retaining the failed
+request's evidence. Refresh archives existing profiler and log files before `cache:clear`;
+a read never refreshes them.
+
+```sh
+__DEV_INVOCATION__ tools:list --format=json
+__DEV_INVOCATION__ tools:inspect symfony-profiler-list --format=json
+__DEV_INVOCATION__ tools:call symfony-profiler-list --context=inspection-dev --limit=20 --url=UNIQUE_REQUEST_MARKER --format=json
+__DEV_INVOCATION__ tools:call symfony-profiler-get --token=HEX6 --format=json
+__DEV_INVOCATION__ resources:read symfony-profiler://profile/HEX6/request --format=json
+__DEV_INVOCATION__ tools:call monolog-search --term=UNIQUE_REQUEST_MARKER --environment=dev --kernelContext=inspection-dev --limit=20 --format=json
+__DEV_INVOCATION__ tools:call symfony-service-detail --id='App\Controller\ReadyController' --context=inspection-dev --format=json
+__DEV_INVOCATION__ tools:call server-info --format=json
+```
+
+Use the exact failed response's `X-Debug-Token`, URL marker and request time; the health
+check creates other profiles. `server-info` describes Mate's CLI process, not the HTTP request.
+Service tools describe the prepared compiled container and require fresh metadata. Serena with
+Mago provides source definitions, references and semantic edits; Mago CLI owns PHP analysis,
+lint, scoped fixes and formatting; Symfony validators and PHPUnit check framework and behavior.
+Runtime calls require exact command and tool names, explicit contexts and limits from 1 to 100.

@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""Run the pinned Mago toolchain in a selected workspace: native profile, or Symfony-enriched analysis."""
+import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from magolib import run_enriched, run_native, selected  # noqa: E402
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--run', default='dev')
+    parser.add_argument('--profile', choices=('native', 'symfony'), default='native')
+    parser.add_argument('--symbol', action='append', default=[], help='Fully qualified class (symfony profile), repeatable')
+    parser.add_argument('--extension-off', action='store_true', help='Symfony profile without the wiring contribution')
+    parser.add_argument('argv', nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    argv = args.argv[1:] if args.argv[:1] == ['--'] else args.argv
+    if not argv:
+        parser.error('Supply Mago arguments after --, for example analyze --reporting-format json')
+    if args.profile == 'symfony':
+        return run_enriched(selected(args.run), argv, symbols=args.symbol, echo=True, wiring_enabled=not args.extension_off)['exit']
+    if args.symbol or args.extension_off:
+        parser.error('--symbol and --extension-off require --profile symfony')
+    return run_native(selected(args.run), argv, echo=True)
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except (RuntimeError, ValueError, AssertionError, OSError) as exc:
+        print(f'mago: {exc}', file=sys.stderr)
+        sys.exit(3)

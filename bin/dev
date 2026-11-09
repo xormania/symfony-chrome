@@ -46,15 +46,20 @@ def cmd_composer(args):
 
 
 def cmd_mago(args):
-    data = load(args.run)
-    require_running(data)
-    return execute(data, 'mago', *args.command, check=False).returncode
+    from magolib import run_native, selected
+    return run_native(selected(args.run), args.command, echo=True)
 
 
 def cmd_mate(args):
-    data = load(args.run)
-    require_running(data)
-    return execute(data, 'php', 'vendor/bin/mate', *args.command, check=False).returncode
+    from matelib import invoke, selected
+    return invoke(selected(args.run), args.command)
+
+
+def cmd_mate_prepare(args):
+    from matelib import prepare
+    record = prepare(load(args.run))
+    print(f"Prepared {record['preparation_id']}; evidence: {record['evidence']}")
+    return 0
 
 
 def cmd_doctor(args):
@@ -105,12 +110,16 @@ def main(argv=None):
     for name, func, help_text in (('exec', cmd_exec, 'Run a command in /workspace'),
                                   ('console', cmd_console, 'Run bin/console in /workspace'),
                                   ('composer', cmd_composer, 'Run composer in /workspace'),
-                                  ('mago', cmd_mago, 'Run Mago (analyze, lint, format, guard) in /workspace'),
-                                  ('mate', cmd_mate, 'Run Symfony AI Mate (vendor/bin/mate) in /workspace')):
+                                  ('mago', cmd_mago, 'Run native Mago with evidence (same as bin/mago --profile native)'),
+                                  ('mate', cmd_mate, 'Run Symfony AI Mate with freshness guards (same as bin/mate)')):
         p = sub.add_parser(name, help=help_text)
         p.add_argument('--run', default='dev')
         p.add_argument('command', nargs=argparse.REMAINDER)
         p.set_defaults(func=func)
+
+    p = sub.add_parser('mate-prepare', help='Install Mate discovery, compile dev metadata, export the wiring reference, seal preparation')
+    p.add_argument('--run', default='dev')
+    p.set_defaults(func=cmd_mate_prepare)
 
     p = sub.add_parser('doctor', help='Print image identity, platform requirements and mounts')
     p.add_argument('--run', default='dev')
@@ -126,7 +135,7 @@ def main(argv=None):
         args.command = args.command[1:]
     try:
         return args.func(args)
-    except (RuntimeError, ValueError, TimeoutError) as exc:
+    except (RuntimeError, ValueError, TimeoutError, AssertionError, OSError) as exc:
         print(f'error: {exc}', file=sys.stderr)
         return 1
 

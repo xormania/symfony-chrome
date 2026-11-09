@@ -52,6 +52,18 @@
       "patch_sha256": "ca955e0db6023a997fe708d46d3bd0b92e6dd91237aee7c206f13768effdea11",
       "recorded_poc_binary_sha256": "5cfaa051b9cb23f63cbcd8ec1703538c1f2789ff21ad068b239678631f701e46",
       "cargo_lock_sha256": "f5468183e5440ccacff66b06f7b444f15641caf89d9533057a03e4f280a28e1d"
+    },
+    "sdk": {
+      "composer_package": "carthage-software/mago 1.58.2",
+      "source_rev": "46df50c96d93d0ac3655c116c375574277cf0b30",
+      "protocol": "MANA 2.1",
+      "note": "Same source revision as the executable; packaged vendor/bin/mago is not invoked. Mago 1.59 uses MANA 2.2 and is incompatible with this pin."
+    },
+    "symfony_wiring": {
+      "composer_package": "byte-kitsune/mago-symfony-wiring dev-poc-28c3f54",
+      "source_rev": "28c3f54065b71fe046a7474ced401aeadc941b0f",
+      "extension_version": "1.3.0-RC1",
+      "backend": "php (MAGO_EXTENSION_BACKEND=php)"
     }
   },
   "serena": {
@@ -62,5 +74,14 @@
     "python": "3.12.12",
     "vendored_from": "xormania/mago-serena_v2-poc@b6dbec8378338e39fe51489bc28f9ad578e4f3ab",
     "note": "pyproject keeps the PoC root project name mago-serena-poc so uv.lock stays valid under --frozen."
+  },
+  "mate": {
+    "version": "0.15.0",
+    "extensions": [
+      "symfony/ai-symfony-mate-extension 0.15.0",
+      "symfony/ai-monolog-mate-extension 0.15.0"
+    ],
+    "context": "inspection-dev",
+    "uxor_declares": "^0.14"
   }
 }

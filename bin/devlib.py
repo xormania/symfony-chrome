@@ -42,6 +42,8 @@ def load(run_id='dev'):
     data = json.loads(marker.read_text())
     if data['repository'] != str(ROOT) or data['run_id'] != run_id:
         raise RuntimeError('Workspace ownership marker does not match this checkout')
+    data.setdefault('trusted', str(ROOT / 'workspaces' / run_id / 'trusted'))
+    Path(data['trusted']).mkdir(exist_ok=True)
     return data
 
 
@@ -55,11 +57,13 @@ def prepare(run_id, port=0, app_env='dev', private=None):
     (workspace / 'app/.serena').mkdir()
     shutil.copy2(ROOT / 'tools/serena/config/project.yml', workspace / 'app/.serena/project.yml')
     (workspace / 'state').mkdir()
+    (workspace / 'trusted').mkdir()
     (ROOT / 'artifacts' / run_id).mkdir(parents=True, exist_ok=True)
     digest = hashlib.sha256(str(ROOT).encode()).hexdigest()[:8]
     data = {'schema': 1, 'run_id': run_id, 'repository': str(ROOT),
             'project': f'symfony-chrome-{digest}-{run_id}', 'app': str(workspace / 'app'),
-            'state': str(workspace / 'state'), 'evidence': str(ROOT / 'artifacts' / run_id),
+            'state': str(workspace / 'state'), 'trusted': str(workspace / 'trusted'),
+            'evidence': str(ROOT / 'artifacts' / run_id),
             'port': port, 'app_env': app_env, 'private': private,
             'image': os.environ.get('DEV_IMAGE') or DEFAULT_IMAGE}
     (workspace / 'run.json').write_text(json.dumps(data, indent=2) + '\n')
@@ -92,10 +96,14 @@ def environment(data):
             'DEV_UID': str(os.getuid()), 'DEV_GID': str(os.getgid())}
 
 
+def exec_command(data, *args):
+    """compose exec argv for the php service as the host user. exec would otherwise run as root because the
+    image drops privileges in its entrypoint, not with a Dockerfile USER."""
+    return compose(data, 'exec', '-T', '--user', f'{os.getuid()}:{os.getgid()}', '-w', '/workspace', 'php', *args)
+
+
 def execute(data, *args, **kwargs):
-    # exec would otherwise run as root; match the PUID/PGID the entrypoint gave the main process.
-    user = f'{os.getuid()}:{os.getgid()}'
-    return run(compose(data, 'exec', '-T', '--user', user, '-w', '/workspace', 'php', *args), env=environment(data), **kwargs)
+    return run(exec_command(data, *args), env=environment(data), **kwargs)
 
 
 def require_running(data):
@@ -103,6 +111,20 @@ def require_running(data):
                             env=environment(data), text=True, capture_output=True)
     if status.returncode or not status.stdout.strip():
         raise RuntimeError(f"Container is stopped. Start it with ./bin/dev up --run {data['run_id']}")
+
+
+def container_id(data):
+    return subprocess.check_output(compose(data, 'ps', '-q', 'php'), env=environment(data), text=True).strip()
+
+
+def write_json(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def host_port(data):

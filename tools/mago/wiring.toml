@@ -1,0 +1,13 @@
+# Symfony-enriched Mago analysis: native analysis plus the wiring extension host.
+# Installed into the workspace as .mago/wiring.toml by bin/dev mate-prepare.
+version = "1.58.2"
+php-version = "8.4"
+
+[source]
+paths = ["src", "tests", "vendor/xormania/chrome-bundle/src", "vendor/xormania/chrome-devtools-bundle/src"]
+includes = ["vendor"]
+excludes = ["var", "public/assets"]
+
+[extension-hosts.php]
+working-directory = ".."
+command = ["env", "MAGO_EXTENSION_BACKEND=php", "MAGO_SYMFONY_WIRING_ATTESTATION=1", "php", "-d", "display_errors=stderr", "-d", "memory_limit=1G", ".mago/extensions.php"]
