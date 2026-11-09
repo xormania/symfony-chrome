@@ -3,6 +3,7 @@ import importlib.util
 import os
 from pathlib import Path
 import tempfile
+import subprocess
 import sys
 import unittest
 
@@ -14,6 +15,28 @@ spec.loader.exec_module(performance)
 
 
 class PerformanceContracts(unittest.TestCase):
+    def test_cli_rejects_evidence_reuse_without_changing_retained_experiment(self):
+        for first_attempts in (1, 0):
+            with self.subTest(first_attempts=first_attempts), tempfile.TemporaryDirectory() as tmp:
+                evidence = Path(tmp) / 'experiment'
+                evidence.mkdir()
+                # The outer runner creates this log before launching the performance CLI.
+                (evidence / 'native.log').write_text('outer runner capture\n')
+                command = [sys.executable, str(ROOT / 'tools/testing/performance.py'),
+                           '--evidence', str(evidence), '--label', 'reuse-control', '--runner', 'unittest']
+                native = ['--', sys.executable, '-c', 'pass']
+                first = subprocess.run(command + ['--attempts', str(first_attempts)] + native,
+                                       cwd=ROOT, capture_output=True, text=True, timeout=20)
+                self.assertEqual(0 if first_attempts else 1, first.returncode, first.stdout + first.stderr)
+                original = {path.relative_to(evidence): path.read_bytes()
+                            for path in evidence.rglob('*') if path.is_file()}
+                second = subprocess.run(command + ['--attempts', '1'] + native,
+                                        cwd=ROOT, capture_output=True, text=True, timeout=20)
+                self.assertNotEqual(0, second.returncode, second.stdout + second.stderr)
+                retained = {path.relative_to(evidence): path.read_bytes()
+                            for path in evidence.rglob('*') if path.is_file()}
+                self.assertEqual(original, retained)
+
     def test_failed_attempt_is_counted_alongside_successes(self):
         rows = [{'attempt': 1, 'outcome': 'passed', 'native_exit': 0, 'seconds': 1},
                 {'attempt': 2, 'outcome': 'failed', 'native_exit': 9, 'seconds': 10},

@@ -1,7 +1,9 @@
 # Consumer, compatibility, and performance checks
 
 The consumer suite installs both candidate distribution archives into a disposable
-checkout of UXor at the exact revision in `tests/consumers/uxor.json`. It preserves
+checkout of UXor at the repository and exact revision in
+`toolchain.lock.json` under `consumers.uxor`. Native test identities and coverage
+remain in `tests/consumers/uxor.json`. It preserves
 the original consumer's Composer constraints, including Mate's version constraint,
 and records the original and resolved lock identities. No source symlinks stand
 in for installed candidate distributions.
@@ -79,9 +81,12 @@ its setup and cleanup, without copying its assertions.
 The experiment retains every actual attempt in `samples.jsonl`, with native exit,
 timeout/truncation, duration, and log identity. It uses the common runner's bounded
 capture/process cleanup. Each native attempt has an 8 MiB output limit; hitting
-the limit is an error, not a passing shortened log. Evidence directories cannot
-be overwritten by a rerun. Cancellation retains a partial, unsuccessful
-experiment rather than manufacturing the remaining samples.
+the limit is an error, not a passing shortened log. Before writing checks, the
+CLI claims a fresh experiment directory and refuses to reuse existing experiment
+evidence, including incomplete setup failures. A directory containing only the
+shared runner's `native.log` remains valid. Concurrent invocations cannot claim
+the same directory. Cancellation retains a partial, unsuccessful experiment
+rather than manufacturing the remaining samples.
 
 `performance.json` records the measurement configuration, source identity before
 and after, every sample, outcome counts, median, median absolute deviation, and

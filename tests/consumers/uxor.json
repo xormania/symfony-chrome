@@ -1,7 +1,5 @@
 {
   "schema": 1,
-  "repository": "https://github.com/xormania/uxor.git",
-  "revision": "89e607a4be48b2fd8f46f1b9e9465cba406fedee",
   "tests": [
     {
       "file": "tests/e2e/lab.live-modal.spec.ts",

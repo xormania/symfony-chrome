@@ -20,6 +20,13 @@ ROOT = Path(__file__).resolve().parents[2]
 PIN = ROOT / 'tests/consumers/uxor.json'
 
 
+def consumer_pin() -> dict:
+    pin = json.loads((ROOT / 'toolchain.lock.json').read_text())['consumers']['uxor']
+    if not re.fullmatch('[0-9a-f]{40}', pin['revision']):
+        raise ValueError('Consumer revision must be an exact commit')
+    return pin
+
+
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -99,8 +106,7 @@ def run(evidence: Path) -> dict:
 
     evidence.mkdir(parents=True, exist_ok=True)
     config = json.loads(PIN.read_text())
-    if not re.fullmatch('[0-9a-f]{40}', config['revision']):
-        raise ValueError('Consumer revision must be an exact commit')
+    pin = consumer_pin()
     workspace_parent = ROOT / 'workspaces'
     workspace_parent.mkdir(exist_ok=True)
     workspace = Path(tempfile.mkdtemp(prefix='consumer-', dir=workspace_parent))
@@ -123,11 +129,11 @@ def run(evidence: Path) -> dict:
     try:
         execute('http-routing-regression', [sys.executable, str(ROOT / 'tests/consumers/test_http_router.py')])
         execute('checkout-init', ['git', 'init', str(checkout)])
-        execute('checkout-remote', ['git', 'remote', 'add', 'origin', config['repository']], checkout)
-        execute('checkout-fetch', ['git', 'fetch', '--depth=1', 'origin', config['revision']], checkout)
-        execute('checkout', ['git', 'checkout', '--detach', config['revision']], checkout)
+        execute('checkout-remote', ['git', 'remote', 'add', 'origin', pin['repository']], checkout)
+        execute('checkout-fetch', ['git', 'fetch', '--depth=1', 'origin', pin['revision']], checkout)
+        execute('checkout', ['git', 'checkout', '--detach', pin['revision']], checkout)
         actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=checkout, text=True).strip()
-        if actual != config['revision']:
+        if actual != pin['revision']:
             raise RuntimeError('Consumer checkout identity mismatch')
         archives = build_archives(ROOT, evidence / 'archives')
         app = checkout / 'demo'
@@ -202,7 +208,7 @@ def run(evidence: Path) -> dict:
         except OSError as exc:
             checks.append({'id': 'consumer.uxor.cleanup', 'outcome': 'error', 'assertions': 0, 'detail': str(exc)})
     return {'schema': 1, 'checks': checks, 'phases': phases,
-            'coverage': config['coverage'], 'consumer_revision': config['revision']}
+            'coverage': config['coverage'], 'consumer_revision': pin['revision']}
 
 
 def main():

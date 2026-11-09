@@ -151,6 +151,17 @@ def main():
     args = parser.parse_args()
     command = args.command[1:] if args.command[:1] == ['--'] else args.command
     evidence = args.evidence.resolve()
+    # Claim this invocation's output before any handler may write checks. The
+    # shared runner can already own native.log in an otherwise fresh directory.
+    try:
+        evidence.mkdir(parents=True, exist_ok=True)
+        outputs = {'samples.jsonl', 'performance.json', 'comparison.json', 'summary.md', 'checks.json'}
+        if any(path.name in outputs or path.name.startswith('attempt-') for path in evidence.iterdir()):
+            raise FileExistsError('Experiment evidence already exists; choose a fresh attempt directory')
+        (evidence / '.performance-owner').touch(exist_ok=False)
+    except OSError as exc:
+        print(f'Cannot claim performance evidence: {exc}', file=sys.stderr)
+        return 1
     checks = []
     try:
         result = experiment(command, evidence, label=args.label, runner=args.runner,

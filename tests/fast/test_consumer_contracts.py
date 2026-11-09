@@ -5,7 +5,9 @@ import json
 import os
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(os.environ.get('CONSUMER_TEST_ROOT', Path(__file__).resolve().parents[2]))
 spec = importlib.util.spec_from_file_location('consumer', ROOT / 'tools/testing/consumer.py')
@@ -29,6 +31,30 @@ class ConsumerContracts(unittest.TestCase):
     def test_selected_native_tests_are_accepted(self):
         checks = consumer.native_results(self.report, self.expected, self.checkout)
         self.assertEqual(['consumer.uxor.modal', 'consumer.uxor.validation'], [row['id'] for row in checks])
+
+    def test_checkout_uses_central_source_pin_with_suite_only_test_selection(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            suite = root / 'uxor.json'
+            suite.write_text(json.dumps({'tests': self.expected, 'coverage': 'selected native tests'}))
+            pin = {'repository': 'https://example.invalid/consumer.git', 'revision': 'a' * 40}
+            (root / 'toolchain.lock.json').write_text(json.dumps({'consumers': {'uxor': pin}}))
+            commands = []
+
+            def capture(argv, directory, timeout, **kwargs):
+                commands.append(argv)
+                # Stop after checkout selection, before package installation or browser setup.
+                return (1 if argv[:2] == ['git', 'checkout'] else 0), False, False
+
+            modules = {'runner': SimpleNamespace(capture=capture),
+                       'package': SimpleNamespace(build_archives=None)}
+            with patch.object(consumer, 'ROOT', root), patch.object(consumer, 'PIN', suite), \
+                    patch.dict('sys.modules', modules):
+                result = consumer.run(root / 'evidence')
+            self.assertIn(['git', 'remote', 'add', 'origin', pin['repository']], commands)
+            self.assertIn(['git', 'fetch', '--depth=1', 'origin', pin['revision']], commands)
+            self.assertIn(['git', 'checkout', '--detach', pin['revision']], commands)
+            self.assertEqual(pin['revision'], result['consumer_revision'])
 
     def test_same_total_with_foreign_test_cannot_pass(self):
         self.report['suites'][0]['specs'][1]['title'] = 'unrelated passing test'
