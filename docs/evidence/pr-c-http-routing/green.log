@@ -1,0 +1,8 @@
+test_lab_route_beneath_existing_public_directory_reaches_front_controller (__main__.NativeHttpRouting.test_lab_route_beneath_existing_public_directory_reaches_front_controller) ... ok
+test_missing_route_uses_front_controller (__main__.NativeHttpRouting.test_missing_route_uses_front_controller) ... ok
+test_static_css_remains_a_static_response (__main__.NativeHttpRouting.test_static_css_remains_a_static_response) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.049s
+
+OK

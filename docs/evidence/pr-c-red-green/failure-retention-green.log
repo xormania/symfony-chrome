@@ -1,0 +1,6 @@
+test_failed_attempt_is_counted_alongside_successes (test_performance_contracts.PerformanceContracts.test_failed_attempt_is_counted_alongside_successes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK

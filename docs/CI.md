@@ -6,8 +6,9 @@ There are no scheduled runs or duplicate feature-branch push runs.
 | Job | Required suites |
 | --- | --- |
 | fast | fast |
-| package | package |
+| package | package, compatibility |
 | integration | support, environment, browser, tooling |
+| consumer | Pinned UXor installation and native modal/validation interactions |
 | Symfony Chrome acceptance | Every required job and its exact native evidence. |
 
 The integration job validates the supported released parent, builds the pinned

@@ -1,0 +1,34 @@
+test_lab_route_beneath_existing_public_directory_reaches_front_controller (__main__.NativeHttpRouting.test_lab_route_beneath_existing_public_directory_reaches_front_controller) ... ERROR
+test_missing_route_uses_front_controller (__main__.NativeHttpRouting.test_missing_route_uses_front_controller) ... ok
+test_static_css_remains_a_static_response (__main__.NativeHttpRouting.test_static_css_remains_a_static_response) ... ok
+
+======================================================================
+ERROR: test_lab_route_beneath_existing_public_directory_reaches_front_controller (__main__.NativeHttpRouting.test_lab_route_beneath_existing_public_directory_reaches_front_controller)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/consumer-work/tests/consumers/test_http_router.py", line 69, in test_lab_route_beneath_existing_public_directory_reaches_front_controller
+    with urllib.request.urlopen(self.url + '/lab/live-modal', timeout=2) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.029s
+
+FAILED (errors=1)

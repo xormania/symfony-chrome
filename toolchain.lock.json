@@ -32,6 +32,12 @@
     "symfony": "8.1.*",
     "reference_consumer": "xormania/uxor demo (PHP >=8.4, Symfony 8.1.*)"
   },
+  "consumers": {
+    "uxor": {
+      "repository": "https://github.com/xormania/uxor.git",
+      "revision": "89e607a4be48b2fd8f46f1b9e9465cba406fedee"
+    }
+  },
   "notes": [
     "Base image is the accepted xorder php-browser 8.4-trixie v1.2.3 resource. The separately pinned Node overlay remains the original 1.2.4-record selection.",
     "Chrome for Testing is added because chrome-devtools-mcp officially supports Google Chrome and Chrome for Testing only; Debian Chromium from the base remains for Panther.",

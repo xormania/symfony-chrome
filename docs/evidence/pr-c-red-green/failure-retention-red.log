@@ -1,0 +1,14 @@
+test_failed_attempt_is_counted_alongside_successes (test_performance_contracts.PerformanceContracts.test_failed_attempt_is_counted_alongside_successes) ... FAIL
+
+======================================================================
+FAIL: test_failed_attempt_is_counted_alongside_successes (test_performance_contracts.PerformanceContracts.test_failed_attempt_is_counted_alongside_successes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/7276bb7a269f/consumer-work/tests/fast/test_performance_contracts.py", line 23, in test_failed_attempt_is_counted_alongside_successes
+    self.assertFalse(summary['native_success'])
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)

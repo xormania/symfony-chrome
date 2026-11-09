@@ -197,7 +197,10 @@ def run_suites(args):
         try:
             if cancelled:
                 raise InterruptedError('Earlier suite was interrupted; remaining selection did not execute')
-            command = [sys.executable, entry['script'], '--evidence', str(evidence)]
+            arguments = entry.get('args', [])
+            if not isinstance(arguments, list) or any(not isinstance(value, str) for value in arguments):
+                raise ValueError('Suite arguments must be a string array')
+            command = [sys.executable, entry['script'], '--evidence', str(evidence), *arguments]
             timeout = entry.get('timeout', 900)
             worker_env = {**os.environ, SUITE_DEADLINE: str(time.monotonic() + timeout)}
             code, timed_out, truncated = capture(command, evidence, timeout, env=worker_env)

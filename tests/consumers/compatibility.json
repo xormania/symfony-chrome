@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "cells": [
+    {"id": "runtime.symfony-7.3", "symfony": "7.3.*", "mode": "prod", "required": true, "purpose": "Declared runtime lower framework boundary"}
+  ],
+  "shared_baseline": "The package suite already runs the independent Symfony 8.1 production consumer; do not repeat it here."
+}
